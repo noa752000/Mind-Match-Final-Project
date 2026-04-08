@@ -1,5 +1,5 @@
 import { Bell } from 'lucide-react';
-import logoImage from 'figma:asset/f14b0c4a2f0a930c5c39121c87066c5ce997c040.png';
+import logoImage from '../../assets/logo.png';
 
 interface TopNavBarProps {
   currentPage: string;
