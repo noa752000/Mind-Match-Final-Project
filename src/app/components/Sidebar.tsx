@@ -2,8 +2,8 @@ import { Home, BookOpen, MessageSquare, Users, Calendar, BarChart3, Settings, He
 import { Button } from './ui/button';
 
 interface SidebarProps {
-  currentPage?: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'course-detail';
-  onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'course-detail') => void;
+  currentPage?: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail';
+  onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail') => void;
   onLogout?: () => void;
   userName?: string;
 }

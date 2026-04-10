@@ -12,17 +12,25 @@ import { CoursesPage } from './pages/CoursesPage';
 import { CourseDetailPage } from './pages/CourseDetailPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { PracticePage } from './pages/PracticePage';
 
 function AppContent() {
   const { isAuthenticated, user, login, register, logout } = useAuth();
-  const [currentPage, setCurrentPage] = useState<'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'course-detail'>('home');
+const [currentPage, setCurrentPage] = useState<
+  'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail'
+>('home');
   const [authPage, setAuthPage] = useState<'login' | 'register'>('login');
   const [selectedCourseId, setSelectedCourseId] = useState<string>('');
   const [tutorCourseId, setTutorCourseId] = useState<string>('');
+  const [practiceCourseId, setPracticeCourseId] = useState<string>('');
 
   const handleCourseSelect = (courseId: string) => {
     setSelectedCourseId(courseId);
     setCurrentPage('course-detail');
+  };
+  const handleOpenPractice = (courseId: string) => {
+  setPracticeCourseId(courseId);
+  setCurrentPage('practice');
   };
 
   const handleBackToCourses = () => {
@@ -76,13 +84,18 @@ function AppContent() {
       <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} onLogout={handleLogout} userName={user?.fullName} />
       <TopNavBar currentPage={currentPage} onNavigate={setCurrentPage} onLogout={handleLogout} userName={user?.fullName} />
       {currentPage === 'home' && <HomePage onNavigate={setCurrentPage} />}
-      {currentPage === 'dashboard' && <DashboardPage />}
+      {currentPage === 'dashboard' && (
+          <DashboardPage onOpenPractice={handleOpenPractice} />
+      )}
       {currentPage === 'courses' && <CoursesPage onCourseSelect={handleCourseSelect} />}
       {currentPage === 'course-detail' && <CourseDetailPage courseId={selectedCourseId} onBack={handleBackToCourses} onOpenTutor={handleOpenTutor} />}
       {currentPage === 'calendar' && <CalendarPage />}
       {currentPage === 'tutor' && <AITutorPage courseId={tutorCourseId} onBack={handleBackToCourseFromTutor} />}
       {currentPage === 'analysis' && <AnalysisPage />}
       {currentPage === 'profile' && <ProfilePage />}
+      {currentPage === 'practice' && (
+          <PracticePage courseId="course_1" onBack={() => setCurrentPage('courses')} />
+        )}
     </div>
   );
 }

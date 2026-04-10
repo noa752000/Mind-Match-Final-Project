@@ -1,13 +1,5 @@
 import { CourseCard } from './CourseCard';
 import { Button } from './ui/button';
-import { Filter } from 'lucide-react';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select';
 
 const courses = [
   {
@@ -72,13 +64,16 @@ const courses = [
   },
 ];
 
-export function CoursesList() {
+interface CoursesListProps {
+  onOpenPractice?: (courseId: string) => void;
+}
+
+export function CoursesList({ onOpenPractice }: CoursesListProps) {
   return (
     <section className="mb-8">
-      {/* Header with Filter */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900">הקורסים שלי</h2>
-        
+
         <div className="flex items-center gap-4">
           <Button className="text-sm text-teal-600 hover:text-teal-700 bg-transparent hover:bg-teal-50 border-0 shadow-none p-0">
             כל הקורסים ←
@@ -86,13 +81,12 @@ export function CoursesList() {
         </div>
       </div>
 
-      {/* Course Grid */}
       <div className="grid grid-cols-12 gap-6">
         {courses.map((course, index) => (
           <div key={index} className="col-span-4">
             <CourseCard
-               {...course}
-                onContinue={() => console.log('continue to practice:', course.courseId)}
+              {...course}
+              onContinue={() => onOpenPractice?.(course.courseId)}
             />
           </div>
         ))}
