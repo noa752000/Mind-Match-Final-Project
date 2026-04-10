@@ -11,6 +11,7 @@ import {
 
 const courses = [
   {
+    courseId: 'course_4',
     title: 'אבטחת מידע',
     semester: 'סמסטר א׳ | שנה א׳',
     progress: 85,
@@ -20,6 +21,7 @@ const courses = [
     status: 'active' as const,
   },
   {
+    courseId: 'course_2',
     title: 'אפיון ותכן',
     semester: 'סמסטר א׳ | שנה ב׳',
     progress: 62,
@@ -29,6 +31,7 @@ const courses = [
     status: 'active' as const,
   },
   {
+    courseId: 'course_1',
     title: 'מסדי נתונים',
     semester: 'סמסטר א׳ | שנה ב׳',
     progress: 78,
@@ -38,6 +41,7 @@ const courses = [
     status: 'active' as const,
   },
   {
+    courseId: 'course_5',
     title: 'HTML',
     semester: 'סמסטר א׳ | שנה ב׳',
     progress: 45,
@@ -47,6 +51,7 @@ const courses = [
     status: 'active' as const,
   },
   {
+    courseId: 'course_6',
     title: 'מבני נתונים',
     semester: 'סמסטר א׳ | שנה ב׳',
     progress: 91,
@@ -56,6 +61,7 @@ const courses = [
     status: 'active' as const,
   },
   {
+    courseId: 'course_8',
     title: 'ניהול פרויקטים',
     semester: 'סמסטר א׳ | שנה ג׳',
     progress: 100,
@@ -84,7 +90,10 @@ export function CoursesList() {
       <div className="grid grid-cols-12 gap-6">
         {courses.map((course, index) => (
           <div key={index} className="col-span-4">
-            <CourseCard {...course} />
+            <CourseCard
+               {...course}
+                onContinue={() => console.log('continue to practice:', course.courseId)}
+            />
           </div>
         ))}
       </div>
