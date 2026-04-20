@@ -18,7 +18,7 @@ export function DashboardPage({ onOpenPractice }: DashboardPageProps) {
 
           <ProgressOverview />
 
-          {/* 🔥 פה החיבור החשוב */}
+          {/* Courses List */}
           <CoursesList onOpenPractice={onOpenPractice} />
 
           <AIRecommendations />

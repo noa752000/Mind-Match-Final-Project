@@ -1,34 +1,69 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../firebase';
 
 interface PracticePageProps {
   courseId: string;
   onBack: () => void;
 }
 
-const mockQuestions = [
-  {
-    id: 1,
-    question: 'מה זה JOIN ב-SQL?',
-    options: ['חיבור טבלאות', 'מחיקת נתונים', 'יצירת טבלה', 'עדכון שדה'],
-    correct: 0,
-  },
-  {
-    id: 2,
-    question: 'מה זה PRIMARY KEY?',
-    options: ['מפתח ייחודי', 'טבלה ראשית', 'שאילתה', 'אינדקס'],
-    correct: 0,
-  },
-];
+interface Question {
+  id: string;
+  questionText: string;
+  options: string[];
+  correctAnswer: string;
+}
 
 export function PracticePage({ courseId, onBack }: PracticePageProps) {
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const question = mockQuestions[currentQuestionIndex];
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        setLoading(true);
 
-  const handleAnswerClick = (index: number) => {
-    setSelectedAnswer(index);
+        const q = query(
+          collection(db, 'questions'),
+          where('courseId', '==', courseId)
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        const questionsData: Question[] = querySnapshot.docs.map((doc) => {
+          const data = doc.data();
+
+          return {
+            id: doc.id,
+            questionText: data.questionText || '',
+            options: data.options || [],
+            correctAnswer: data.correctAnswer || '',
+          };
+        });
+
+        setQuestions(questionsData);
+        setCurrentQuestionIndex(0);
+        setSelectedAnswer(null);
+        setShowFeedback(false);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (courseId) {
+      fetchQuestions();
+    }
+  }, [courseId]);
+
+  const question = questions[currentQuestionIndex];
+
+  const handleAnswerClick = (option: string) => {
+    setSelectedAnswer(option);
     setShowFeedback(true);
   };
 
@@ -37,6 +72,33 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
     setShowFeedback(false);
     setCurrentQuestionIndex((prev) => prev + 1);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8 pr-72">
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm p-8 text-right">
+          <h1 className="text-2xl font-bold">טוען שאלות...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8 pr-72">
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm p-8 text-right">
+          <h1 className="text-3xl font-bold mb-4">אין שאלות לקורס הזה עדיין</h1>
+          <p className="text-gray-600 mb-6">קורס: {courseId}</p>
+          <button
+            onClick={onBack}
+            className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl"
+          >
+            חזרה לקורסים
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!question) {
     return (
@@ -55,7 +117,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
     );
   }
 
-  const isCorrect = selectedAnswer === question.correct;
+  const isCorrect = selectedAnswer === question.correctAnswer;
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 pr-72">
@@ -77,17 +139,17 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
         <div className="bg-white rounded-2xl shadow-sm p-8">
           <div className="mb-6 text-right">
             <p className="text-sm text-gray-500 mb-2">
-              שאלה {currentQuestionIndex + 1} מתוך {mockQuestions.length}
+              שאלה {currentQuestionIndex + 1} מתוך {questions.length}
             </p>
             <h2 className="text-2xl font-semibold text-gray-900">
-              {question.question}
+              {question.questionText}
             </h2>
           </div>
 
           <div className="space-y-3">
-            {question.options.map((option, index) => {
-              const isSelected = selectedAnswer === index;
-              const isRightAnswer = question.correct === index;
+            {question.options.map((option) => {
+              const isSelected = selectedAnswer === option;
+              const isRightAnswer = question.correctAnswer === option;
 
               let buttonClass =
                 'w-full text-right border rounded-xl p-4 transition';
@@ -106,8 +168,8 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
 
               return (
                 <button
-                  key={index}
-                  onClick={() => handleAnswerClick(index)}
+                  key={option}
+                  onClick={() => handleAnswerClick(option)}
                   disabled={showFeedback}
                   className={buttonClass}
                 >
