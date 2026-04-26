@@ -3,9 +3,10 @@ import { Button } from './ui/button';
 
 interface HeroProps {
   onRegisterClick?: () => void;
+  onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'course-detail') => void;
 }
 
-export function Hero({ onRegisterClick }: HeroProps) {
+export function Hero({ onRegisterClick, onNavigate }: HeroProps) {
   return (
     <section className="relative pt-8 pb-20 px-16 overflow-hidden">
       <div className="max-w-[1440px] mx-auto">
@@ -34,7 +35,7 @@ export function Hero({ onRegisterClick }: HeroProps) {
               <Button 
                 size="lg" 
                 className="text-lg px-8 bg-teal-600 hover:bg-teal-700"
-                onClick={onRegisterClick}
+                onClick={() => onNavigate?.('dashboard')}
               >
                 התחל ללמוד עכשיו
                 <ArrowLeft className="w-5 h-5 mr-2" />

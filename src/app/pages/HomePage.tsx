@@ -20,7 +20,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
   return (
     <div className="mr-64 pt-16 min-h-screen bg-white" dir="rtl">
       <main>
-        <Hero />
+        <Hero onNavigate={handleNavigate} />
         <AIExplanation />
         <Features />
         <DashboardPreview onNavigate={handleNavigate} />
