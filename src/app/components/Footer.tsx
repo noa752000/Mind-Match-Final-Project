@@ -9,7 +9,7 @@ export function Footer() {
           {/* Brand - Right side (first in RTL flex) */}
           <div className="flex-shrink-0">
             <div className="mb-6 flex justify-start">
-              <img src={logoImage} alt="MindMatch Logo" className="h-12 w-auto" />
+              <img src={logoImage} alt="MindMatch Logo" className="h-20 w-auto" />
             </div>
           </div>
 
