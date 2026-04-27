@@ -164,8 +164,8 @@ export const coursesData: Record<string, CourseData> = {
       { week: 4, title: 'מולטימדיה ונגישות', topics: ['audio ו-video', 'ARIA', 'תקני נגישות'] },
     ]
   },
-  'requirements-design': {
-    id: 'requirements-design',
+  'system_design': {
+    id: 'system_design',
     title: 'אפיון ותכן',
     category: 'הנדסת תוכנה',
     level: 'מתקדם',
