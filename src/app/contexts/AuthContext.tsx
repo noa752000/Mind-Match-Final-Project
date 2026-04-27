@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { collection, getDocs, doc, setDoc, query, orderBy, limit } from 'firebase/firestore';
+import { db } from '../../firebase';
 
 interface User {
+  userId: string;
   username: string;
   fullName: string;
   email: string;
@@ -38,6 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else {
       // משתמש ברירת מחדל - הדס
       const defaultUser: User = {
+        userId: 'user_1',
         username: 'hadar',
         fullName: 'הדס לוי',
         email: 'hadar@student.ac.il',
@@ -54,6 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (username && password) {
       // תמיד טען את הפרופיל של הדס
       const newUser: User = {
+        userId: 'user_1',
         username: 'hadar',
         fullName: 'הדס לוי',
         email: 'hadar@student.ac.il',
@@ -69,21 +74,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const register = async (fullName: string, email: string, password: string): Promise<boolean> => {
-    // Demo: כל שם משתמש וסיסמה יעבדו
-    // במציאות - כאן תהיה קריאה לשרת
-    if (fullName && email && password) {
+    try {
+      // Generate next user ID
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+      const userCount = usersSnapshot.size;
+      const nextUserId = `user_${userCount + 1}`;
+
       const newUser: User = {
+        userId: nextUserId,
         username: email.split('@')[0],
         fullName: fullName,
         email: email,
       };
-      
+
+      // Store user in Firestore
+      const userRef = doc(db, 'users', nextUserId);
+      await setDoc(userRef, {
+        ...newUser,
+        courses: [
+          'sql',
+          'systems_analysis',
+          'oop',
+          'calculus1',
+          'linear_algebra',
+          'html_fundamentals',
+          'information_systems_economics',
+          'cyber_security'
+        ],
+        createdAt: new Date(),
+      });
+
       setUser(newUser);
       setIsAuthenticated(true);
       localStorage.setItem('user', JSON.stringify(newUser));
       return true;
+    } catch (error) {
+      console.error('Registration error:', error);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {

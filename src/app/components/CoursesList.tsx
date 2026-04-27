@@ -73,7 +73,7 @@ export function CoursesList({ onOpenPractice }: CoursesListProps) {
   useEffect(() => {
     const fetchCoursesAndInteractions = async () => {
       try {
-        const userId = (user as any)?.id || (user as any)?.uid || 'user_1';
+        const userId = user?.userId || 'user_1';
 
         const coursesSnapshot = await getDocs(collection(db, 'courses'));
 
@@ -82,8 +82,18 @@ export function CoursesList({ onOpenPractice }: CoursesListProps) {
           where('userId', '==', userId)
         );
         const interactionsSnapshot = await getDocs(interactionsQuery);
-
         const interactions = interactionsSnapshot.docs.map((doc) => doc.data());
+
+        const progressQuery = query(
+          collection(db, 'course_progress'),
+          where('userId', '==', userId)
+        );
+        const progressSnapshot = await getDocs(progressQuery);
+        const progressByCourseId = progressSnapshot.docs.reduce((acc, doc) => {
+          const data = doc.data();
+          acc[data.courseId] = data.progress ?? 0;
+          return acc;
+        }, {} as Record<string, number>);
 
         const coursesData: Course[] = coursesSnapshot.docs.map((doc) => {
           const data = doc.data();
@@ -96,7 +106,9 @@ export function CoursesList({ onOpenPractice }: CoursesListProps) {
               interaction.courseId === doc.id
           );
 
-          const progress = Math.min(courseInteractions.length * 10, 100);
+          const courseProgress = progressByCourseId[courseId] ?? 0;
+          const interactionProgress = Math.min(courseInteractions.length * 10, 100);
+          const progress = courseProgress || interactionProgress;
 
           return {
             courseId,
@@ -117,6 +129,7 @@ export function CoursesList({ onOpenPractice }: CoursesListProps) {
           };
         });
 
+        console.log('Merged courses with progress:', coursesData);
         setCourses(coursesData);
       } catch (error) {
         console.error('Error fetching courses/interactions:', error);
