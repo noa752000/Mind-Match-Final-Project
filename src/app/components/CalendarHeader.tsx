@@ -2,52 +2,47 @@ import { ChevronRight, ChevronLeft, Calendar as CalendarIcon, Download, Settings
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { useState } from 'react';
+import { useCalendarSync } from '../contexts/CalendarSyncContext';
 
 export function CalendarHeader() {
-  const [isSyncing, setIsSyncing] = useState(false);
+  const { syncToGoogleCalendar, syncFromGoogleCalendar, isSyncing } = useCalendarSync();
   const [syncStatus, setSyncStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  
+
   const today = new Date();
   const weekStart = new Date(today);
   weekStart.setDate(today.getDate() - today.getDay()); // Sunday
-  
+
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekStart.getDate() + 4); // Thursday
-  
+
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('he-IL', { day: 'numeric', month: 'long' });
   };
 
   // Google Calendar Sync Handler
   const handleGoogleCalendarSync = async () => {
-    setIsSyncing(true);
     setSyncStatus('idle');
-    
+
     try {
-      // NOTE: In production, replace with actual Google Calendar API integration
-      // You'll need to:
-      // 1. Set up Google Cloud Project and enable Calendar API
-      // 2. Get OAuth 2.0 credentials
-      // 3. Implement proper authentication flow
-      // 4. Use the Google Calendar API to sync events
-      
-      // Mock API call for demonstration
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Simulated success
-      setSyncStatus('success');
-      
-      // Reset status after 3 seconds
-      setTimeout(() => {
-        setSyncStatus('idle');
-      }, 3000);
-      
-      console.log('Google Calendar sync completed');
+      // Sync both directions:
+      // 1. Push Mind-Match events to Google Calendar
+      // 2. Pull Google Calendar events to Mind-Match
+      const toGoogleSuccess = await syncToGoogleCalendar();
+      const fromGoogleSuccess = await syncFromGoogleCalendar();
+
+      if (toGoogleSuccess && fromGoogleSuccess) {
+        setSyncStatus('success');
+        // Reset status after 3 seconds
+        setTimeout(() => {
+          setSyncStatus('idle');
+        }, 3000);
+        console.log('Google Calendar sync completed');
+      } else {
+        setSyncStatus('error');
+      }
     } catch (error) {
       setSyncStatus('error');
       console.error('Failed to sync with Google Calendar:', error);
-    } finally {
-      setIsSyncing(false);
     }
   };
 
@@ -68,10 +63,10 @@ export function CalendarHeader() {
               <Download className="w-4 h-4" />
               ייצא
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className={`gap-2 ${syncStatus === 'success' ? 'bg-green-50 border-green-500 text-green-700' : syncStatus === 'error' ? 'bg-red-50 border-red-500 text-red-700' : ''}`}
-              onClick={handleGoogleCalendarSync} 
+              onClick={handleGoogleCalendarSync}
               disabled={isSyncing}
             >
               <CalendarIcon className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
@@ -94,14 +89,14 @@ export function CalendarHeader() {
             <Button variant="ghost" size="icon">
               <ChevronLeft className="w-5 h-5" />
             </Button>
-            
+
             <div className="text-center min-w-[280px]">
               <div className="text-lg font-semibold text-gray-900">
                 {formatDate(weekStart)} - {formatDate(weekEnd)}
               </div>
               <div className="text-sm text-gray-600">שבוע 8, סמסטר א׳</div>
             </div>
-            
+
             <Button variant="ghost" size="icon">
               <ChevronRight className="w-5 h-5" />
             </Button>

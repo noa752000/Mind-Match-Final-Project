@@ -11,17 +11,15 @@ import { CalendarPage } from './pages/CalendarPage';
 import { CoursesPage } from './pages/CoursesPage';
 import { CourseDetailPage } from './pages/CourseDetailPage';
 import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
 import { PracticePage } from './pages/PracticePage';
 
 function AppContent() {
-  const { isAuthenticated, user, login, register, logout } = useAuth();
+  const { isAuthenticated, user, loginWithGoogle, logout, loading } = useAuth();
 
   const [currentPage, setCurrentPage] = useState<
     'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail'
   >('home');
 
-  const [authPage, setAuthPage] = useState<'login' | 'register'>('login');
   const [selectedCourseId, setSelectedCourseId] = useState<string>('');
   const [tutorCourseId, setTutorCourseId] = useState<string>('');
   const [practiceCourseId, setPracticeCourseId] = useState<string>('');
@@ -60,24 +58,24 @@ function AppContent() {
     setCurrentPage('home');
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-cyan-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">טוען...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
-    if (authPage === 'login') {
-      return (
-        <LoginPage
-          onLogin={login}
-          onBackToHome={() => {}}
-          onRegister={() => setAuthPage('register')}
-        />
-      );
-    } else {
-      return (
-        <RegisterPage
-          onRegister={register}
-          onBackToHome={() => {}}
-          onLogin={() => setAuthPage('login')}
-        />
-      );
-    }
+    return (
+      <LoginPage
+        onLogin={loginWithGoogle}
+        onBackToHome={() => {}}
+      />
+    );
   }
 
   return (
