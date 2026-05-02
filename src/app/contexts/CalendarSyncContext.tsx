@@ -1,110 +1,140 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '../../firebase';
 import { useAuth } from './AuthContext';
 
+export interface GoogleCalendarEvent {
+  id: string;
+  summary: string;
+  location?: string;
+  start: { dateTime?: string; date?: string };
+  end: { dateTime?: string; date?: string };
+}
+
 interface CalendarSyncContextType {
-  syncToGoogleCalendar: () => Promise<boolean>;
   syncFromGoogleCalendar: () => Promise<boolean>;
   isSyncing: boolean;
+  googleEvents: GoogleCalendarEvent[];
+  weekStart: Date;
+  goToPrevWeek: () => void;
+  goToNextWeek: () => void;
 }
 
 const CalendarSyncContext = createContext<CalendarSyncContextType | undefined>(undefined);
 
+function getWeekStart(date: Date): Date {
+  const d = new Date(date);
+  d.setDate(d.getDate() - d.getDay()); // back to Sunday
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
 export function CalendarSyncProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
-  const [isSyncing, setIsSyncing] = React.useState(false);
+  const { googleAccessToken } = useAuth();
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [googleEvents, setGoogleEvents] = useState<GoogleCalendarEvent[]>([]);
+  const [weekStart, setWeekStart] = useState<Date>(() => getWeekStart(new Date()));
 
-  const getGoogleAccessToken = async (): Promise<string | null> => {
-    try {
-      // Firebase automatically stores Google OAuth tokens
-      const tokenResult = await (window as any).gapi?.auth2?.getAuthInstance()?.currentUser?.get()?.getAuthResponse()?.id_token;
-
-      if (tokenResult) {
-        return tokenResult;
-      }
-
-      // Alternative: Get from Firebase user
-      const currentUser = (window as any).firebase?.auth?.currentUser;
-      if (currentUser) {
-        const token = await currentUser.getIdToken();
-        return token;
-      }
-
-      return null;
-    } catch (error) {
-      console.error('Error getting Google access token:', error);
-      return null;
+  // Auto-sync when access token becomes available
+  useEffect(() => {
+    if (googleAccessToken) {
+      syncFromGoogleCalendar();
     }
-  };
+  }, [googleAccessToken]);
 
-  const syncToGoogleCalendar = async (): Promise<boolean> => {
-    setIsSyncing(true);
+  const getAccessToken = async (): Promise<string | null> => {
+    // Use token from login if available
+    if (googleAccessToken) return googleAccessToken;
+
+    // Otherwise re-trigger Google sign-in with calendar scope to get token
     try {
-      if (!user) {
-        console.error('User not authenticated');
-        return false;
-      }
-
-      // Get access token
-      const token = await getGoogleAccessToken();
-      if (!token) {
-        console.error('Could not get Google access token');
-        return false;
-      }
-
-      // TODO: Fetch events from Firestore
-      // For now, show mock implementation
-      console.log('Syncing to Google Calendar for user:', user.userId);
-
-      // Mock implementation - in production, this would:
-      // 1. Fetch all Mind-Match events from Firestore
-      // 2. Call Google Calendar API to create/update events
-      // 3. Store google calendar event IDs in Firestore for future syncing
-
-      return true;
+      const provider = new GoogleAuthProvider();
+      provider.addScope('https://www.googleapis.com/auth/calendar');
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      return credential?.accessToken || null;
     } catch (error) {
-      console.error('Error syncing to Google Calendar:', error);
-      return false;
-    } finally {
-      setIsSyncing(false);
+      console.error('Failed to get access token:', error);
+      return null;
     }
   };
 
   const syncFromGoogleCalendar = async (): Promise<boolean> => {
     setIsSyncing(true);
     try {
-      if (!user) {
-        console.error('User not authenticated');
-        return false;
-      }
-
-      // Get access token
-      const token = await getGoogleAccessToken();
+      const token = await getAccessToken();
       if (!token) {
-        console.error('Could not get Google access token');
+        console.error('No Google access token available');
         return false;
       }
 
-      // TODO: Fetch Google Calendar events
-      // For now, show mock implementation
-      console.log('Syncing from Google Calendar for user:', user.userId);
+      // Fetch events for the displayed week (Sunday to Saturday)
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+      weekEnd.setHours(23, 59, 59, 999);
 
-      // Mock implementation - in production, this would:
-      // 1. Call Google Calendar API to fetch user's events
-      // 2. Filter for relevant events (e.g., this week)
-      // 3. Create events in Firestore if they don't already exist
-      // 4. Store google calendar event IDs for future syncing
+      const params = new URLSearchParams({
+        timeMin: weekStart.toISOString(),
+        timeMax: weekEnd.toISOString(),
+        singleEvents: 'true',
+        orderBy: 'startTime',
+        maxResults: '100',
+      });
 
+      const response = await fetch(
+        `https://www.googleapis.com/calendar/v3/calendars/primary/events?${params}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (!response.ok) {
+        const err = await response.json();
+        console.error('Google Calendar API error:', err);
+        return false;
+      }
+
+      const data = await response.json();
+      setGoogleEvents(data.items || []);
       return true;
     } catch (error) {
-      console.error('Error syncing from Google Calendar:', error);
+      console.error('Error fetching Google Calendar events:', error);
       return false;
     } finally {
       setIsSyncing(false);
     }
   };
 
+  const goToPrevWeek = () => {
+    setWeekStart(prev => {
+      const d = new Date(prev);
+      d.setDate(d.getDate() - 7);
+      return d;
+    });
+  };
+
+  const goToNextWeek = () => {
+    setWeekStart(prev => {
+      const d = new Date(prev);
+      d.setDate(d.getDate() + 7);
+      return d;
+    });
+  };
+
+  // Re-sync when week changes
+  useEffect(() => {
+    if (googleAccessToken) {
+      syncFromGoogleCalendar();
+    }
+  }, [weekStart]);
+
   return (
-    <CalendarSyncContext.Provider value={{ syncToGoogleCalendar, syncFromGoogleCalendar, isSyncing }}>
+    <CalendarSyncContext.Provider value={{
+      syncFromGoogleCalendar,
+      isSyncing,
+      googleEvents,
+      weekStart,
+      goToPrevWeek,
+      goToNextWeek,
+    }}>
       {children}
     </CalendarSyncContext.Provider>
   );

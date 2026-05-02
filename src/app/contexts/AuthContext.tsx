@@ -20,6 +20,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   loading: boolean;
+  googleAccessToken: string | null;
   loginWithGoogle: () => Promise<boolean>;
   logout: () => void;
 }
@@ -27,11 +28,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const googleProvider = new GoogleAuthProvider();
+googleProvider.addScope('https://www.googleapis.com/auth/calendar');
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [googleAccessToken, setGoogleAccessToken] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -44,7 +47,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUser(userDoc.data() as User);
             setIsAuthenticated(true);
           } else {
-            // First login via persistent session — create user doc
             const newUser: User = {
               userId: firebaseUser.uid,
               username: firebaseUser.email?.split('@')[0] || 'user',
@@ -67,6 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } else {
           setIsAuthenticated(false);
           setUser(null);
+          setGoogleAccessToken(null);
         }
       } catch (error) {
         console.error('Auth state error:', error);
@@ -82,9 +85,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = async (): Promise<boolean> => {
     try {
-      // Opens Google popup — Firebase handles the entire OAuth flow
       const result = await signInWithPopup(auth, googleProvider);
       const firebaseUser = result.user;
+
+      // Store Google OAuth access token for Calendar API calls
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      setGoogleAccessToken(credential?.accessToken || null);
 
       const userRef = doc(db, 'users', firebaseUser.uid);
       const userDoc = await getDoc(userRef);
@@ -124,13 +130,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signOut(auth);
       setUser(null);
       setIsAuthenticated(false);
+      setGoogleAccessToken(null);
     } catch (error) {
       console.error('Logout error:', error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, loading, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, loading, googleAccessToken, loginWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   );
