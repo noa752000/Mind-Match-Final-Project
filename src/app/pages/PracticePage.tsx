@@ -27,7 +27,7 @@ interface Question {
   difficulty?: number;
   format?: string;
   learningType?: string;
-  questionText: string;
+  question: string;
   options: string[];
   correctAnswer: string;
   imageUrl?: string;
@@ -48,8 +48,10 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
     const loadQuestions = async () => {
       try {
         setLoading(true);
+        console.log('Loading questions from Firestore...');
 
         let loadedQuestions: Question[] = [];
+        let firestoreLoaded = false;
 
         try {
           const q = query(
@@ -69,17 +71,21 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
               difficulty: data.difficulty || 1,
               format: data.format || 'mcq',
               learningType: data.learningType || 'concept',
-              questionText: data.questionText || data.question || '',
+              question: data.question || '',
               options: data.options || [],
               correctAnswer: data.correctAnswer || '',
               imageUrl: data.imageUrl || '',
             };
           });
+
+          loadedQuestions.sort((a, b) => (a.difficulty || 0) - (b.difficulty || 0));
+          firestoreLoaded = true;
+          console.log('Questions loaded successfully');
         } catch (firebaseError) {
           console.error('Firestore error, loading local questions instead:', firebaseError);
         }
 
-          if (loadedQuestions.length === 0) {
+        if (!firestoreLoaded) {
               const allLocalQuestions = [
                 ...calculus1Questions,
                 ...linearAlgebraQuestions,
@@ -100,11 +106,13 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
                   difficulty: q.difficulty || 1,
                   format: q.format || 'mcq',
                   learningType: q.learningType || 'concept',
-                  questionText: q.question || '',
+                question: q.question || '',
                   options: q.options || [],
                   correctAnswer: q.correctAnswer || '',
                   imageUrl: q.imageUrl || '',
                 }));
+
+            loadedQuestions.sort((a, b) => (a.difficulty || 0) - (b.difficulty || 0));
   }
 
         setQuestions(loadedQuestions);
@@ -385,7 +393,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
             <div className="p-6 flex-1 flex flex-col">
               <div className="mb-6 text-right">
                 <h2 className="text-2xl font-semibold text-gray-900 leading-8 whitespace-pre-line">
-                  <span dangerouslySetInnerHTML={{ __html: question.questionText }} />
+                    <span dangerouslySetInnerHTML={{ __html: question.question }} />
                 </h2>
               </div>
 
