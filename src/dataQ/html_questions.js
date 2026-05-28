@@ -108,7 +108,7 @@ export const htmlQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "באיור מוצג כפתור עם אייקון בלבד ללא טקסט או תיאור. מהי הבעיה העיקרית?",
-    imageUrl: "",
+    imageUrl: "/question-images/accessibility-example.png",
     options: [
       "הכפתור גדול מדי",
       "ייתכן שמשתמשים לא יבינו את מטרת הכפתור, במיוחד עם קורא מסך",
@@ -142,7 +142,7 @@ export const htmlQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "אם כפתור נראה ברור ויזואלית אך אי אפשר להגיע אליו עם מקלדת, קיימת בעיית נגישות.",
-    imageUrl: "",
+    imageUrl: "/question-images/accessibility-example.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
