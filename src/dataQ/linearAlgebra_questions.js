@@ -108,7 +108,7 @@ export const linearAlgebraQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "במטריצה המוצגת, כל האיברים שמתחת לאלכסון הראשי הם אפס. כיצד נקראת מטריצה כזו?",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-upper-triangular-matrix.png",
     options: [
       "מטריצה משולשית עליונה",
       "מטריצה משולשית תחתונה",
@@ -125,7 +125,7 @@ export const linearAlgebraQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בשרטוט של כפל שורות-עמודות, איזה איבר של המכפלה <span dir='ltr'>AB</span> מתקבל ממכפלת השורה הראשונה של <span dir='ltr'>A</span> בעמודה השנייה של <span dir='ltr'>B</span>?",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-matrix-multiplication.png",
     options: [
       "האיבר <span dir='ltr'>(1,2)</span>",
       "האיבר <span dir='ltr'>(2,1)</span>",
@@ -142,7 +142,7 @@ export const linearAlgebraQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "אם במטריצה כל האיברים מחוץ לאלכסון הראשי הם אפס, אז מדובר במטריצה אלכסונית.",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-diagonal-matrix.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -249,7 +249,7 @@ export const linearAlgebraQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בשרטוט נראים שני וקטורים היוצאים מראשית ומצביעים לאותו כיוון, אך אורכיהם שונים. מה נכון?",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-same-direction-vectors.png",
     options: [
       "הם בהכרח שווים",
       "הם בהכרח מאונכים",
@@ -266,7 +266,7 @@ export const linearAlgebraQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בתרשים חיבור וקטורים לפי כלל המקבילית, מה מייצג האלכסון היוצא מנקודת ההתחלה המשותפת?",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-vector-parallelogram.png",
     options: [
       "את ההפרש בין הווקטורים",
       "את הסכום של הווקטורים",
@@ -283,7 +283,7 @@ export const linearAlgebraQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "אם שני וקטורים נראים מאונכים בשרטוט, אז המכפלה הסקלרית שלהם היא אפס.",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-perpendicular-vectors.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -390,7 +390,7 @@ export const linearAlgebraQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בשרטוט נראה שכל נקודה במישור נמתחת פי <span dir='ltr'>2</span> ביחס לראשית. איזו טרנספורמציה מתוארת?",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-linear-stretch.png",
     options: [
       "שיקוף",
       "הזזה",
@@ -407,7 +407,7 @@ export const linearAlgebraQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "באיור נראה שווקטורים על ציר <span dir='ltr'>x</span> נשארים במקומם, ואילו וקטורים על ציר <span dir='ltr'>y</span> מתהפכים לסימן ההפוך. איזו טרנספורמציה מתוארת?",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-x-axis-reflection.png",
     options: [
       "שיקוף ביחס לציר <span dir='ltr'>x</span>",
       "שיקוף ביחס לציר <span dir='ltr'>y</span>",
@@ -422,7 +422,7 @@ export const linearAlgebraQuestions = [
     subTopic: "transformations",
     difficulty: 1,
     format: "true_false",
-    learningType: "visual",
+    learningType: "concept",
     question: "אם טרנספורמציה שומרת את הראשית במקומה ומבצעת רק מתיחה או סיבוב, ייתכן שהיא ליניארית.",
     imageUrl: "",
     options: ["נכון", "לא נכון"],
@@ -531,7 +531,7 @@ export const linearAlgebraQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "באיור נראה וקטור שכאשר מפעילים עליו את הטרנספורמציה הוא נשאר על אותו קו, ורק אורכו משתנה. מה ניתן להסיק?",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-eigenvector-transform.png",
     options: [
       "הווקטור הוא וקטור עצמי",
       "הווקטור נמצא בגרעין בהכרח",
@@ -548,7 +548,7 @@ export const linearAlgebraQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בשרטוט רואים כי טרנספורמציה מותחת וקטור פי <span dir='ltr'>3</span> מבלי לשנות את כיוונו. מהו הערך העצמי המתאים?",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-eigenvector-transform.png",
     options: [
       "<span dir='ltr'>0</span>",
       "<span dir='ltr'>1</span>",
@@ -565,7 +565,7 @@ export const linearAlgebraQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "אם וקטור משנה את כיוונו בדיוק להופכי תחת טרנספורמציה, עדיין ייתכן שהוא וקטור עצמי.",
-    imageUrl: "",
+    imageUrl: "/question-images/LA-eigenvector-transform.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   }
