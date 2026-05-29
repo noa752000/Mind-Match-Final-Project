@@ -76,8 +76,8 @@ export const systemDesignQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "איזו ארכיטקטורה מחלקת לשכבות?",
-    imageUrl: "",
-    options: ["Layered", "JOIN", "SELECT", "UML"],
+    imageUrl: "/question-images/SA-layered-architecture.png",
+    options: ["Layered", "Microservices", "MVC", "Monolithic"],
     correctAnswer: "Layered"
   },
   {
@@ -88,8 +88,8 @@ export const systemDesignQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "איזה סוג מתאים למערכת מבוזרת?",
-    imageUrl: "",
-    options: ["Microservices", "Monolith", "Single", "Local"],
+    imageUrl: "/question-images/SA-microservices-architecture.png",
+    options: ["Microservices", "Monolithic", "Layered", "MVC"],
     correctAnswer: "Microservices"
   },
   {
@@ -99,10 +99,10 @@ export const systemDesignQuestions = [
     difficulty: 1,
     format: "true_false",
     learningType: "visual",
-    question: "Layered architecture מפרידה בין שכבות.",
-    imageUrl: "",
+    question: "ב-Layered Architecture כל שכבה יכולה לגשת ישירות לכל שכבה אחרת.",
+    imageUrl: "/question-images/SA-layered-architecture.png",
     options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    correctAnswer: "לא נכון"
   },
 
   // =========================
@@ -182,9 +182,9 @@ export const systemDesignQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "איזה תרשים מציג מחלקות?",
-    imageUrl: "",
-    options: ["Class", "JOIN", "HTML", "CSS"],
-    correctAnswer: "Class"
+    imageUrl: "/question-images/SA-class-diagram.png",
+    options: ["Class Diagram", "Use Case Diagram", "Sequence Diagram", "Activity Diagram"],
+    correctAnswer: "Class Diagram"
   },
   {
     id: "uml_8",
@@ -194,9 +194,9 @@ export const systemDesignQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "איזה תרשים מציג אינטראקציה?",
-    imageUrl: "",
-    options: ["Use Case", "SELECT", "Table", "Loop"],
-    correctAnswer: "Use Case"
+    imageUrl: "/question-images/SA-use-case-diagram.png",
+    options: ["Use Case Diagram", "Class Diagram", "Activity Diagram", "Component Diagram"],
+    correctAnswer: "Use Case Diagram"
   },
   {
     id: "uml_9",
@@ -205,8 +205,8 @@ export const systemDesignQuestions = [
     difficulty: 1,
     format: "true_false",
     learningType: "visual",
-    question: "Class diagram מציג מחלקות.",
-    imageUrl: "",
+    question: "Class diagram יכול להציג גם קשרים בין מחלקות.",
+    imageUrl: "/question-images/SA-class-diagram.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -288,9 +288,9 @@ export const systemDesignQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "איזה תרשים עוזר בדרישות?",
-    imageUrl: "",
-    options: ["Use Case", "SQL", "HTML", "CSS"],
-    correctAnswer: "Use Case"
+    imageUrl: "/question-images/SA-use-case-diagram.png",
+    options: ["Use Case Diagram", "Class Diagram", "Sequence Diagram", "ERD"],
+    correctAnswer: "Use Case Diagram"
   },
   {
     id: "req_8",
@@ -300,8 +300,8 @@ export const systemDesignQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה מתאר משתמש?",
-    imageUrl: "",
-    options: ["Actor", "DB", "Table", "JOIN"],
+    imageUrl: "/question-images/SA-use-case-diagram.png",
+    options: ["Actor", "Use Case", "Class", "Component"],
     correctAnswer: "Actor"
   },
   {
@@ -311,8 +311,8 @@ export const systemDesignQuestions = [
     difficulty: 1,
     format: "true_false",
     learningType: "visual",
-    question: "Actor מייצג משתמש.",
-    imageUrl: "",
+    question: "Actor בתרשים Use Case יכול לייצג גם מערכת חיצונית ולא רק אדם.",
+    imageUrl: "/question-images/SA-use-case-diagram.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -394,8 +394,8 @@ export const systemDesignQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "איזו שיטה איטרטיבית?",
-    imageUrl: "",
-    options: ["Agile", "Waterfall", "SQL", "HTML"],
+    imageUrl: "/question-images/SA-methodologies-comparison.png",
+    options: ["Agile", "Waterfall", "Spiral", "V-Model"],
     correctAnswer: "Agile"
   },
   {
@@ -406,8 +406,8 @@ export const systemDesignQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "איזו שיטה לינארית?",
-    imageUrl: "",
-    options: ["Waterfall", "Agile", "JOIN", "Loop"],
+    imageUrl: "/question-images/SA-methodologies-comparison.png",
+    options: ["Waterfall", "Agile", "Spiral", "Kanban"],
     correctAnswer: "Waterfall"
   },
   {
@@ -417,9 +417,9 @@ export const systemDesignQuestions = [
     difficulty: 1,
     format: "true_false",
     learningType: "visual",
-    question: "Agile איטרטיבי.",
-    imageUrl: "",
+    question: "ב-Agile כל דרישות המערכת חייבות להיות מוגדרות ומאושרות לפני תחילת הפיתוח.",
+    imageUrl: "/question-images/SA-methodologies-comparison.png",
     options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    correctAnswer: "לא נכון"
   }
 ];
