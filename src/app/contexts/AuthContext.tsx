@@ -1,128 +1,143 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { collection, getDocs, doc, setDoc, query, orderBy, limit } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signOut
+} from 'firebase/auth';
 
 interface User {
   userId: string;
   username: string;
   fullName: string;
   email: string;
+  googleId?: string;
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (username: string, password: string) => Promise<boolean>;
-  register: (fullName: string, email: string, password: string) => Promise<boolean>;
+  loading: boolean;
+  googleAccessToken: string | null;
+  loginWithGoogle: () => Promise<boolean>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const googleProvider = new GoogleAuthProvider();
+googleProvider.addScope('https://www.googleapis.com/auth/calendar');
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [googleAccessToken, setGoogleAccessToken] = useState<string | null>(null);
 
-  // בדיקה אם המשתמש מחובר (מ-LocalStorage)
   useEffect(() => {
-    const isLoggedOut = localStorage.getItem('isLoggedOut');
-    
-    // אם המשתמש עשה logout במפורש, לא נטען אוטומטית
-    if (isLoggedOut === 'true') {
-      setIsAuthenticated(false);
-      setUser(null);
-      return;
-    }
-    
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
-    } else {
-      // משתמש ברירת מחדל - הדס
-      const defaultUser: User = {
-        userId: 'user_1',
-        username: 'hadar',
-        fullName: 'הדס לוי',
-        email: 'hadar@student.ac.il',
-      };
-      setUser(defaultUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(defaultUser));
-    }
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      try {
+        if (firebaseUser) {
+          const userRef = doc(db, 'users', firebaseUser.uid);
+          const userDoc = await getDoc(userRef);
+
+          if (userDoc.exists()) {
+            setUser(userDoc.data() as User);
+            setIsAuthenticated(true);
+          } else {
+            const newUser: User = {
+              userId: firebaseUser.uid,
+              username: firebaseUser.email?.split('@')[0] || 'user',
+              fullName: firebaseUser.displayName || 'User',
+              email: firebaseUser.email || '',
+              googleId: firebaseUser.uid,
+            };
+            await setDoc(userRef, {
+              ...newUser,
+              courses: [
+                'sql', 'systems_analysis', 'oop', 'calculus1',
+                'linear_algebra', 'html_fundamentals',
+                'information_systems_economics', 'cyber_security'
+              ],
+              createdAt: new Date(),
+            });
+            setUser(newUser);
+            setIsAuthenticated(true);
+          }
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+          setGoogleAccessToken(null);
+        }
+      } catch (error) {
+        console.error('Auth state error:', error);
+        setIsAuthenticated(false);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
-    // Demo: כל שם משתמש וסיסמה יעבדו
-    // במציאות - כאן תהיה קריאה לשרת
-    if (username && password) {
-      // תמיד טען את הפרופיל של הדס
-      const newUser: User = {
-        userId: 'user_1',
-        username: 'hadar',
-        fullName: 'הדס לוי',
-        email: 'hadar@student.ac.il',
-      };
-      
-      setUser(newUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      localStorage.removeItem('isLoggedOut'); // הסר את דגל ההתנתקות
-      return true;
-    }
-    return false;
-  };
-
-  const register = async (fullName: string, email: string, password: string): Promise<boolean> => {
+  const loginWithGoogle = async (): Promise<boolean> => {
     try {
-      // Generate next user ID
-      const usersSnapshot = await getDocs(collection(db, 'users'));
-      const userCount = usersSnapshot.size;
-      const nextUserId = `user_${userCount + 1}`;
+      const result = await signInWithPopup(auth, googleProvider);
+      const firebaseUser = result.user;
 
-      const newUser: User = {
-        userId: nextUserId,
-        username: email.split('@')[0],
-        fullName: fullName,
-        email: email,
-      };
+      // Store Google OAuth access token for Calendar API calls
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      setGoogleAccessToken(credential?.accessToken || null);
 
-      // Store user in Firestore
-      const userRef = doc(db, 'users', nextUserId);
-      await setDoc(userRef, {
-        ...newUser,
-        courses: [
-          'sql',
-          'systems_analysis',
-          'oop',
-          'calculus1',
-          'linear_algebra',
-          'html_fundamentals',
-          'information_systems_economics',
-          'cyber_security'
-        ],
-        createdAt: new Date(),
-      });
+      const userRef = doc(db, 'users', firebaseUser.uid);
+      const userDoc = await getDoc(userRef);
 
-      setUser(newUser);
+      if (!userDoc.exists()) {
+        const newUser: User = {
+          userId: firebaseUser.uid,
+          username: firebaseUser.email?.split('@')[0] || 'user',
+          fullName: firebaseUser.displayName || 'User',
+          email: firebaseUser.email || '',
+          googleId: firebaseUser.uid,
+        };
+        await setDoc(userRef, {
+          ...newUser,
+          courses: [
+            'sql', 'systems_analysis', 'oop', 'calculus1',
+            'linear_algebra', 'html_fundamentals',
+            'information_systems_economics', 'cyber_security'
+          ],
+          createdAt: new Date(),
+        });
+        setUser(newUser);
+      } else {
+        setUser(userDoc.data() as User);
+      }
+
       setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(newUser));
       return true;
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Google login error:', error);
       return false;
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem('user');
-    localStorage.setItem('isLoggedOut', 'true');
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setIsAuthenticated(false);
+      setGoogleAccessToken(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, loading, googleAccessToken, loginWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   );

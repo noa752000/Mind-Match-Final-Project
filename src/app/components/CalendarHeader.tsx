@@ -1,54 +1,24 @@
-import { ChevronRight, ChevronLeft, Calendar as CalendarIcon, Download, Settings } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Calendar as CalendarIcon, Settings } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { useState } from 'react';
+import { useCalendarSync } from '../contexts/CalendarSyncContext';
 
 export function CalendarHeader() {
-  const [isSyncing, setIsSyncing] = useState(false);
+  const { syncFromGoogleCalendar, isSyncing, weekStart, goToPrevWeek, goToNextWeek } = useCalendarSync();
   const [syncStatus, setSyncStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  
-  const today = new Date();
-  const weekStart = new Date(today);
-  weekStart.setDate(today.getDate() - today.getDay()); // Sunday
-  
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekStart.getDate() + 4); // Thursday
-  
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('he-IL', { day: 'numeric', month: 'long' });
-  };
 
-  // Google Calendar Sync Handler
-  const handleGoogleCalendarSync = async () => {
-    setIsSyncing(true);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 4);
+
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString('he-IL', { day: 'numeric', month: 'long' });
+
+  const handleSync = async () => {
     setSyncStatus('idle');
-    
-    try {
-      // NOTE: In production, replace with actual Google Calendar API integration
-      // You'll need to:
-      // 1. Set up Google Cloud Project and enable Calendar API
-      // 2. Get OAuth 2.0 credentials
-      // 3. Implement proper authentication flow
-      // 4. Use the Google Calendar API to sync events
-      
-      // Mock API call for demonstration
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Simulated success
-      setSyncStatus('success');
-      
-      // Reset status after 3 seconds
-      setTimeout(() => {
-        setSyncStatus('idle');
-      }, 3000);
-      
-      console.log('Google Calendar sync completed');
-    } catch (error) {
-      setSyncStatus('error');
-      console.error('Failed to sync with Google Calendar:', error);
-    } finally {
-      setIsSyncing(false);
-    }
+    const success = await syncFromGoogleCalendar();
+    setSyncStatus(success ? 'success' : 'error');
+    if (success) setTimeout(() => setSyncStatus('idle'), 3000);
   };
 
   return (
@@ -56,26 +26,26 @@ export function CalendarHeader() {
       <div className="max-w-[1440px] mx-auto">
         {/* Title and Actions */}
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <h1 className="text-3xl font-bold text-gray-900">לוח זמנים חכם</h1>
-              <p className="text-gray-600 mt-1">ניהול שבועי מותאם אישית</p>
-            </div>
+          <div className="text-right">
+            <h1 className="text-3xl font-bold text-gray-900">לוח זמנים חכם</h1>
+            <p className="text-gray-600 mt-1">ניהול שבועי מותאם אישית</p>
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="gap-2">
-              <Download className="w-4 h-4" />
-              ייצא
-            </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className={`gap-2 ${syncStatus === 'success' ? 'bg-green-50 border-green-500 text-green-700' : syncStatus === 'error' ? 'bg-red-50 border-red-500 text-red-700' : ''}`}
-              onClick={handleGoogleCalendarSync} 
+              onClick={handleSync}
               disabled={isSyncing}
             >
               <CalendarIcon className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
-              {isSyncing ? 'מסנכרן...' : syncStatus === 'success' ? '✓ סונכרן בהצלחה' : syncStatus === 'error' ? '✗ שגיאה בסנכרון' : 'סנכרן עם Google Calendar'}
+              {isSyncing
+                ? 'מסנכרן...'
+                : syncStatus === 'success'
+                  ? '✓ סונכרן בהצלחה'
+                  : syncStatus === 'error'
+                    ? '✗ שגיאה בסנכרון'
+                    : 'סנכרן עם Google Calendar'}
             </Button>
             <Button variant="outline" size="icon">
               <Settings className="w-4 h-4" />
@@ -87,22 +57,20 @@ export function CalendarHeader() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Badge className="bg-blue-100 text-blue-700">תצוגה שבועית</Badge>
-            <Badge variant="outline">תצוגה חודשית</Badge>
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={goToNextWeek}>
               <ChevronLeft className="w-5 h-5" />
             </Button>
-            
+
             <div className="text-center min-w-[280px]">
               <div className="text-lg font-semibold text-gray-900">
                 {formatDate(weekStart)} - {formatDate(weekEnd)}
               </div>
-              <div className="text-sm text-gray-600">שבוע 8, סמסטר א׳</div>
             </div>
-            
-            <Button variant="ghost" size="icon">
+
+            <Button variant="ghost" size="icon" onClick={goToPrevWeek}>
               <ChevronRight className="w-5 h-5" />
             </Button>
           </div>

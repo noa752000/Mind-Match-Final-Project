@@ -1,30 +1,29 @@
 import { useState } from 'react';
-import { LogIn, GraduationCap, Sparkles, TrendingUp, Users } from 'lucide-react';
+import { GraduationCap, Sparkles, TrendingUp, Users } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { Logo } from '../components/Logo';
 
 interface LoginPageProps {
-  onLogin: (username: string, password: string) => Promise<boolean>;
+  onLogin: () => Promise<boolean>;
   onBackToHome: () => void;
-  onRegister?: () => void;
 }
 
-export function LoginPage({ onLogin, onBackToHome, onRegister }: LoginPageProps) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+export function LoginPage({ onLogin, onBackToHome }: LoginPageProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleGoogleLogin = async () => {
     setError('');
     setIsLoading(true);
-
-    const success = await onLogin(username, password);
-    
-    if (!success) {
-      setError('שם משתמש או סיסמה שגויים');
+    try {
+      const success = await onLogin();
+      if (!success) {
+        setError('התחברות נכשלה. אנא נסה שוב.');
+      }
+    } catch (err) {
+      setError('אירעה שגיאה בעת ההתחברות');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -50,42 +49,28 @@ export function LoginPage({ onLogin, onBackToHome, onRegister }: LoginPageProps)
             <div className="text-right mb-8">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">התחברות</h2>
               <p className="text-gray-600 text-xl leading-relaxed">
-                ברוך שובך! התחבר כדי להמשיך ללמוד
+                ברוך שובך! התחבר עם חשבון Google שלך כדי להמשיך ללמוד
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <label htmlFor="username" className="block text-right text-sm font-medium text-gray-700">
-                  שם משתמש
-                </label>
-                <input
-                  id="username"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-3 text-right border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                  placeholder="הזן שם משתמש"
-                  required
-                  dir="rtl"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="password" className="block text-right text-sm font-medium text-gray-700">
-                  סיסמה
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 text-right border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                  placeholder="הזן סיסמה"
-                  required
-                  dir="rtl"
-                />
-              </div>
+            <div className="space-y-6">
+              {/* Google Sign-In Button */}
+              <button
+                onClick={handleGoogleLogin}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center gap-3 px-6 py-3 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {/* Google logo SVG */}
+                <svg width="20" height="20" viewBox="0 0 48 48">
+                  <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+                  <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+                  <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+                  <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+                </svg>
+                <span className="text-gray-700 font-medium text-base">
+                  {isLoading ? 'מתחבר...' : 'התחבר עם Google'}
+                </span>
+              </button>
 
               {error && (
                 <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-right">
@@ -93,32 +78,11 @@ export function LoginPage({ onLogin, onBackToHome, onRegister }: LoginPageProps)
                 </div>
               )}
 
-              <Button
-                type="submit"
-                className="w-full h-12 bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold text-lg"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  'מתחבר...'
-                ) : (
-                  <>
-                    <LogIn className="w-5 h-5 ml-2" />
-                    התחבר
-                  </>
-                )}
-              </Button>
-            </form>
-
-            <div className="mt-8 pt-8 border-t border-gray-200">
-              <p className="text-center text-sm text-gray-600">
-                אין לך חשבון?{' '}
-                <button 
-                  onClick={onRegister}
-                  className="text-teal-600 hover:text-teal-700 font-semibold"
-                >
-                  הירשם כאן
-                </button>
-              </p>
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-right">
+                <p className="text-blue-600 text-sm leading-relaxed">
+                  🔒 התחברות בטוחה עם Google - פרטיותך מוגנת
+                </p>
+              </div>
             </div>
           </Card>
 
