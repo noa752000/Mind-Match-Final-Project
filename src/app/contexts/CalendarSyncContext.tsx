@@ -3,12 +3,32 @@ import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useAuth } from './AuthContext';
 
+export type EventType = 'lecture' | 'tutorial' | 'self-study' | 'deadline';
+
+export interface LocalAppEvent {
+  id: string;
+  dayOfWeek: number;
+  type: EventType;
+  title: string;
+  location?: string;
+  time: string;
+  duration: number;
+  top: number;
+}
+
 export interface GoogleCalendarEvent {
   id: string;
   summary: string;
   location?: string;
   start: { dateTime?: string; date?: string };
   end: { dateTime?: string; date?: string };
+}
+
+export interface CreateGoogleEventParams {
+  title: string;
+  startDateTime: string;
+  endDateTime: string;
+  description?: string;
 }
 
 interface CalendarSyncContextType {
@@ -18,6 +38,13 @@ interface CalendarSyncContextType {
   weekStart: Date;
   goToPrevWeek: () => void;
   goToNextWeek: () => void;
+  goToPrevDay: () => void;
+  goToNextDay: () => void;
+  goToPrevMonth: () => void;
+  goToNextMonth: () => void;
+  localAppEvents: LocalAppEvent[];
+  addLocalAppEvent: (event: LocalAppEvent) => void;
+  createGoogleCalendarEvent: (params: CreateGoogleEventParams) => Promise<boolean>;
 }
 
 const CalendarSyncContext = createContext<CalendarSyncContextType | undefined>(undefined);
@@ -33,6 +60,7 @@ export function CalendarSyncProvider({ children }: { children: React.ReactNode }
   const { googleAccessToken } = useAuth();
   const [isSyncing, setIsSyncing] = useState(false);
   const [googleEvents, setGoogleEvents] = useState<GoogleCalendarEvent[]>([]);
+  const [localAppEvents, setLocalAppEvents] = useState<LocalAppEvent[]>([]);
   const [weekStart, setWeekStart] = useState<Date>(() => getWeekStart(new Date()));
 
   // Auto-sync when access token becomes available
@@ -111,12 +139,49 @@ export function CalendarSyncProvider({ children }: { children: React.ReactNode }
     });
   };
 
-  const goToNextWeek = () => {
-    setWeekStart(prev => {
-      const d = new Date(prev);
-      d.setDate(d.getDate() + 7);
-      return d;
-    });
+  const goToNextWeek = () => setWeekStart(prev => { const d = new Date(prev); d.setDate(d.getDate() + 7); return d; });
+  const goToPrevDay = () => setWeekStart(prev => { const d = new Date(prev); d.setDate(d.getDate() - 1); return d; });
+  const goToNextDay = () => setWeekStart(prev => { const d = new Date(prev); d.setDate(d.getDate() + 1); return d; });
+  const goToPrevMonth = () => setWeekStart(prev => { const d = new Date(prev); d.setMonth(d.getMonth() - 1); return d; });
+  const goToNextMonth = () => setWeekStart(prev => { const d = new Date(prev); d.setMonth(d.getMonth() + 1); return d; });
+
+  const addLocalAppEvent = (event: LocalAppEvent) => {
+    setLocalAppEvents(prev => [...prev, event]);
+  };
+
+  const createGoogleCalendarEvent = async (params: CreateGoogleEventParams): Promise<boolean> => {
+    try {
+      const token = await getAccessToken();
+      if (!token) return false;
+
+      const response = await fetch(
+        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            summary: params.title,
+            description: params.description,
+            start: { dateTime: params.startDateTime, timeZone: 'Asia/Jerusalem' },
+            end: { dateTime: params.endDateTime, timeZone: 'Asia/Jerusalem' },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error('Failed to create Google Calendar event:', await response.json());
+        return false;
+      }
+
+      await syncFromGoogleCalendar();
+      return true;
+    } catch (error) {
+      console.error('Error creating Google Calendar event:', error);
+      return false;
+    }
   };
 
   // Re-sync when week changes
@@ -134,6 +199,13 @@ export function CalendarSyncProvider({ children }: { children: React.ReactNode }
       weekStart,
       goToPrevWeek,
       goToNextWeek,
+      goToPrevDay,
+      goToNextDay,
+      goToPrevMonth,
+      goToNextMonth,
+      localAppEvents,
+      addLocalAppEvent,
+      createGoogleCalendarEvent,
     }}>
       {children}
     </CalendarSyncContext.Provider>

@@ -1,5 +1,6 @@
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
+import { useAuth } from '../contexts/AuthContext';
 
 interface HeroProps {
   onRegisterClick?: () => void;
@@ -7,13 +8,17 @@ interface HeroProps {
 }
 
 export function Hero({ onRegisterClick, onNavigate }: HeroProps) {
+  // Display the logged-in user's name instead of a hardcoded name
+  const { user } = useAuth();
+  const displayName = user?.fullName || user?.username || 'סטודנט';
+
   return (
     <section className="relative pt-8 pb-20 px-16 overflow-hidden">
       <div className="max-w-[1440px] mx-auto">
         <div className="grid grid-cols-12 gap-8 items-center">
           {/* Content - Right side for RTL */}
           <div className="col-span-12 md:col-span-6 text-right">
-            <h2 className="text-2xl text-gray-700 mb-4">צהריים טובים הדס!</h2>
+            <h2 className="text-2xl text-gray-700 mb-4">שלום {displayName}!</h2>
             
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-50 rounded-full mb-6">
               <Sparkles className="w-4 h-4 text-teal-600" />
@@ -32,21 +37,18 @@ export function Hero({ onRegisterClick, onNavigate }: HeroProps) {
             </p>
             
             <div className="flex items-center gap-4 justify-start">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="text-lg px-8 bg-teal-600 hover:bg-teal-700"
                 onClick={() => onNavigate?.('dashboard')}
               >
                 התחל ללמוד עכשיו
                 <ArrowLeft className="w-5 h-5 mr-2" />
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8">
-                למד עוד
-              </Button>
             </div>
 
             {/* Stats */}
-            <div className="flex items-center gap-12 mt-12 justify-center">
+            <div className="flex items-center gap-12 mt-12 justify-start">
               <div className="text-right">
                 <div className="text-3xl font-bold text-gray-900">10,000+</div>
                 <div className="text-sm text-gray-600">סטודנטים פעילים</div>

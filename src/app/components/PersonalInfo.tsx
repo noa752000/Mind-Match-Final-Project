@@ -1,79 +1,143 @@
-import { Mail, Calendar, GraduationCap, MapPin, Phone, Globe } from 'lucide-react';
+import { Mail, Calendar, GraduationCap, MapPin, Phone } from 'lucide-react';
 import { Card } from './ui/card';
 
-export function PersonalInfo() {
+interface PersonalInfoProps {
+  fullName: string;
+  email: string;
+  phone: string;
+  institution: string;
+  academicYear: string;
+  studentId: string;
+  onFullNameChange: (v: string) => void;
+  onPhoneChange: (v: string) => void;
+  onInstitutionChange: (v: string) => void;
+  onAcademicYearChange: (v: string) => void;
+  onStudentIdChange: (v: string) => void;
+}
+
+const fieldClass =
+  'w-full px-4 py-3 text-right border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm bg-white';
+const readonlyClass =
+  'w-full px-4 py-3 text-right bg-gray-50 rounded-lg text-gray-900 font-medium text-sm select-all';
+
+export function PersonalInfo({
+  fullName, email,
+  phone, institution, academicYear, studentId,
+  onFullNameChange, onPhoneChange, onInstitutionChange, onAcademicYearChange, onStudentIdChange,
+}: PersonalInfoProps) {
   return (
     <Card className="p-8 border-gray-100">
       <h3 className="text-xl font-bold text-gray-900 mb-6 text-right">מידע אישי</h3>
-      
-      <div className="space-y-6">
-        <div className="grid grid-cols-2 gap-6">
+
+      <div className="space-y-5">
+        {/* Name + Email — read-only from auth */}
+        <div className="grid grid-cols-2 gap-5">
           <div className="text-right">
-            <label className="text-sm text-gray-600 block mb-2">שם מלא</label>
-            <div className="bg-gray-50 px-4 py-3 rounded-lg">
-              <span className="text-gray-900 font-medium block truncate">הדס כהן</span>
-            </div>
+            <label className="text-sm text-gray-500 block mb-1.5">שם מלא</label>
+            <div className={readonlyClass}>{fullName}</div>
           </div>
-          
           <div className="text-right">
-            <label className="text-sm text-gray-600 block mb-2">תעודת זהות</label>
-            <div className="bg-gray-50 px-4 py-3 rounded-lg">
-              <span className="text-gray-900 font-medium block truncate">987654321</span>
+            <label className="text-sm text-gray-500 block mb-1.5">דואר אלקטרוני</label>
+            <div className="relative">
+              <div className={`${readonlyClass} pl-10`}>{email}</div>
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        {/* Phone — editable */}
+        <div className="grid grid-cols-2 gap-5">
           <div className="text-right">
-            <label className="text-sm text-gray-600 block mb-2">דואר אלקטרוני</label>
-            <div className="bg-gray-50 px-4 py-3 rounded-lg flex items-center gap-3 justify-end">
-              <span className="text-gray-900 truncate">hadas.cohen@mail.ac.il</span>
-              <Mail className="w-5 h-5 text-gray-400 flex-shrink-0" />
-            </div>
-          </div>
-
-          <div className="text-right">
-            <label className="text-sm text-gray-600 block mb-2">טלפון נייד</label>
-            <div className="bg-gray-50 px-4 py-3 rounded-lg flex items-center gap-3 justify-end">
-              <span className="text-gray-900 truncate">052-9876543</span>
-              <Phone className="w-5 h-5 text-gray-400 flex-shrink-0" />
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-6">
-          <div className="text-right">
-            <label className="text-sm text-gray-600 block mb-2">תואר</label>
-            <div className="bg-gray-50 px-4 py-3 rounded-lg flex items-center gap-3 justify-end">
-              <span className="text-gray-900 truncate">תואר ראשון במערכות מידע</span>
-              <GraduationCap className="w-5 h-5 text-gray-400 flex-shrink-0" />
-            </div>
-          </div>
-
-          <div className="text-right">
-            <label className="text-sm text-gray-600 block mb-2">שנה אקדמית</label>
-            <div className="bg-gray-50 px-4 py-3 rounded-lg flex items-center gap-3 justify-end">
-              <span className="text-gray-900 truncate">שנה ב׳, סמסטר א׳</span>
-              <Calendar className="w-5 h-5 text-gray-400 flex-shrink-0" />
+            <label className="text-sm text-gray-600 block mb-1.5">טלפון נייד</label>
+            <div className="relative">
+              <input
+                type="tel"
+                value={phone}
+                onChange={e => onPhoneChange(e.target.value)}
+                placeholder="050-0000000"
+                dir="ltr"
+                className={`${fieldClass} pl-10`}
+              />
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        {/* Institution + Year — editable */}
+        <div className="grid grid-cols-2 gap-5">
           <div className="text-right">
-            <label className="text-sm text-gray-600 block mb-2">מוסד לימודים</label>
-            <div className="bg-gray-50 px-4 py-3 rounded-lg flex items-center gap-3 justify-end">
-              <span className="text-gray-900 truncate">אוניברסיטת תל אביב</span>
-              <MapPin className="w-5 h-5 text-gray-400 flex-shrink-0" />
+            <label className="text-sm text-gray-600 block mb-1.5">מוסד לימודים</label>
+            <div className="relative">
+              <select
+                value={institution}
+                onChange={e => onInstitutionChange(e.target.value)}
+                dir="rtl"
+                className={`${fieldClass} pr-10 appearance-none`}
+              >
+                <option value="">בחרי מוסד לימודים...</option>
+                <optgroup label="אוניברסיטאות">
+                  <option>אוניברסיטת תל אביב</option>
+                  <option>האוניברסיטה העברית בירושלים</option>
+                  <option>אוניברסיטת בר-אילן</option>
+                  <option>אוניברסיטת חיפה</option>
+                  <option>אוניברסיטת בן-גוריון בנגב</option>
+                  <option>אוניברסיטת אריאל בשומרון</option>
+                  <option>האוניברסיטה הפתוחה</option>
+                  <option>הטכניון - מכון טכנולוגי לישראל</option>
+                </optgroup>
+                <optgroup label="מכללות אקדמיות">
+                  <option>המכללה האקדמית תל אביב-יפו (MTA)</option>
+                  <option>מכללת אפקה - המכללה האקדמית להנדסה בתל אביב</option>
+                  <option>מכללת רופין</option>
+                  <option>המכללה האקדמית נתניה</option>
+                  <option>המכללה האקדמית ספיר</option>
+                  <option>המכללה האקדמית עמק יזרעאל</option>
+                  <option>המכללה האקדמית כנרת</option>
+                  <option>המכללה האקדמית גליל מערבי</option>
+                  <option>מכללת אשקלון</option>
+                  <option>המרכז האקדמי פרס</option>
+                  <option>המכללה האקדמית הדסה</option>
+                  <option>מכללת סמי שמעון</option>
+                </optgroup>
+              </select>
+              <MapPin className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
-
           <div className="text-right">
-            <label className="text-sm text-gray-600 block mb-2">מספר סטודנט</label>
-            <div className="bg-gray-50 px-4 py-3 rounded-lg flex items-center gap-3 justify-end">
-              <span className="text-gray-900 truncate">2022-98765</span>
-              <Globe className="w-5 h-5 text-gray-400 flex-shrink-0" />
+            <label className="text-sm text-gray-600 block mb-1.5">שנה אקדמית</label>
+            <div className="relative">
+              <select
+                value={academicYear}
+                onChange={e => onAcademicYearChange(e.target.value)}
+                dir="rtl"
+                className={`${fieldClass} pr-10 appearance-none`}
+              >
+                <option value="">בחר שנה</option>
+                <option>שנה א׳, סמסטר א׳</option>
+                <option>שנה א׳, סמסטר ב׳</option>
+                <option>שנה ב׳, סמסטר א׳</option>
+                <option>שנה ב׳, סמסטר ב׳</option>
+                <option>שנה ג׳, סמסטר א׳</option>
+                <option>שנה ג׳, סמסטר ב׳</option>
+                <option>שנה ד׳, סמסטר א׳</option>
+                <option>שנה ד׳, סמסטר ב׳</option>
+              </select>
+              <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
+          </div>
+        </div>
+
+        {/* Degree — editable */}
+        <div className="text-right">
+          <label className="text-sm text-gray-600 block mb-1.5">תואר / תוכנית לימודים</label>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="לדוגמה: תואר ראשון במערכות מידע"
+              dir="rtl"
+              className={`${fieldClass} pr-10`}
+            />
+            <GraduationCap className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
           </div>
         </div>
       </div>

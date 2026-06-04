@@ -1,26 +1,27 @@
-import { Home, BookOpen, MessageSquare, Users, Calendar, BarChart3, Settings, HelpCircle, LogOut, User, GraduationCap, Bell } from 'lucide-react';
+import { Home, BookOpen, Bot, Calendar, BarChart3, Settings, LogOut, User, GraduationCap, Users } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface SidebarProps {
-  currentPage?: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail';
-  onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail') => void;
+  currentPage?: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail' | 'settings' | 'community';
+  onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail' | 'settings' | 'community') => void;
   onLogout?: () => void;
   userName?: string;
 }
 
-export function Sidebar({ currentPage = 'dashboard', onNavigate, onLogout, userName = 'הדס לוי' }: SidebarProps) {
+export function Sidebar({ currentPage = 'dashboard', onNavigate, onLogout, userName = 'משתמש' }: SidebarProps) {
   const menuItems = [
     { id: 'home' as const, icon: Home, label: 'בית' },
     { id: 'courses' as const, icon: GraduationCap, label: 'קורסים' },
     { id: 'dashboard' as const, icon: BookOpen, label: 'הקורסים שלי' },
+    { id: 'tutor' as const, icon: Bot, label: 'מורה AI' },
+    { id: 'community' as const, icon: Users, label: 'קהילה' },
     { id: 'calendar' as const, icon: Calendar, label: 'לוח שנה' },
     { id: 'analysis' as const, icon: BarChart3, label: 'לוח מחוונים' },
     { id: 'profile' as const, icon: User, label: 'פרופיל' },
   ];
 
   const bottomMenuItems = [
-    { icon: Settings, label: 'הגדרות', action: () => console.log('הגדרות') },
-    { icon: HelpCircle, label: 'עזרה', action: () => console.log('עזרה') },
+    { icon: Settings, label: 'הגדרות', action: () => onNavigate?.('settings') },
     { icon: LogOut, label: 'התנתק', action: onLogout },
   ];
 

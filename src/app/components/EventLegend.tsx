@@ -10,16 +10,16 @@ const legendItems = [
 
 export function EventLegend() {
   return (
-    <div className="flex items-center gap-6 justify-end mb-4">
+    <div className="flex items-center gap-6 justify-start mb-4">
       <div className="text-sm text-gray-600 font-medium">מקרא:</div>
       {legendItems.map((item, index) => {
         const Icon = item.icon;
         return (
           <div key={index} className="flex items-center gap-2">
-            <span className="text-sm text-gray-700">{item.label}</span>
             <div className={`w-8 h-8 rounded-lg ${item.color} border-r-4 flex items-center justify-center`}>
               <Icon className="w-4 h-4 text-gray-700" />
             </div>
+            <span className="text-sm text-gray-700">{item.label}</span>
           </div>
         );
       })}

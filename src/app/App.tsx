@@ -12,12 +12,15 @@ import { CoursesPage } from './pages/CoursesPage';
 import { CourseDetailPage } from './pages/CourseDetailPage';
 import { LoginPage } from './pages/LoginPage';
 import { PracticePage } from './pages/PracticePage';
+import { SettingsPage } from './pages/SettingsPage';
+import { CommunityPage } from './pages/CommunityPage';
+import { CalendarSyncProvider } from './contexts/CalendarSyncContext';
 
 function AppContent() {
-  const { isAuthenticated, user, loginWithGoogle, logout, loading } = useAuth();
+  const { isAuthenticated, user, loginWithGoogle, loginWithEmail, registerWithEmail, logout, loading } = useAuth();
 
   const [currentPage, setCurrentPage] = useState<
-    'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail'
+    'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail' | 'settings' | 'community'
   >('home');
 
   const [selectedCourseId, setSelectedCourseId] = useState<string>('');
@@ -73,6 +76,8 @@ function AppContent() {
     return (
       <LoginPage
         onLogin={loginWithGoogle}
+        onLoginWithEmail={loginWithEmail}
+        onRegisterWithEmail={registerWithEmail}
         onBackToHome={() => {}}
       />
     );
@@ -95,7 +100,7 @@ function AppContent() {
 
       {currentPage === 'home' && <HomePage onNavigate={setCurrentPage} />}
       {currentPage === 'dashboard' && (
-        <DashboardPage onOpenPractice={handleOpenPractice} />
+        <DashboardPage onOpenPractice={handleOpenPractice} onNavigateToCourses={() => setCurrentPage('courses')} />
       )}
       {currentPage === 'courses' && (
         <CoursesPage onCourseSelect={handleCourseSelect} />
@@ -105,6 +110,7 @@ function AppContent() {
           courseId={selectedCourseId}
           onBack={handleBackToCourses}
           onOpenTutor={handleOpenTutor}
+          onOpenPractice={handleOpenPractice}
         />
       )}
       {currentPage === 'calendar' && <CalendarPage />}
@@ -116,6 +122,8 @@ function AppContent() {
       )}
       {currentPage === 'analysis' && <AnalysisPage />}
       {currentPage === 'profile' && <ProfilePage />}
+      {currentPage === 'settings' && <SettingsPage />}
+      {currentPage === 'community' && <CalendarSyncProvider><CommunityPage /></CalendarSyncProvider>}
       {currentPage === 'practice' && (
         <PracticePage
           courseId={practiceCourseId}

@@ -1,354 +1,404 @@
-import { ChatSidebar } from "../components/ChatSidebar";
-import { TutorHeader } from "../components/TutorHeader";
-import { AIMessage } from "../components/AIMessage";
-import { StudentMessage } from "../components/StudentMessage";
-import { TypingIndicator } from "../components/TypingIndicator";
-import { QuickQuestions } from "../components/QuickQuestions";
-import { LearningMethodSuggestion } from "../components/LearningMethodSuggestion";
-import { UnderstandingProgress } from "../components/UnderstandingProgress";
-import { ChatInput } from "../components/ChatInput";
-import { ScrollArea } from "../components/ui/scroll-area";
-import { ArrowRight } from "lucide-react";
-import { Button } from "../components/ui/button";
-import { coursesData } from "../data/coursesData";
+import { useState, useRef, useEffect } from 'react';
+import { Send, Bot, User, GraduationCap, Loader2, BookOpen } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { useAuth } from '../contexts/AuthContext';
 
-// תוכן צ'אט ספציפי לכל קורס
-const courseChats: Record<string, { question: string; answer: string; code?: string; expandTitle?: string; expandContent?: string }[]> = {
-  'sql': [
-    {
-      question: 'מה ההבדל בין INNER JOIN ל-LEFT JOIN?',
-      answer: 'שאלה מעולה! בואי נבין את ההבדל בצורה מובנית!\n\nINNER JOIN - מחזיר רק שורות שיש להן התאמה בשתי הטבלאות. אם אין התאמה, השורה לא תופיע בתוצאה.\n\nLEFT JOIN (או LEFT OUTER JOIN) - מחזיר את כל השורות מהטבלה השמאלית (הראשונה), גם אם אין התאמה בטבלה הימנית.\n\nהבדל מרכזי:\nLEFT JOIN שומרת את כל השורות מהטבלה הראשונה, לעומת INNER JOIN שמחזירה רק שורות עם התאמה בשתי הטבלאות.',
-      code: `-- INNER JOIN Example
-SELECT students.name, courses.course_name
-FROM students
-INNER JOIN enrollments ON students.id = enrollments.student_id
-INNER JOIN courses ON enrollments.course_id = courses.id;
-
--- LEFT JOIN Example
-SELECT students.name, courses.course_name
-FROM students
-LEFT JOIN enrollments ON students.id = enrollments.student_id
-LEFT JOIN courses ON enrollments.course_id = courses.id;
-
--- התוצאה: LEFT JOIN יציג גם סטודנטים ללא קורסים (עם NULL)`,
-      expandTitle: 'הסבר מעמיק: מתי להשתמש בכל אחד?',
-      expandContent: 'השתמשי ב-INNER JOIN כאשר את רוצה רק רשומות עם התאמה מלאה (למשל, רק סטודנטים שנרשמו לקורסים). השתמשי ב-LEFT JOIN כאשר את רוצה לראות את כל הרשומות מהטבלה הראשונה, גם אם אין להן התאמה (למשל, כל הסטודנטים כולל אלו שלא נרשמו לשום קורס).',
-    },
-  ],
-  'calculus1': [
-    {
-      question: 'מה זה גבול של פונקציה?',
-      answer: 'שאלה מצוינת! גבול הוא מושג יסודי בחדו\"א.\n\nגבול של פונקציה f(x) כאשר x שואף ל-a הוא הערך שאליו מתקרבת הפונקציה כאשר x מתקרב ל-a.\n\nמתמטית: lim(x→a) f(x) = L\n\nזה אומר שכאשר x מתקרב מספיק ל-a, הערך f(x) מתקרב ל-L.',
-      code: `// דוגמה: חישוב גבול פשוט
-lim(x→2) (x² - 4)/(x - 2)
-
-// פתרון:
-= lim(x→2) (x-2)(x+2)/(x-2)
-= lim(x→2) (x+2)
-= 2+2 = 4`,
-      expandTitle: 'למה גבולות חשובים?',
-      expandContent: 'גבולות הם הבסיס להגדרת נגזרות ואינטגרלים. הם מאפשרים לנו להבין התנהגות של פונקציות בנקודות בעייתיות ולפתור בעיות שלא ניתן לפתור בצורה ישירה.',
-    },
-  ],
-  'information-security': [
-    {
-      question: 'מה זה הצפנה סימטרית?',
-      answer: 'שאלה חשובה! הצפנה סימטרית היא שיטת הצפנה שבה משתמשים באותו מפתח גם להצפנה וגם לפענוח.\n\nיתרונות:\n• מהירה מאוד\n• יעילה למידע רב\n• פשוטה יחסית\n\nחסרונות:\n• בעיית חלוקת המפתח\n• צריך מפתח ייחודי לכל זוג משתמשים',
-      code: `# דוגמה ב-Python עם AES
-from cryptography.fernet import Fernet
-
-# יצירת מפתח
-key = Fernet.generate_key()
-cipher = Fernet(key)
-
-# הצפנה
-plaintext = b"הודעה סודית"
-ciphertext = cipher.encrypt(plaintext)
-
-# פענוח (עם אותו מפתח!)
-decrypted = cipher.decrypt(ciphertext)`,
-      expandTitle: 'אלגוריתמי הצפנה סימטרית נפוצים',
-      expandContent: 'AES (Advanced Encryption Standard) - הסטנדרט המודרני, DES (Data Encryption Standard) - ישן ולא מאובטח, 3DES - גרסה משופרת של DES, ChaCha20 - מהיר במיוחד למובייל.',
-    },
-  ],
-  'oop': [
-    {
-      question: 'מה זה פולימורפיזם?',
-      answer: 'פולימורפיזם (Polymorphism) הוא אחד מעקרונות היסוד ב-OOP!\n\nמשמעות: היכולת של אובייקטים שונים להגיב באופן שונה לאותו מסר.\n\nשני סוגים עיקריים:\n1. פולימורפיזם בזמן קומפילציה (Compile-time) - Overloading\n2. פולימורפיזם בזמן ריצה (Runtime) - Overriding',
-      code: `// דוגמה ל-Polymorphism ב-Java
-class Animal {
-    void makeSound() {
-        System.out.println("Some sound");
-    }
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: number;
 }
 
-class Dog extends Animal {
-    @Override
-    void makeSound() {
-        System.out.println("Woof!");
-    }
+function formatDateLabel(ts: number): string {
+  const d = new Date(ts);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  if (d.toDateString() === today.toDateString()) return 'היום';
+  if (d.toDateString() === yesterday.toDateString()) return 'אתמול';
+  return d.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-class Cat extends Animal {
-    @Override
-    void makeSound() {
-        System.out.println("Meow!");
-    }
+function isSameDay(a: number, b: number) {
+  return new Date(a).toDateString() === new Date(b).toDateString();
 }
-
-// שימוש:
-Animal myDog = new Dog();
-Animal myCat = new Cat();
-myDog.makeSound(); // "Woof!"
-myCat.makeSound(); // "Meow!"`,
-      expandTitle: 'למה פולימורפיזם חשוב?',
-      expandContent: 'פולימורפיזם מאפשר לנו לכתוב קוד גנרי יותר וגמיש יותר. אנחנו יכולים לכתוב פונקציה שעובדת עם Animal ולהעביר לה Dog או Cat, והקוד יעבוד נכון בלי שנצטרך לשנות אותו.',
-    },
-  ],
-  'html': [
-    {
-      question: 'מה ההבדל בין div ל-section?',
-      answer: 'שאלה מצוינת על סמנטיקה ב-HTML5!\n\n<div> - אלמנט generic ללא משמעות סמנטית. משמש רק לסגנון ופריסה.\n\n<section> - אלמנט סמנטי שמייצג קטע עצמאי של תוכן עם נושא ספציפי. בדרך כלל כולל כותרת.\n\nמתי להשתמש ב-section:\n• כאשר התוכן הוא קטע עצמאי עם נושא ברור\n• כאשר יש כותרת (h1-h6)\n• כאשר זה הגיוני להציג את הקטע בתוכן עניינים',
-      code: `<!-- שימוש נכון ב-section -->
-<section>
-    <h2>אודות</h2>
-    <p>מידע על החברה...</p>
-</section>
-
-<section>
-    <h2>שירותים</h2>
-    <p>השירותים שאנחנו מציעים...</p>
-</section>
-
-<!-- שימוש ב-div לסגנון בלבד -->
-<div class="wrapper">
-    <div class="flex-container">
-        <div class="item">תוכן</div>
-    </div>
-</div>`,
-      expandTitle: 'למה סמנטיקה חשובה?',
-      expandContent: 'HTML סמנטי משפר נגישות (screen readers), SEO (מנועי חיפוש מבינים טוב יותר את המבנה), תחזוקה (קל יותר להבין את המבנה), ועתידיות (דפדפנים יכולים להוסיף תכונות חדשות).',
-    },
-  ],
-  'linear-algebra': [
-    {
-      question: 'מה זה מרחב וקטורי?',
-      answer: 'שאלה מעולה! מרחב וקטורי הוא מושג מרכזי באלגברה לינארית.\n\nמרחב וקטורי הוא קבוצה של וקטורים שסגורה תחת שתי פעולות:\n1. חיבור וקטורים\n2. כפל בסקלר\n\nדוגמה פשוטה: R² - המישור הדו-ממדי\nכל וקטור הוא זוג מספרים (x, y)\n\nתכונות חשובות:\n• קיים וקטור אפס\n• לכל וקטור יש וקטור נגדי\n• הפעולות קומוטטיביות ואסוציאטיביות',
-      code: `// דוגמה למרחב וקטורי R²
-v₁ = (3, 2)
-v₂ = (1, 4)
-
-// חיבור וקטורים
-v₁ + v₂ = (3+1, 2+4) = (4, 6)
-
-// כפל בסקלר
-2 · v₁ = (2·3, 2·2) = (6, 4)
-
-// וקטור האפס
-0 = (0, 0)`,
-      expandTitle: 'למה מרחבים וקטוריים חשובים?',
-      expandContent: 'מרחבים וקטוריים הם הבסיס לאלגברה לינארית ומופיעים בכל מקום - גרפיקה ממוחשבת, למידת מכונה, פיזיקה, כלכלה ועוד. הם מאפשרים לנו לתאר ולפתור בעיות מורכבות בצורה מתמטית אלגנטית.',
-    },
-  ],
-  'requirements-design': [
-    {
-      question: 'מה זה Use Case Diagram?',
-      answer: 'שאלה מצוינת! Use Case Diagram הוא כלי מרכזי ב-UML לתיאור דרישות המערכת.\n\nמטרה: להציג את האינטראקציות בין משתמשים (Actors) למערכת.\n\nרכיבים עיקריים:\n• Actor - משתמש או מערכת חיצונית\n• Use Case - פעולה או שירות שהמערכת מספקת\n• קשרים - יחסים בין Use Cases (include, extend)\n\nמתי להשתמש:\n• בשלבי ניתוח הדרישות\n• לתקשורת עם הלקוח\n• להגדרת היקף המערכת',
-      code: `// דוגמה ל-Use Case Diagram (תיאור טקסטואלי)
-
-Actors:
-- Student (סטודנט)
-- Instructor (מרצה)
-- Admin (מנהל)
-
-Use Cases:
-1. "רשמה לקורס" (Student)
-   - Include: "בדיקת קדם-דרישות"
-   - Extend: "תשלום"
-
-2. "עדכון ציונים" (Instructor)
-   - Include: "התחברות למערכת"
-
-3. "ניהול משתמשים" (Admin)`,
-      expandTitle: 'ההבדל בין Include ל-Extend',
-      expandContent: 'Include - תמיד קורה, חובה. Use Case A תמיד כולל את B. דוגמה: "הרשמה לקורס" תמיד כולל "בדיקת קדם-דרישות". Extend - לפעמים קורה, אופציונלי. Use Case A יכול להתרחב ל-B בתנאים מסוימים. דוגמה: "הרשמה לקורס" יכול להתרחב ל-"תשלום" רק אם הקורס בתשלום.',
-    },
-  ],
-  'mis-economics': [
-    {
-      question: 'מה זה ROI ואיך מחשבים אותו?',
-      answer: 'שאלה מעולה! ROI (Return On Investment) הוא מדד מרכזי להערכת השקעות במערכות מידע.\n\nהגדרה: ROI מודד את התשואה על ההשקעה באחוזים.\n\nנוסחה: ROI = ((תועלות - עלויות) / עלויות) × 100%\n\nדוגמה:\nעלות מערכת CRM חדשה: 100,000 ₪\nתועלות שנתיות (חיסכון + הכנסות): 130,000 ₪\n\nROI = ((130,000 - 100,000) / 100,000) × 100% = 30%\n\nמשמעות: לכל שקל שהשקענו, הרווחנו 30 אגורות נוספות.',
-      code: `// חישוב ROI למערכת מידע
-
-# נתונים:
-initial_cost = 100000  # עלות התקנה ראשונית
-annual_benefit = 130000  # תועלות שנתיות
-annual_operating_cost = 20000  # עלות תפעול שנתית
-
-# חישוב ROI שנתי:
-net_benefit = annual_benefit - annual_operating_cost
-roi_percentage = ((net_benefit - initial_cost) / initial_cost) * 100
-
-print(f"ROI: {roi_percentage}%")
-
-# חישוב תקופת החזר:
-payback_period = initial_cost / net_benefit
-print(f"תקופת החזר: {payback_period:.2f} שנים")`,
-      expandTitle: 'מה ההבדל בין ROI ל-NPV?',
-      expandContent: 'ROI מודד תשואה באחוזים ופשוט לחישוב, אבל לא מתחשב בערך הזמן של הכסף. NPV (Net Present Value) מתחשב בערך הזמן - שקל היום שווה יותר משקל בעתיד. NPV מתאים יותר להשוואת פרויקטים ארוכי טווח, בעוד ROI טוב להערכה מהירה של רווחיות.',
-    },
-  ],
-};
 
 interface AITutorPageProps {
   courseId?: string;
   onBack?: () => void;
 }
 
-export function AITutorPage({ courseId, onBack }: AITutorPageProps) {
-  const course = courseId && coursesData[courseId] ? coursesData[courseId] : null;
-  const chat = courseId && courseChats[courseId] ? courseChats[courseId] : courseChats['sql'];
+const ALL_COURSES = [
+  { id: 'calculus1',           title: 'חדו"א 1',               color: 'from-blue-500 to-blue-600',     emoji: '∫' },
+  { id: 'linear-algebra',      title: 'אלגברה לינארית',         color: 'from-purple-500 to-purple-600', emoji: '⊕' },
+  { id: 'oop',                  title: 'תכנות מונחה עצמים',       color: 'from-green-500 to-green-600',   emoji: '{}' },
+  { id: 'html',                 title: 'HTML',                   color: 'from-orange-500 to-orange-600', emoji: '<>' },
+  { id: 'sql',                  title: 'SQL',                    color: 'from-cyan-500 to-cyan-600',     emoji: '⊞' },
+  { id: 'requirements-design',  title: 'אפיון ותכן',             color: 'from-indigo-500 to-indigo-600', emoji: '⬡' },
+  { id: 'information-security', title: 'אבטחת מידע',            color: 'from-red-500 to-red-600',       emoji: '🔒' },
+  { id: 'mis-economics',        title: 'כלכלת מערכות מידע',       color: 'from-amber-500 to-amber-600',   emoji: '₪' },
+];
+
+// Pollinations AI — free, no API key needed
+
+const SYSTEM_PROMPT = (courseName: string) =>
+  `You are a professional academic tutor for the course "${courseName}" at an Israeli university. ` +
+  `STRICT RULES: ` +
+  `1. ALWAYS respond in Hebrew only. Never switch to English. ` +
+  `2. Give complete, detailed explanations — never cut off mid-sentence. Always finish your answer fully. ` +
+  `3. Structure your answer clearly: start with a brief definition, then explain in depth with examples, then summarize. ` +
+  `4. Use a professional academic tone. No jokes, no roleplay, no asterisks. ` +
+  `5. When showing code or formulas, use markdown code blocks.`;
+
+async function callAI(messages: Message[], courseName: string): Promise<string> {
+  const response = await fetch('/api/groq/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT(courseName) },
+        ...messages.map(m => ({ role: m.role, content: m.content })),
+      ],
+      max_tokens: 4000,
+    }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data?.error?.message || `שגיאה ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content ?? 'לא התקבלה תשובה';
+}
+
+function MessageBubble({ msg, userName }: { msg: Message; userName: string }) {
+  const isUser = msg.role === 'user';
+
+  const renderContent = (text: string) => {
+    const parts = text.split(/(```[\s\S]*?```)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('```')) {
+        const code = part.replace(/^```\w*\n?/, '').replace(/```$/, '');
+        return (
+          <pre key={i} className="bg-gray-900 text-gray-100 rounded-lg p-3 text-sm overflow-x-auto my-2 text-left" dir="ltr">
+            <code>{code}</code>
+          </pre>
+        );
+      }
+      return (
+        <span key={i} className="whitespace-pre-wrap">{part}</span>
+      );
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16" dir="rtl">
-      <ChatSidebar courseId={courseId} />
-      <div className="mr-[544px]">{/* 256px (Sidebar) + 320px (ChatSidebar) = 576px, but using 544px for better spacing */}
-        <TutorHeader courseTitle={course?.title} courseColor={course?.color} />
-
-        {/* כפתור חזרה אם יש courseId */}
-        {course && onBack && (
-          <div className="px-8 pt-24 pb-4">
-            <Button
-              variant="ghost"
-              className="text-gray-600 hover:bg-gray-100"
-              onClick={onBack}
-            >
-              <ArrowRight className="w-4 h-4 ml-2" />
-              חזרה לעמוד הקורס
-            </Button>
-          </div>
+    <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+        isUser ? 'bg-teal-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'
+      }`}>
+        {isUser
+          ? <User className="w-4 h-4 text-white" />
+          : <Bot className="w-4 h-4 text-white" />
+        }
+      </div>
+      <div className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+        isUser
+          ? 'bg-teal-600 text-white rounded-tr-sm'
+          : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm shadow-sm'
+      }`}>
+        {!isUser && (
+          <p className="text-xs text-indigo-500 font-semibold mb-1">מורה AI</p>
         )}
+        {isUser && (
+          <p className="text-xs text-teal-100 font-semibold mb-1 text-right">{userName}</p>
+        )}
+        <div dir="rtl">{renderContent(msg.content)}</div>
+      </div>
+    </div>
+  );
+}
 
-        {/* Chat Area */}
-        <div className="flex flex-col h-screen pt-20">
-          <ScrollArea className="flex-1 px-8 py-6">
-            <div className="max-w-4xl mx-auto">
-              {/* Welcome Message */}
-              <div className="mb-6 flex items-center justify-center">
-                <div className="inline-block p-6 bg-white rounded-2xl shadow-sm border border-gray-200">
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">
-                    היי הדס, אני המורה <span dir="ltr">AI</span>{" "}
-                    {course ? `שלך ל${course.title}` : 'שלך'}
-                  </h2>
-                  <p className="text-gray-600">
-                    {course 
-                      ? `אני כאן כדי לעזור לך ללמוד ${course.title} בצורה מותאמת אישית.`
-                      : 'אני כאן כדי לעזור לך למד מערכות מידע בצורה מותאמת אישית.'}
-                  </p>
-                </div>
-              </div>
+export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
+  const { user } = useAuth();
+  const userName = user?.fullName || 'סטודנט';
 
-              {/* Understanding Progress */}
-              <UnderstandingProgress />
+  const storageKey = `mindmatch_chats_${user?.userId || 'guest'}`;
 
-              {/* Quick Questions */}
-              <QuickQuestions courseId={courseId} />
+  const [activeCourseId, setActiveCourseId] = useState<string>(initialCourseId || '');
+  const [conversations, setConversations] = useState<Record<string, Message[]>>(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-              {/* Conversation */}
-              <div className="space-y-6 mt-8">
-                <StudentMessage content={chat[0].question} />
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(conversations));
+    } catch {
+      // localStorage מלא — לא שומרים
+    }
+  }, [conversations, storageKey]);
 
-                <AIMessage
-                  content={chat[0].answer}
-                  hasCode={!!chat[0].code}
-                  codeLanguage={courseId === 'sql' ? 'sql' : courseId === 'information-security' ? 'python' : courseId === 'oop' ? 'java' : 'html'}
-                  dir="rtl"
-                  codeExample={chat[0].code}
-                  hasExpandable={!!chat[0].expandTitle}
-                  expandableTitle={chat[0].expandTitle}
-                  expandableContent={chat[0].expandContent}
-                />
+  const activeCourse = ALL_COURSES.find(c => c.id === activeCourseId);
+  const messages = conversations[activeCourseId] || [];
 
-                <LearningMethodSuggestion />
+  const myCourses = ALL_COURSES.filter(c =>
+    (user?.selectedCourses ?? []).includes(c.id)
+  );
 
-                {courseId === 'sql' && (
-                  <>
-                    <StudentMessage content="יש עוד סוגי JOIN?" />
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
 
-                    <AIMessage
-                      content="בהחלט! יש עוד כמה סוגי JOIN חשובים:
+  const handleSend = async () => {
+    const text = input.trim();
+    if (!text || !activeCourseId || isLoading) return;
 
-• RIGHT JOIN - הפוך מ-LEFT JOIN, שומר את כל השורות מהטבלה הימנית
-• FULL OUTER JOIN - מחזיר את כל השורות משתי הטבלאות, עם NULL במקומות ללא התאמה
-• CROSS JOIN - יוצר מכפלה קרטזית, כל שורה מטבלה אחת עם כל שורה מהשנייה
+    setInput('');
+    setError('');
 
-ברוב המקרים, תשתמשי ב-INNER JOIN או LEFT JOIN. RIGHT JOIN פחות נפוץ כי תמיד אפשר להחליף את סדר הטבלאות ולהשתמש ב-LEFT JOIN במקום."
-                      hasExpandable={true}
-                      expandableTitle="טבלת השוואה מלאה של כל סוגי ה-JOINs"
-                      expandableContent="INNER JOIN = רק התאמות | LEFT JOIN = כל שמאל + התאמות | RIGHT JOIN = כל ימין + התאמות | FULL OUTER JOIN = הכל | CROSS JOIN = מכפלה קרטזית של כל השורות"
-                      dir="rtl"
-                    />
-                  </>
-                )}
+    const userMsg: Message = { role: 'user', content: text, timestamp: Date.now() };
+    const updatedMsgs = [...messages, userMsg];
 
-                {courseId === 'calculus1' && (
-                  <>
-                    <StudentMessage content="איך מחשבים נגזרת של פונקציה מורכבת?" />
+    setConversations(prev => ({ ...prev, [activeCourseId]: updatedMsgs }));
+    setIsLoading(true);
 
-                    <AIMessage
-                      content="שאלה מצוינת! לחישוב נגזרת של פונקציה מורכבת נשתמש בכלל השרשרת (Chain Rule).
+    try {
+      const reply = await callAI(updatedMsgs, activeCourse?.title || activeCourseId);
+      const aiMsg: Message = { role: 'assistant', content: reply, timestamp: Date.now() };
+      setConversations(prev => ({
+        ...prev,
+        [activeCourseId]: [...updatedMsgs, aiMsg],
+      }));
+    } catch (err: any) {
+      setError(err?.message || 'אירעה שגיאה. בדוק שמפתח ה-API מוגדר.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-כלל השרשרת אומר:
-אם יש לנו פונקציה מורכבת f(g(x)), אז הנגזרת שלה היא:
-[f(g(x))]' = f'(g(x)) · g'(x)
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
 
-במילים פשוטות:
-• גזור את הפונקציה החיצונית (ושאיר את הפנימית כמו שהיא)
-• כפול בנגזרת של הפונקציה הפנימית
+  const selectCourse = (id: string) => {
+    setActiveCourseId(id);
+    setError('');
+    textareaRef.current?.focus();
+  };
 
-דוגמה:
-נגזרת של (3x² + 5)⁴
-
-הפונקציה החיצונית: x⁴
-הפונקציה הפנימית: 3x² + 5
-
-נגזרת הפונקציה החיצונית: 4x³
-נגזרת הפונקציה הפנימית: 6x
-
-לפי כלל השרשרת:
-[f(g(x))]' = 4(3x² + 5)³ · 6x = 24x(3x² + 5)³"
-                      hasExpandable={true}
-                      expandableTitle="דוגמאות נוספות לכלל השרשרת"
-                      expandableContent="sin(x²) → cos(x²)·2x | e^(3x) → e^(3x)·3 | ln(x² + 1) → [1/(x² + 1)]·2x = 2x/(x² + 1) | √(x³ + 2x) → [1/(2√(x³ + 2x))]·(3x² + 2)"
-                      dir="rtl"
-                      hasCode={true}
-                      codeLanguage="text"
-                      codeExample={`// דוגמה מפורטת נוספת
-y = (2x³ - 4x + 1)⁵
-
-חיצונית: u⁵ → 5u⁴
-פנימית: u = 2x³ - 4x + 1 → 6x² - 4
-
-נגזרת:
-y' = 5(2x³ - 4x + 1)⁴ · (6x² - 4)
-y' = (6x² - 4) · 5(2x³ - 4x + 1)⁴`}
-                    />
-                  </>
-                )}
-
-                <TypingIndicator />
-              </div>
+  return (
+    <div className="flex h-screen mr-64 pt-16 bg-gray-50" dir="rtl">
+      {/* Course list sidebar */}
+      <aside className="w-72 bg-white border-l border-gray-200 flex flex-col flex-shrink-0">
+        <div className="p-5 border-b border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+              <Bot className="w-5 h-5 text-white" />
             </div>
-          </ScrollArea>
-
-          {/* Input Area */}
-          <div className="px-8 pb-6">
-            <div className="max-w-4xl mx-auto">
-              <ChatInput />
+            <div>
+              <h2 className="font-bold text-gray-900 text-base">מורה AI</h2>
+              <p className="text-xs text-gray-500">בחרי קורס לשוחח עם AI</p>
             </div>
           </div>
         </div>
-      </div>
+
+        <div className="flex-1 overflow-y-auto p-3 space-y-1">
+          {ALL_COURSES.map(course => {
+            const isActive = activeCourseId === course.id;
+            const hasHistory = (conversations[course.id]?.length ?? 0) > 0;
+            return (
+              <button
+                key={course.id}
+                onClick={() => selectCourse(course.id)}
+                className={`w-full text-right px-4 py-3 rounded-xl transition-all flex items-center gap-3 ${
+                  isActive
+                    ? 'bg-blue-50 border-2 border-blue-200 shadow-sm'
+                    : 'hover:bg-gray-50 border-2 border-transparent'
+                }`}
+              >
+                <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${course.color} flex items-center justify-center flex-shrink-0 text-white text-xs font-bold`}>
+                  {course.emoji}
+                </div>
+                <div className="flex-1 text-right min-w-0">
+                  <p className={`text-sm font-semibold truncate ${isActive ? 'text-blue-800' : 'text-gray-800'}`}>
+                    {course.title}
+                  </p>
+                  {hasHistory && (
+                    <p className="text-xs text-gray-400">
+                      {conversations[course.id].length} הודעות
+                    </p>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </aside>
+
+      {/* Chat area */}
+      <main className="flex-1 flex flex-col overflow-hidden">
+        {!activeCourseId ? (
+          /* Welcome screen */
+          <div className="flex-1 flex flex-col items-center justify-center gap-6 p-8">
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+              <Bot className="w-10 h-10 text-white" />
+            </div>
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">שלום {userName}!</h2>
+              <p className="text-gray-500">בחרי קורס מהרשימה כדי להתחיל לשוחח עם המורה AI</p>
+            </div>
+
+            {myCourses.length > 0 ? (
+              <div className="flex flex-col items-center gap-3 w-full max-w-md">
+                <p className="text-sm font-semibold text-gray-600">הקורסים שלי</p>
+                <div className="flex flex-wrap justify-center gap-3 w-full">
+                  {myCourses.map(course => (
+                    <button
+                      key={course.id}
+                      onClick={() => selectCourse(course.id)}
+                      className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all text-right"
+                    >
+                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${course.color} flex items-center justify-center text-white text-sm font-bold flex-shrink-0`}>
+                        {course.emoji}
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">{course.title}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-400 text-center">
+                עדיין לא הוספת קורסים.<br />
+                כנסי לקטלוג הקורסים והוסיפי קורסים לרשימה שלך.
+              </p>
+            )}
+          </div>
+        ) : (
+          <>
+            {/* Chat header */}
+            <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center gap-4 flex-shrink-0">
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${activeCourse?.color} flex items-center justify-center text-white text-sm font-bold flex-shrink-0`}>
+                {activeCourse?.emoji}
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900">{activeCourse?.title}</h3>
+                <p className="text-xs text-gray-500 flex items-center gap-1">
+                  <span className="w-2 h-2 bg-green-500 rounded-full inline-block" />
+                  מורה AI מוכן לעזור
+                </p>
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+              {messages.length === 0 && (
+                <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
+                  <BookOpen className="w-12 h-12 text-gray-300" />
+                  <div>
+                    <p className="text-gray-500 font-medium">שאל כל שאלה על {activeCourse?.title}</p>
+                    <p className="text-gray-400 text-sm mt-1">המורה AI ישיב לך בעברית עם הסברים ברורים</p>
+                  </div>
+                  <div className="flex flex-wrap gap-2 justify-center mt-2">
+                    {['הסבר לי את המושג הבסיסי ביותר', 'אילו נושאים חשובים לבחינה?', 'תן לי דוגמה פשוטה'].map(q => (
+                      <button
+                        key={q}
+                        onClick={() => { setInput(q); textareaRef.current?.focus(); }}
+                        className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full border border-blue-200 hover:bg-blue-100 transition-colors"
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {messages.map((msg, i) => {
+                const showDate = i === 0 || !isSameDay(messages[i - 1].timestamp || 0, msg.timestamp || 0);
+                return (
+                  <div key={i}>
+                    {showDate && (
+                      <div className="flex items-center gap-3 my-4">
+                        <div className="flex-1 h-px bg-gray-200" />
+                        <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full flex-shrink-0">
+                          {formatDateLabel(msg.timestamp || Date.now())}
+                        </span>
+                        <div className="flex-1 h-px bg-gray-200" />
+                      </div>
+                    )}
+                    <MessageBubble msg={msg} userName={userName} />
+                  </div>
+                );
+              })}
+
+              {isLoading && (
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
+                    <Bot className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+                    <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                  </div>
+                </div>
+              )}
+
+              {error && (
+                <div className="mx-auto max-w-sm p-3 bg-red-50 border border-red-200 rounded-xl text-center">
+                  <p className="text-red-600 text-sm">{error}</p>
+                  <p className="text-red-400 text-xs mt-1">
+                    בדקי שיש חיבור לאינטרנט ונסי שוב.
+                  </p>
+                </div>
+              )}
+
+              <div ref={bottomRef} />
+            </div>
+
+            {/* Input area */}
+            <div className="bg-white border-t border-gray-200 px-6 py-4 flex-shrink-0">
+              <div className="flex items-end gap-3">
+                <Button
+                  onClick={handleSend}
+                  disabled={!input.trim() || isLoading}
+                  className="bg-blue-600 hover:bg-blue-700 text-white flex-shrink-0 h-11 w-11 p-0"
+                  size="icon"
+                >
+                  {isLoading
+                    ? <Loader2 className="w-5 h-5 animate-spin" />
+                    : <Send className="w-5 h-5" />
+                  }
+                </Button>
+                <textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={`שאלי שאלה על ${activeCourse?.title}...`}
+                  rows={1}
+                  dir="rtl"
+                  className="flex-1 resize-none border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none min-h-[44px] max-h-32 overflow-y-auto"
+                  style={{ fieldSizing: 'content' } as React.CSSProperties}
+                />
+              </div>
+              <p className="text-xs text-gray-400 mt-2 text-right">Enter לשליחה • Shift+Enter לשורה חדשה</p>
+            </div>
+          </>
+        )}
+      </main>
     </div>
   );
 }
