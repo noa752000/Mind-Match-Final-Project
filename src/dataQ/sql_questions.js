@@ -1,6 +1,6 @@
-export const sqlQuestions = [
+﻿export const sqlQuestions = [
   // =========================
-  // SELECT + WHERE
+  // SELECT / WHERE
   // =========================
   {
     id: "sql_select_where_1",
@@ -8,10 +8,15 @@ export const sqlQuestions = [
     subTopic: "select_where",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
-    question: "מה עושה הפקודה SELECT?",
-    options: ["מוחקת נתונים", "מחזירה נתונים", "מעדכנת נתונים", "יוצרת טבלה"],
-    correctAnswer: "מחזירה נתונים"
+    learningType: "knowledge",
+    question: "מה עושה הפקודה SELECT ב-SQL?",
+    options: [
+      "מחזירה נתונים מתוך טבלה",
+      "מוחקת נתונים מטבלה",
+      "מעדכנת נתונים קיימים",
+      "יוצרת טבלה חדשה"
+    ],
+    correctAnswer: "מחזירה נתונים מתוך טבלה"
   },
   {
     id: "sql_select_where_2",
@@ -19,21 +24,31 @@ export const sqlQuestions = [
     subTopic: "select_where",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
-    question: "מה תפקידה של WHERE?",
-    options: ["מיון", "סינון", "חיבור טבלאות", "יצירת טבלה"],
-    correctAnswer: "סינון"
+    learningType: "knowledge",
+    question: "מה תפקידה של פקודת WHERE בשאילתת SQL?",
+    options: [
+      "סינון רשומות לפי תנאי",
+      "מיון תוצאות השאילתה",
+      "חיבור בין טבלאות",
+      "יצירת עמודה חדשה"
+    ],
+    correctAnswer: "סינון רשומות לפי תנאי"
   },
   {
     id: "sql_select_where_3",
     courseId: "sql",
     subTopic: "select_where",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "WHERE משמש לסינון נתונים.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה מהמשפטים הבאים נכון לגבי SELECT ו-WHERE?",
+    options: [
+      "SELECT בוחר אילו עמודות להחזיר, ו-WHERE מסנן אילו רשומות יוחזרו",
+      "SELECT מסנן רשומות, ו-WHERE יוצר טבלה חדשה",
+      "WHERE מחייב תמיד שימוש ב-JOIN",
+      "SELECT משמש רק למחיקת נתונים"
+    ],
+    correctAnswer: "SELECT בוחר אילו עמודות להחזיר, ו-WHERE מסנן אילו רשומות יוחזרו"
   },
   {
     id: "sql_select_where_4",
@@ -42,82 +57,46 @@ export const sqlQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "איזו שאילתה נכונה?",
+    question: "איזו שאילתה תחזיר את כל המשתמשים שגילם גדול מ-18?",
     options: [
-      "<span dir='ltr'>SELECT * FROM users WHERE age > 18</span>",
-      "<span dir='ltr'>SELECT users age > 18</span>",
-      "<span dir='ltr'>WHERE age > 18</span>",
-      "<span dir='ltr'>SELECT age users</span>"
+      "SELECT * FROM users WHERE age > 18",
+      "SELECT users WHERE age > 18",
+      "WHERE age > 18 FROM users",
+      "SELECT age > 18 FROM users"
     ],
-    correctAnswer: "<span dir='ltr'>SELECT * FROM users WHERE age > 18</span>"
+    correctAnswer: "SELECT * FROM users WHERE age > 18"
   },
   {
     id: "sql_select_where_5",
     courseId: "sql",
     subTopic: "select_where",
-    difficulty: 3,
+    difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מה תחזיר SELECT name FROM users WHERE age = 20?",
-    options: ["כל המשתמשים", "רק שמות בני 20", "רק גילאים", "שום דבר"],
-    correctAnswer: "רק שמות בני 20"
+    question: "מה תחזיר השאילתה SELECT name FROM users WHERE age = 20?",
+    options: [
+      "רק את שמות המשתמשים שגילם 20",
+      "את כל המשתמשים בטבלה",
+      "רק את הגילאים של המשתמשים",
+      "את כל המשתמשים ששמם הוא age"
+    ],
+    correctAnswer: "רק את שמות המשתמשים שגילם 20"
   },
   {
     id: "sql_select_where_6",
     courseId: "sql",
     subTopic: "select_where",
-    difficulty: 2,
-    format: "true_false",
+    difficulty: 3,
+    format: "mcq",
     learningType: "analysis",
-    question: "SELECT * תמיד מסנן נתונים.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "לא נכון"
-  },
-  {
-    id: "sql_select_where_7",
-    courseId: "sql",
-    subTopic: "select_where",
-    difficulty: 2,
-    format: "mcq",
-    learningType: "visual",
-    question: "איזו שאילתה תחזיר רק שמות?",
-    imageUrl: "",
+    question: "מנהל מערכת רוצה לשלוף רק את כתובות האימייל של משתמשים פעילים. איזו שאילתה מתאימה ביותר?",
     options: [
-      "<span dir='ltr'>SELECT name FROM users</span>",
-      "<span dir='ltr'>SELECT * FROM users</span>",
-      "<span dir='ltr'>SELECT age FROM users</span>",
-      "<span dir='ltr'>FROM users</span>"
+      "SELECT email FROM users WHERE status = 'active'",
+      "SELECT * FROM users",
+      "WHERE status = 'active'",
+      "SELECT active FROM email"
     ],
-    correctAnswer: "<span dir='ltr'>SELECT name FROM users</span>"
-  },
-  {
-    id: "sql_select_where_8",
-    courseId: "sql",
-    subTopic: "select_where",
-    difficulty: 2,
-    format: "mcq",
-    learningType: "visual",
-    question: "איזו שאילתה משתמשת ב-WHERE?",
-    imageUrl: "",
-    options: [
-      "<span dir='ltr'>SELECT * FROM users WHERE age > 30</span>",
-      "<span dir='ltr'>SELECT users</span>",
-      "<span dir='ltr'>FROM users</span>",
-      "<span dir='ltr'>ORDER BY age</span>"
-    ],
-    correctAnswer: "<span dir='ltr'>SELECT * FROM users WHERE age > 30</span>"
-  },
-  {
-    id: "sql_select_where_9",
-    courseId: "sql",
-    subTopic: "select_where",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "visual",
-    question: "ניתן לבחור חלק מהשורות עם WHERE.",
-    imageUrl: "",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    correctAnswer: "SELECT email FROM users WHERE status = 'active'"
   },
 
   // =========================
@@ -129,10 +108,15 @@ export const sqlQuestions = [
     subTopic: "joins",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
-    question: "מה עושה JOIN?",
-    options: ["מוחק", "מחבר טבלאות", "יוצר טבלה", "ממיין"],
-    correctAnswer: "מחבר טבלאות"
+    learningType: "knowledge",
+    question: "מה עושה JOIN ב-SQL?",
+    options: [
+      "מחבר נתונים משתי טבלאות או יותר",
+      "מוחק טבלה ממסד הנתונים",
+      "ממיין רשומות לפי עמודה",
+      "יוצר משתמש חדש"
+    ],
+    correctAnswer: "מחבר נתונים משתי טבלאות או יותר"
   },
   {
     id: "sql_joins_2",
@@ -140,21 +124,31 @@ export const sqlQuestions = [
     subTopic: "joins",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
-    question: "מה עושה INNER JOIN?",
-    options: ["הכל", "רק התאמות", "רק טבלה אחת", "מוחק"],
-    correctAnswer: "רק התאמות"
+    learningType: "knowledge",
+    question: "מה מחזיר INNER JOIN?",
+    options: [
+      "רק רשומות שיש להן התאמה בשתי הטבלאות",
+      "את כל הרשומות מהטבלה השמאלית בלבד",
+      "את כל הרשומות משתי הטבלאות ללא תנאי",
+      "רק רשומות ללא התאמה"
+    ],
+    correctAnswer: "רק רשומות שיש להן התאמה בשתי הטבלאות"
   },
   {
     id: "sql_joins_3",
     courseId: "sql",
     subTopic: "joins",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "JOIN מחבר טבלאות.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "מה ההבדל המרכזי בין INNER JOIN ל-LEFT JOIN?",
+    options: [
+      "LEFT JOIN מחזיר גם רשומות מהטבלה השמאלית שאין להן התאמה",
+      "INNER JOIN מחזיר תמיד את כל הרשומות",
+      "LEFT JOIN מוחק רשומות ללא התאמה",
+      "אין הבדל בין סוגי ה-JOIN"
+    ],
+    correctAnswer: "LEFT JOIN מחזיר גם רשומות מהטבלה השמאלית שאין להן התאמה"
   },
   {
     id: "sql_joins_4",
@@ -163,82 +157,46 @@ export const sqlQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מה ההבדל בין LEFT JOIN ל-INNER JOIN?",
+    question: "יש שתי טבלאות: users ו-orders. רוצים להציג רק משתמשים שביצעו הזמנה. איזה JOIN מתאים?",
     options: [
-      "אין הבדל",
-      "LEFT כולל גם ללא התאמה",
-      "INNER כולל הכל",
-      "LEFT מוחק נתונים"
+      "INNER JOIN",
+      "LEFT JOIN",
+      "RIGHT JOIN בלבד",
+      "FULL JOIN בלבד"
     ],
-    correctAnswer: "LEFT כולל גם ללא התאמה"
+    correctAnswer: "INNER JOIN"
   },
   {
     id: "sql_joins_5",
     courseId: "sql",
     subTopic: "joins",
-    difficulty: 3,
+    difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "איזו שאילתה מחברת בין טבלאות?",
+    question: "איזו שאילתה מחברת בין users ל-orders לפי מזהה המשתמש?",
     options: [
-      "<span dir='ltr'>SELECT * FROM A JOIN B ON A.id=B.id</span>",
-      "<span dir='ltr'>SELECT A B</span>",
-      "<span dir='ltr'>WHERE JOIN</span>",
-      "<span dir='ltr'>FROM A,B</span>"
+      "SELECT * FROM users JOIN orders ON users.id = orders.user_id",
+      "SELECT users orders",
+      "JOIN users WHERE orders",
+      "SELECT * FROM users WHERE orders.user_id"
     ],
-    correctAnswer: "<span dir='ltr'>SELECT * FROM A JOIN B ON A.id=B.id</span>"
+    correctAnswer: "SELECT * FROM users JOIN orders ON users.id = orders.user_id"
   },
   {
     id: "sql_joins_6",
     courseId: "sql",
     subTopic: "joins",
-    difficulty: 2,
-    format: "true_false",
+    difficulty: 3,
+    format: "mcq",
     learningType: "analysis",
-    question: "INNER JOIN מחזיר רק התאמות.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
-  },
-  {
-    id: "sql_joins_7",
-    courseId: "sql",
-    subTopic: "joins",
-    difficulty: 2,
-    format: "mcq",
-    learningType: "visual",
-    question: "איזו שאילתה מחברת טבלאות?",
-    imageUrl: "",
+    question: "רוצים להציג את כל המשתמשים, גם כאלה שלא ביצעו אף הזמנה. איזו שאילתה מתאימה ביותר?",
     options: [
-      "<span dir='ltr'>JOIN</span>",
-      "<span dir='ltr'>SELECT</span>",
-      "<span dir='ltr'>WHERE</span>",
-      "<span dir='ltr'>ORDER</span>"
+      "SELECT * FROM users LEFT JOIN orders ON users.id = orders.user_id",
+      "SELECT * FROM users INNER JOIN orders ON users.id = orders.user_id",
+      "SELECT * FROM orders",
+      "SELECT * FROM users WHERE orders IS NULL"
     ],
-    correctAnswer: "<span dir='ltr'>JOIN</span>"
-  },
-  {
-    id: "sql_joins_8",
-    courseId: "sql",
-    subTopic: "joins",
-    difficulty: 2,
-    format: "mcq",
-    learningType: "visual",
-    question: "מה דרוש ל-JOIN?",
-    imageUrl: "",
-    options: ["תנאי ON", "DELETE", "DROP", "INDEX"],
-    correctAnswer: "תנאי ON"
-  },
-  {
-    id: "sql_joins_9",
-    courseId: "sql",
-    subTopic: "joins",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "visual",
-    question: "JOIN דורש תנאי חיבור.",
-    imageUrl: "",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    correctAnswer: "SELECT * FROM users LEFT JOIN orders ON users.id = orders.user_id"
   },
 
   // =========================
@@ -250,21 +208,31 @@ export const sqlQuestions = [
     subTopic: "normalization",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
-    question: "מה מטרת נרמול?",
-    options: ["כפילויות", "מניעת כפילויות", "מיון", "מחיקה"],
-    correctAnswer: "מניעת כפילויות"
+    learningType: "knowledge",
+    question: "מהי המטרה המרכזית של נרמול מסד נתונים?",
+    options: [
+      "צמצום כפילויות ושיפור מבנה הנתונים",
+      "הגדלת מספר הטבלאות ללא צורך",
+      "מחיקת נתונים ישנים",
+      "החלפת SQL בשפת תכנות"
+    ],
+    correctAnswer: "צמצום כפילויות ושיפור מבנה הנתונים"
   },
   {
     id: "sql_norm_2",
     courseId: "sql",
     subTopic: "normalization",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "נרמול משפר מבנה נתונים.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה מהמשפטים הבאים נכון לגבי נרמול?",
+    options: [
+      "נרמול מסייע לשמור על עקביות הנתונים",
+      "נרמול תמיד מוחק נתונים",
+      "נרמול מבטל את הצורך במפתחות",
+      "נרמול מתאים רק לטבלאות ריקות"
+    ],
+    correctAnswer: "נרמול מסייע לשמור על עקביות הנתונים"
   },
   {
     id: "sql_norm_3",
@@ -272,79 +240,63 @@ export const sqlQuestions = [
     subTopic: "normalization",
     difficulty: 2,
     format: "mcq",
-    learningType: "analysis",
-    question: "מה בעיה בטבלה לא מנורמלת?",
-    options: ["כפילויות", "מהירה", "קלה", "אין בעיה"],
-    correctAnswer: "כפילויות"
+    learningType: "knowledge",
+    question: "מה עלול לקרות בטבלה שאינה מנורמלת?",
+    options: [
+      "כפילויות, חוסר עקביות וקושי בעדכון נתונים",
+      "השאילתות תמיד יהיו מהירות יותר",
+      "לא ניתן להוסיף רשומות",
+      "הטבלה תימחק אוטומטית"
+    ],
+    correctAnswer: "כפילויות, חוסר עקביות וקושי בעדכון נתונים"
   },
   {
     id: "sql_norm_4",
     courseId: "sql",
     subTopic: "normalization",
     difficulty: 2,
-    format: "true_false",
+    format: "mcq",
     learningType: "analysis",
-    question: "נרמול מפחית כפילויות.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "בטבלת students נשמר שם הקורס שוב ושוב עבור כל סטודנט הרשום אליו. מה עשויה להיות הבעיה?",
+    options: [
+      "כפילות נתונים שעלולה לגרום לחוסר עקביות",
+      "שימוש נכון במפתח ראשי",
+      "שיפור אוטומטי בביצועים",
+      "אין צורך בטבלת קורסים"
+    ],
+    correctAnswer: "כפילות נתונים שעלולה לגרום לחוסר עקביות"
   },
   {
     id: "sql_norm_5",
     courseId: "sql",
     subTopic: "normalization",
-    difficulty: 3,
+    difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "למה נרמול חשוב?",
-    options: ["אחידות", "כפילויות", "שגיאות", "כולם"],
-    correctAnswer: "כולם"
+    question: "רוצים להפריד נתוני לקוחות ונתוני הזמנות לשתי טבלאות. מה היתרון המרכזי בכך?",
+    options: [
+      "צמצום כפילויות וייצוג קשר ברור בין ישויות",
+      "הפיכת כל השאילתות ללא נחוצות",
+      "מחיקת הצורך במפתח זר",
+      "הגדלת כפילויות כדי לשפר מהירות"
+    ],
+    correctAnswer: "צמצום כפילויות וייצוג קשר ברור בין ישויות"
   },
   {
     id: "sql_norm_6",
     courseId: "sql",
     subTopic: "normalization",
-    difficulty: 2,
-    format: "true_false",
+    difficulty: 3,
+    format: "mcq",
     learningType: "analysis",
-    question: "נרמול פוגע בביצועים תמיד.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "לא נכון"
-  },
-  {
-    id: "sql_norm_7",
-    courseId: "sql",
-    subTopic: "normalization",
-    difficulty: 2,
-    format: "mcq",
-    learningType: "visual",
-    question: "איזו טבלה מנורמלת?",
-    imageUrl: "",
-    options: ["מפוצלת", "כפולה", "לא מסודרת", "ריקה"],
-    correctAnswer: "מפוצלת"
-  },
-  {
-    id: "sql_norm_8",
-    courseId: "sql",
-    subTopic: "normalization",
-    difficulty: 2,
-    format: "mcq",
-    learningType: "visual",
-    question: "מה נראה בטבלה לא מנורמלת?",
-    imageUrl: "",
-    options: ["כפילויות", "סדר", "דיוק", "חיבור"],
-    correctAnswer: "כפילויות"
-  },
-  {
-    id: "sql_norm_9",
-    courseId: "sql",
-    subTopic: "normalization",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "visual",
-    question: "טבלה מנורמלת מפחיתה כפילויות.",
-    imageUrl: "",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "במערכת מכירות, שינוי שם מוצר דורש עדכון של אותו שם בעשרות רשומות שונות. איזו בעיית תכנון זה מצביע עליה?",
+    options: [
+      "הטבלה אינה מנורמלת מספיק",
+      "המערכת משתמשת ביותר מדי JOIN",
+      "השאילתה משתמשת ב-WHERE",
+      "יש יותר מדי מפתחות ראשיים"
+    ],
+    correctAnswer: "הטבלה אינה מנורמלת מספיק"
   },
 
   // =========================
@@ -354,23 +306,33 @@ export const sqlQuestions = [
     id: "sql_opt_1",
     courseId: "sql",
     subTopic: "optimization",
-    difficulty: 2,
+    difficulty: 1,
     format: "mcq",
-    learningType: "concept",
-    question: "מה משפר ביצועים?",
-    options: ["Index", "DELETE", "DROP", "NULL"],
-    correctAnswer: "Index"
+    learningType: "knowledge",
+    question: "מהו Index במסד נתונים?",
+    options: [
+      "מבנה שמסייע לאתר נתונים במהירות גבוהה יותר",
+      "פקודה למחיקת טבלה",
+      "סוג של JOIN",
+      "דרך לשמור תמונות במסד הנתונים"
+    ],
+    correctAnswer: "מבנה שמסייע לאתר נתונים במהירות גבוהה יותר"
   },
   {
     id: "sql_opt_2",
     courseId: "sql",
     subTopic: "optimization",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "Index משפר ביצועים.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה מהמשפטים הבאים נכון לגבי Index?",
+    options: [
+      "Index יכול לשפר ביצועי חיפוש וסינון",
+      "Index תמיד מוחק רשומות כפולות",
+      "Index מחליף את הצורך בטבלאות",
+      "Index משמש רק לעיצוב ממשק משתמש"
+    ],
+    correctAnswer: "Index יכול לשפר ביצועי חיפוש וסינון"
   },
   {
     id: "sql_opt_3",
@@ -378,78 +340,62 @@ export const sqlQuestions = [
     subTopic: "optimization",
     difficulty: 2,
     format: "mcq",
-    learningType: "analysis",
-    question: "מה לא טוב לביצועים?",
-    options: ["SELECT *", "Index", "WHERE", "JOIN"],
-    correctAnswer: "SELECT *"
+    learningType: "knowledge",
+    question: "למה שימוש מיותר ב-SELECT * עלול להיות פחות יעיל?",
+    options: [
+      "הוא מחזיר יותר עמודות ממה שבאמת צריך",
+      "הוא מוחק את כל הרשומות",
+      "הוא מחייב שימוש ב-DELETE",
+      "הוא מונע שימוש ב-WHERE"
+    ],
+    correctAnswer: "הוא מחזיר יותר עמודות ממה שבאמת צריך"
   },
   {
     id: "sql_opt_4",
     courseId: "sql",
     subTopic: "optimization",
     difficulty: 2,
-    format: "true_false",
+    format: "mcq",
     learningType: "analysis",
-    question: "SELECT * תמיד יעיל.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "לא נכון"
+    question: "שאילתה מחפשת משתמש לפי עמודת email בטבלה גדולה מאוד. מה יכול לשפר את הביצועים?",
+    options: [
+      "הוספת Index על עמודת email",
+      "הסרת כל תנאי WHERE",
+      "שימוש ב-SELECT * בלבד",
+      "מחיקת הטבלה"
+    ],
+    correctAnswer: "הוספת Index על עמודת email"
   },
   {
     id: "sql_opt_5",
     courseId: "sql",
     subTopic: "optimization",
-    difficulty: 3,
+    difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "למה להשתמש ב-index?",
-    options: ["מהירות", "מחיקה", "טבלה", "קוד"],
-    correctAnswer: "מהירות"
+    question: "איזו שאילתה צפויה להיות יעילה יותר כאשר צריך רק שמות משתמשים פעילים?",
+    options: [
+      "SELECT name FROM users WHERE status = 'active'",
+      "SELECT * FROM users",
+      "SELECT * FROM users WHERE name IS NOT NULL",
+      "DELETE FROM users WHERE status = 'active'"
+    ],
+    correctAnswer: "SELECT name FROM users WHERE status = 'active'"
   },
   {
     id: "sql_opt_6",
     courseId: "sql",
     subTopic: "optimization",
-    difficulty: 2,
-    format: "true_false",
+    difficulty: 3,
+    format: "mcq",
     learningType: "analysis",
-    question: "Index עוזר בחיפוש.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
-  },
-  {
-    id: "sql_opt_7",
-    courseId: "sql",
-    subTopic: "optimization",
-    difficulty: 2,
-    format: "mcq",
-    learningType: "visual",
-    question: "מה מאיץ שאילתה?",
-    imageUrl: "",
-    options: ["Index", "DELETE", "DROP", "NULL"],
-    correctAnswer: "Index"
-  },
-  {
-    id: "sql_opt_8",
-    courseId: "sql",
-    subTopic: "optimization",
-    difficulty: 2,
-    format: "mcq",
-    learningType: "visual",
-    question: "מה גורם לאיטיות?",
-    imageUrl: "",
-    options: ["SELECT *", "Index", "WHERE", "JOIN"],
-    correctAnswer: "SELECT *"
-  },
-  {
-    id: "sql_opt_9",
-    courseId: "sql",
-    subTopic: "optimization",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "visual",
-    question: "Index משפר ביצועים.",
-    imageUrl: "",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "בטבלה גדולה קיימת שאילתה איטית שמסננת לפי עמודה שאינה מאונדקסת. מהו הפתרון הסביר ביותר לשיפור הביצועים?",
+    options: [
+      "הוספת Index מתאים לעמודת הסינון",
+      "החלפת כל השאילתות ב-SELECT *",
+      "הסרת כל המפתחות מהטבלה",
+      "הפסקת השימוש ב-WHERE"
+    ],
+    correctAnswer: "הוספת Index מתאים לעמודת הסינון"
   }
 ];
