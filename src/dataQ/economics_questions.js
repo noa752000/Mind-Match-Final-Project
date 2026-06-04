@@ -8,7 +8,7 @@ export const economicsQuestions = [
     subTopic: "risk_management",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו ניהול סיכונים?",
     options: ["מחיקה", "זיהוי והפחתת סיכונים", "קוד", "טבלה"],
     correctAnswer: "זיהוי והפחתת סיכונים"
@@ -19,21 +19,31 @@ export const economicsQuestions = [
     subTopic: "risk_management",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
-    question: "מהו סיכון?",
-    options: ["ודאות", "אירוע לא צפוי", "קוד", "DB"],
-    correctAnswer: "אירוע לא צפוי"
+    learningType: "knowledge",
+    question: "איזה מהבאים מתאר בצורה הטובה ביותר סיכון בפרויקט?",
+    options: [
+      "אירוע אפשרי שעלול להשפיע על הצלחת הפרויקט",
+      "משימה שכבר הסתיימה",
+      "קוד במערכת",
+      "טבלה במסד נתונים"
+    ],
+    correctAnswer: "אירוע אפשרי שעלול להשפיע על הצלחת הפרויקט"
   },
   {
     id: "risk_3",
     courseId: "information_systems_economics",
     subTopic: "risk_management",
-    difficulty: 1,
+    difficulty: 2,
     format: "true_false",
-    learningType: "concept",
-    question: "ניהול סיכונים עוזר להפחית נזק.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "מדוע חשוב לזהות סיכונים כבר בשלבי התכנון של פרויקט?",
+    options: [
+      "כדי לבטל את הצורך בניהול הפרויקט",
+      "כדי להיערך מראש ולהקטין נזקים אפשריים",
+      "כדי למחוק משימות מהמערכת",
+      "כדי להבטיח שלא יהיו שינויים בפרויקט"
+    ],
+    correctAnswer: "כדי להיערך מראש ולהקטין נזקים אפשריים"
   },
   {
     id: "risk_4",
@@ -42,9 +52,14 @@ export const economicsQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "איך מטפלים בסיכון?",
-    options: ["התעלמות", "מניעה", "מחיקה", "עצירה"],
-    correctAnswer: "מניעה"
+    question: "צוות הפרויקט זיהה סיכון שעלול לעכב את לוח הזמנים. מהו צעד מתאים לניהול הסיכון?",
+    options: [
+      "להתעלם מהסיכון עד שיתרחש",
+      "להגדיר פעולת מניעה או תוכנית תגובה מראש",
+      "למחוק את הפרויקט",
+      "להפסיק את כל המשימות"
+    ],
+    correctAnswer: "להגדיר פעולת מניעה או תוכנית תגובה מראש"
   },
   {
     id: "risk_5",
@@ -53,9 +68,14 @@ export const economicsQuestions = [
     difficulty: 3,
     format: "mcq",
     learningType: "analysis",
-    question: "מהו Risk Impact?",
-    options: ["סיכוי", "השפעה", "זמן", "קוד"],
-    correctAnswer: "השפעה"
+    question: "סיכון בפרויקט הוא בעל הסתברות גבוהה והשפעה גבוהה. כיצד כדאי להתייחס אליו?",
+    options: [
+      "לתעדף אותו ולטפל בו מוקדם",
+      "להתעלם ממנו כי הוא רק אפשרות",
+      "לטפל בו רק בסוף הפרויקט",
+      "להסיר אותו מרשימת הסיכונים"
+    ],
+    correctAnswer: "לתעדף אותו ולטפל בו מוקדם"
   },
   {
     id: "risk_6",
@@ -64,9 +84,14 @@ export const economicsQuestions = [
     difficulty: 2,
     format: "true_false",
     learningType: "analysis",
-    question: "סיכון כולל הסתברות והשפעה.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "ארגון בוחן סיכון חדש בפרויקט. אילו שני מרכיבים חשובים במיוחד להערכת חומרת הסיכון?",
+    options: [
+      "הסתברות והשפעה",
+      "צבע וגודל",
+      "שם הפרויקט ושם הלקוח",
+      "מספר עובדים ושפת תכנות"
+    ],
+    correctAnswer: "הסתברות והשפעה"
   },
   {
     id: "risk_7",
@@ -114,7 +139,7 @@ export const economicsQuestions = [
     subTopic: "project_management",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו פרויקט?",
     options: ["תהליך קבוע", "משימה זמנית", "קוד", "DB"],
     correctAnswer: "משימה זמנית"
@@ -125,7 +150,7 @@ export const economicsQuestions = [
     subTopic: "project_management",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מה כולל ניהול פרויקטים?",
     options: ["תכנון", "שליטה", "בקרה", "כולם"],
     correctAnswer: "כולם"
@@ -136,10 +161,15 @@ export const economicsQuestions = [
     subTopic: "project_management",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
-    question: "פרויקט הוא זמני.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "איזה מאפיין מבדיל פרויקט מפעילות שוטפת בארגון?",
+    options: [
+      "לפרויקט יש התחלה וסיום מוגדרים",
+      "פרויקט מתבצע ללא מטרות",
+      "פרויקט תמיד חוזר על עצמו באותה צורה",
+      "פרויקט אינו דורש משאבים"
+    ],
+    correctAnswer: "לפרויקט יש התחלה וסיום מוגדרים"
   },
   {
     id: "proj_4",
@@ -148,9 +178,14 @@ export const economicsQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מהו לו\"ז?",
-    options: ["זמן", "קוד", "DB", "טבלה"],
-    correctAnswer: "זמן"
+    question: "מדוע חשוב להגדיר לו״ז ברור בפרויקט?",
+    options: [
+      "כדי לעקוב אחר משימות, תאריכים ותלויות בין פעילויות",
+      "כדי לבטל את הצורך בבקרה",
+      "כדי להחליף את מנהל הפרויקט",
+      "כדי להימנע מהגדרת יעדים"
+    ],
+    correctAnswer: "כדי לעקוב אחר משימות, תאריכים ותלויות בין פעילויות"
   },
   {
     id: "proj_5",
@@ -159,9 +194,14 @@ export const economicsQuestions = [
     difficulty: 3,
     format: "mcq",
     learningType: "analysis",
-    question: "מה חשוב בפרויקט?",
-    options: ["זמן", "עלות", "איכות", "כולם"],
-    correctAnswer: "כולם"
+    question: "פרויקט חורג מהתקציב אך עומד בזמן. איזה ממד במשולש ניהול הפרויקטים נפגע?",
+    options: [
+      "זמן",
+      "עלות",
+      "איכות בלבד",
+      "שם הפרויקט"
+    ],
+    correctAnswer: "עלות"
   },
   {
     id: "proj_6",
@@ -170,9 +210,14 @@ export const economicsQuestions = [
     difficulty: 2,
     format: "true_false",
     learningType: "analysis",
-    question: "ניהול פרויקטים כולל בקרה.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "מהי מטרת הבקרה במהלך ניהול פרויקט?",
+    options: [
+      "לבדוק התקדמות מול התכנון ולזהות חריגות בזמן",
+      "להפסיק את הפרויקט מיד",
+      "למחוק משימות שהסתיימו",
+      "להחליף את כל חברי הצוות"
+    ],
+    correctAnswer: "לבדוק התקדמות מול התכנון ולזהות חריגות בזמן"
   },
   {
     id: "proj_7",
@@ -220,7 +265,7 @@ export const economicsQuestions = [
     subTopic: "roi_analysis",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו ROI?",
     options: ["רווח", "החזר השקעה", "קוד", "DB"],
     correctAnswer: "החזר השקעה"
@@ -231,7 +276,7 @@ export const economicsQuestions = [
     subTopic: "roi_analysis",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "ROI מודד?",
     options: ["עלות", "רווח", "תועלת מול השקעה", "זמן"],
     correctAnswer: "תועלת מול השקעה"
@@ -240,12 +285,17 @@ export const economicsQuestions = [
     id: "roi_3",
     courseId: "information_systems_economics",
     subTopic: "roi_analysis",
-    difficulty: 1,
+    difficulty: 2,
     format: "true_false",
-    learningType: "concept",
-    question: "ROI מודד רווחיות.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "מה ניתן ללמוד מחישוב ROI בפרויקט מערכות מידע?",
+    options: [
+      "האם התועלת מההשקעה מצדיקה את העלות",
+      "איזה צבע יהיה לממשק",
+      "כמה שורות קוד נכתבו",
+      "איזה שרת נמחק"
+    ],
+    correctAnswer: "האם התועלת מההשקעה מצדיקה את העלות"
   },
   {
     id: "roi_4",
@@ -254,9 +304,14 @@ export const economicsQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "ROI גבוה אומר?",
-    options: ["רע", "טוב", "אין קשר", "קוד"],
-    correctAnswer: "טוב"
+    question: "ארגון קיבל ROI גבוה לאחר הטמעת מערכת חדשה. מה המשמעות הסבירה?",
+    options: [
+      "ההשקעה הניבה תועלת גבוהה ביחס לעלות",
+      "המערכת בהכרח נכשלה",
+      "לא ניתן להסיק דבר על ההשקעה",
+      "העלות הייתה תמיד גבוהה מהתועלת"
+    ],
+    correctAnswer: "ההשקעה הניבה תועלת גבוהה ביחס לעלות"
   },
   {
     id: "roi_5",
@@ -265,9 +320,14 @@ export const economicsQuestions = [
     difficulty: 3,
     format: "mcq",
     learningType: "analysis",
-    question: "מה חשוב בהשקעה?",
-    options: ["רווח", "סיכון", "עלות", "כולם"],
-    correctAnswer: "כולם"
+    question: "בעת בחינת השקעה במערכת מידע חדשה, אילו גורמים כדאי לשקול?",
+    options: [
+      "עלות, תועלת צפויה וסיכון",
+      "רק رنگי המערכת",
+      "רק מספר המסכים",
+      "רק שם הספק"
+    ],
+    correctAnswer: "עלות, תועלת צפויה וסיכון"
   },
   {
     id: "roi_6",
@@ -276,9 +336,14 @@ export const economicsQuestions = [
     difficulty: 2,
     format: "true_false",
     learningType: "analysis",
-    question: "ROI נמוך עדיף.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "לא נכון"
+    question: "שני פרויקטים דורשים השקעה דומה, אך לאחד מהם ROI גבוה יותר. מה ניתן להסיק בדרך כלל?",
+    options: [
+      "הפרויקט עם ה-ROI הגבוה צפוי להחזיר יותר תועלת ביחס להשקעה",
+      "הפרויקט עם ה-ROI הנמוך תמיד עדיף",
+      "שני הפרויקטים זהים לחלוטין",
+      "ROI אינו קשור להשקעות"
+    ],
+    correctAnswer: "הפרויקט עם ה-ROI הגבוה צפוי להחזיר יותר תועלת ביחס להשקעה"
   },
   {
     id: "roi_7",
@@ -326,7 +391,7 @@ export const economicsQuestions = [
     subTopic: "digital_strategy",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהי אסטרטגיה דיגיטלית?",
     options: ["קוד", "תכנון עסקי", "DB", "טבלה"],
     correctAnswer: "תכנון עסקי"
@@ -337,7 +402,7 @@ export const economicsQuestions = [
     subTopic: "digital_strategy",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מה המטרה?",
     options: ["רווח", "יתרון תחרותי", "קוד", "אין"],
     correctAnswer: "יתרון תחרותי"
@@ -346,12 +411,17 @@ export const economicsQuestions = [
     id: "dig_3",
     courseId: "information_systems_economics",
     subTopic: "digital_strategy",
-    difficulty: 1,
+    difficulty: 2,
     format: "true_false",
-    learningType: "concept",
-    question: "אסטרטגיה דיגיטלית עוזרת לעסק.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "כיצד אסטרטגיה דיגיטלית יכולה לתרום לארגון?",
+    options: [
+      "באמצעות התאמת טכנולוגיות למטרות עסקיות",
+      "באמצעות מחיקת כל המערכות הקיימות",
+      "באמצעות ביטול הצורך בלקוחות",
+      "באמצעות שימוש בקוד בלבד ללא תכנון"
+    ],
+    correctAnswer: "באמצעות התאמת טכנולוגיות למטרות עסקיות"
   },
   {
     id: "dig_4",
@@ -360,9 +430,14 @@ export const economicsQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מה כולל?",
-    options: ["טכנולוגיה", "שיווק", "מידע", "כולם"],
-    correctAnswer: "כולם"
+    question: "ארגון רוצה לשפר את השירות ללקוחות באמצעות כלים דיגיטליים. מהו חלק מתאים מאסטרטגיה דיגיטלית?",
+    options: [
+      "הטמעת ערוצים דיגיטליים לשירות ומעקב אחר חוויית הלקוח",
+      "התעלמות מנתוני לקוחות",
+      "הפסקת שימוש בטכנולוגיה",
+      "מחיקת אתר הארגון"
+    ],
+    correctAnswer: "הטמעת ערוצים דיגיטליים לשירות ומעקב אחר חוויית הלקוח"
   },
   {
     id: "dig_5",
@@ -371,9 +446,14 @@ export const economicsQuestions = [
     difficulty: 3,
     format: "mcq",
     learningType: "analysis",
-    question: "למה חשוב?",
-    options: ["תחרות", "רווח", "חדשנות", "כולם"],
-    correctAnswer: "כולם"
+    question: "מדוע אסטרטגיה דיגיטלית חשובה ליתרון תחרותי?",
+    options: [
+      "היא מסייעת לארגון לחדש, לייעל תהליכים ולהגיב לשינויים בשוק",
+      "היא מבטלת את הצורך בניהול",
+      "היא מבטיחה שכל פרויקט יצליח ללא סיכון",
+      "היא משמשת רק לעיצוב לוגו"
+    ],
+    correctAnswer: "היא מסייעת לארגון לחדש, לייעל תהליכים ולהגיב לשינויים בשוק"
   },
   {
     id: "dig_6",
@@ -382,9 +462,14 @@ export const economicsQuestions = [
     difficulty: 2,
     format: "true_false",
     learningType: "analysis",
-    question: "אסטרטגיה דיגיטלית משפרת תחרותיות.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "חברה מאמצת מערכת דיגיטלית שמקצרת זמני שירות ומשפרת זמינות ללקוחות. איזה יעד אסטרטגי זה משרת?",
+    options: [
+      "שיפור תחרותיות וחוויית לקוח",
+      "הגדלת עומס ללא תועלת",
+      "מחיקת נתונים עסקיים",
+      "ביטול הצורך בשירות לקוחות"
+    ],
+    correctAnswer: "שיפור תחרותיות וחוויית לקוח"
   },
   {
     id: "dig_7",
