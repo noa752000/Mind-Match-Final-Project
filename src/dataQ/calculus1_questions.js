@@ -16,7 +16,7 @@ export const calculus1Questions = [
     subTopic: "limits",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "אם קיים הגבול של f(x) כאשר x שואף ל-a, מה חייב להתקיים?",
     options: [
       "ערך הפונקציה בנקודה a חייב להיות שווה לגבול",
@@ -32,7 +32,7 @@ export const calculus1Questions = [
     subTopic: "limits",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "איזו מהטענות הבאות נכונה לגבי גבול אינסופי בנקודה x=a?",
     options: [
       "הפונקציה חייבת להיות מוגדרת ב-a",
@@ -48,7 +48,7 @@ export const calculus1Questions = [
     subTopic: "limits",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "אם הגבול משמאל והגבול מימין שונים זה מזה, אז הגבול בנקודה אינו קיים.",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
@@ -59,7 +59,7 @@ export const calculus1Questions = [
     subTopic: "limits",
     difficulty: 1,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "חשב/י את הגבול: lim(x→2) (3x+1).",
     options: ["5", "6", "7", "8"],
     correctAnswer: "7"
@@ -70,7 +70,7 @@ export const calculus1Questions = [
     subTopic: "limits",
     difficulty: 2,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "חשב/י את הגבול: lim(x→1) (x^2-1)/(x-1).",
     options: ["0", "1", "2", "לא קיים"],
     correctAnswer: "2"
@@ -81,7 +81,7 @@ export const calculus1Questions = [
     subTopic: "limits",
     difficulty: 3,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "חשב/י את הגבול: lim(x→∞) (2x^2+3x-1)/(x^2-4).",
     options: ["0", "2", "3", "∞"],
     correctAnswer: "2"
@@ -142,7 +142,7 @@ export const calculus1Questions = [
     subTopic: "derivatives",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהי המשמעות הגיאומטרית של הנגזרת בנקודה?",
     options: [
       "שטח מתחת לגרף",
@@ -158,7 +158,7 @@ export const calculus1Questions = [
     subTopic: "derivatives",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "אם f'(a)=0, מה ניתן להסיק בוודאות?",
     options: [
       "ל-f יש מקסימום מקומי ב-a",
@@ -174,7 +174,7 @@ export const calculus1Questions = [
     subTopic: "derivatives",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "אם f'(x)>0 בתחום מסוים, אז הפונקציה עולה בתחום זה.",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
@@ -185,7 +185,7 @@ export const calculus1Questions = [
     subTopic: "derivatives",
     difficulty: 1,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "מהי הנגזרת של f(x)=4x^3-2x?",
     options: ["12x^2-2", "12x-2", "4x^2-2", "3x^2-2"],
     correctAnswer: "12x^2-2"
@@ -196,7 +196,7 @@ export const calculus1Questions = [
     subTopic: "derivatives",
     difficulty: 2,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "מהי הנגזרת של f(x)=x^4-3x^2+5?",
     options: ["4x^3-6x", "4x^3-3x", "x^3-6x", "4x^3-6"],
     correctAnswer: "4x^3-6x"
@@ -207,7 +207,7 @@ export const calculus1Questions = [
     subTopic: "derivatives",
     difficulty: 3,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "אם f(x)=(2x-1)(x^2+1), מהי f'(x)?",
     options: [
       "2(x^2+1)+(2x-1)·2x",
@@ -268,7 +268,7 @@ export const calculus1Questions = [
     subTopic: "function_investigation",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "איזה מן השלבים הבאים שייך בדרך כלל לחקירת פונקציה?",
     options: [
       "בדיקת תחום הגדרה ונקודות קיצון",
@@ -284,7 +284,7 @@ export const calculus1Questions = [
     subTopic: "function_investigation",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מדוע בודקים אסימפטוטות, חיתוכי צירים ונקודות קיצון בעת חקירת פונקציה?",
     options: [
       "כדי לבנות תמונה איכותית של התנהגות הגרף",
@@ -300,7 +300,7 @@ export const calculus1Questions = [
     subTopic: "function_investigation",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "בחקירת פונקציה, נקודות שבהן המכנה מתאפס עשויות להיות חשובות לבדיקת תחום ההגדרה ואסימפטוטות.",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
@@ -311,7 +311,7 @@ export const calculus1Questions = [
     subTopic: "function_investigation",
     difficulty: 2,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "מהו תחום ההגדרה של הפונקציה f(x)=1/(x-3)?",
     options: [
       "כל x",
@@ -327,7 +327,7 @@ export const calculus1Questions = [
     subTopic: "function_investigation",
     difficulty: 2,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "לפונקציה f(x)=x^2-4 יש חיתוך עם ציר ה-x בנקודות:",
     options: [
       "x=±4",
@@ -343,7 +343,7 @@ export const calculus1Questions = [
     subTopic: "function_investigation",
     difficulty: 3,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "אם f(x)=x^3-3x, מהן הנקודות החשודות לקיצון?",
     options: [
       "x=±1",
@@ -409,7 +409,7 @@ export const calculus1Questions = [
     subTopic: "integrals",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מה מייצג אינטגרל לא מסוים?",
     options: [
       "מספר קבוע בלבד",
@@ -425,7 +425,7 @@ export const calculus1Questions = [
     subTopic: "integrals",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מה ההבדל העיקרי בין אינטגרל מסוים לאינטגרל לא מסוים?",
     options: [
       "אינטגרל מסוים מחזיר מספר, ואינטגרל לא מסוים מחזיר פונקציה כללית עם קבוע",
@@ -441,7 +441,7 @@ export const calculus1Questions = [
     subTopic: "integrals",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "בכל אינטגרל לא מסוים יש להוסיף קבוע אינטגרציה.",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
@@ -452,7 +452,7 @@ export const calculus1Questions = [
     subTopic: "integrals",
     difficulty: 1,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "חשב/י: ∫ 3x^2 dx",
     options: ["x^3 + C", "3x^3 + C", "x^2 + C", "6x + C"],
     correctAnswer: "x^3 + C"
@@ -463,7 +463,7 @@ export const calculus1Questions = [
     subTopic: "integrals",
     difficulty: 2,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "חשב/י: ∫ (2x+1) dx",
     options: ["x^2+x + C", "2x^2+x + C", "x^2+1 + C", "2x+1 + C"],
     correctAnswer: "x^2+x + C"
@@ -474,7 +474,7 @@ export const calculus1Questions = [
     subTopic: "integrals",
     difficulty: 3,
     format: "mcq",
-    learningType: "practice",
+    learningType: "analysis",
     question: "חשב/י את האינטגרל המסוים: ∫_0^2 x dx",
     options: ["1", "2", "4", "0"],
     correctAnswer: "2"

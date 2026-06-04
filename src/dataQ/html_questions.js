@@ -1,4 +1,4 @@
-// מאגר שאלות - HTML
+﻿// מאגר שאלות - HTML
 // תתי נושא: נגישות, טפסים, סמנטיקה, HTML5 APIs
 //
 // הערה לתצוגת עברית + קוד:
@@ -15,7 +15,7 @@ export const htmlQuestions = [
     subTopic: "accessibility",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהי המטרה המרכזית של נגישות באתרים?",
     options: [
       "להפוך את האתר למהיר יותר בלבד",
@@ -31,7 +31,7 @@ export const htmlQuestions = [
     subTopic: "accessibility",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "למה חשוב להוסיף מאפיין <span dir='ltr'>alt</span> לתמונות?",
     options: [
       "כדי להגדיל את גודל התמונה",
@@ -45,12 +45,17 @@ export const htmlQuestions = [
     id: "html_accessibility_3",
     courseId: "html_fundamentals",
     subTopic: "accessibility",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "כותרות מסודרות כמו <span dir='ltr'>&lt;h1&gt;</span>, <span dir='ltr'>&lt;h2&gt;</span> ו-<span dir='ltr'>&lt;h3&gt;</span> תורמות לנגישות של עמוד.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "מדוע חשוב להשתמש במבנה כותרות מסודר באמצעות תגיות h1, h2 ו-h3?",
+    options: [
+      "כדי לעזור למשתמשים ולקוראי מסך להבין את מבנה התוכן",
+      "כדי לשנות את צבע הכותרות אוטומטית",
+      "כדי למנוע שימוש ב-CSS",
+      "כדי לשפר את מהירות האינטרנט"
+    ],
+    correctAnswer: "כדי לעזור למשתמשים ולקוראי מסך להבין את מבנה התוכן"
   },
   {
     id: "html_accessibility_4",
@@ -156,7 +161,7 @@ export const htmlQuestions = [
     subTopic: "forms",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "איזו תגית משמשת ליצירת טופס ב-<span dir='ltr'>HTML</span>?",
     options: [
       "<span dir='ltr'>&lt;table&gt;</span>",
@@ -172,7 +177,7 @@ export const htmlQuestions = [
     subTopic: "forms",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מה תפקידו של המאפיין <span dir='ltr'>required</span> בשדה קלט?",
     options: [
       "להפוך את השדה לנסתר",
@@ -186,12 +191,17 @@ export const htmlQuestions = [
     id: "html_forms_3",
     courseId: "html_fundamentals",
     subTopic: "forms",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "התגית <span dir='ltr'>&lt;textarea&gt;</span> מתאימה לקלט טקסט רב-שורות.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "באיזה מצב עדיף להשתמש ב-textarea במקום input רגיל?",
+    options: [
+      "כאשר המשתמש צריך להזין טקסט ארוך או הערות",
+      "כאשר רוצים לבחור צבע",
+      "כאשר רוצים להעלות קובץ",
+      "כאשר רוצים להציג תמונה"
+    ],
+    correctAnswer: "כאשר המשתמש צריך להזין טקסט ארוך או הערות"
   },
   {
     id: "html_forms_4",
@@ -297,7 +307,7 @@ export const htmlQuestions = [
     subTopic: "semantics",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מה היתרון העיקרי של תגיות סמנטיות ב-<span dir='ltr'>HTML</span>?",
     options: [
       "הן מקטינות תמיד את משקל התמונות",
@@ -313,7 +323,7 @@ export const htmlQuestions = [
     subTopic: "semantics",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "איזו תגית מתאימה ביותר לאזור הניווט הראשי באתר?",
     options: [
       "<span dir='ltr'>&lt;footer&gt;</span>",
@@ -327,12 +337,17 @@ export const htmlQuestions = [
     id: "html_semantics_3",
     courseId: "html_fundamentals",
     subTopic: "semantics",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "התגית <span dir='ltr'>&lt;article&gt;</span> מתאימה לתוכן עצמאי שיכול לעמוד בפני עצמו.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה סוג תוכן מתאים במיוחד לתגית article?",
+    options: [
+      "כתבת חדשות או פוסט בבלוג שיכול לעמוד בפני עצמו",
+      "אזור ניווט ראשי",
+      "טופס התחברות",
+      "רשימת קישורים בלבד"
+    ],
+    correctAnswer: "כתבת חדשות או פוסט בבלוג שיכול לעמוד בפני עצמו"
   },
   {
     id: "html_semantics_4",
@@ -438,7 +453,7 @@ export const htmlQuestions = [
     subTopic: "html5_apis",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מה הכוונה ב-<span dir='ltr'>HTML5 APIs</span>?",
     options: [
       "רק תגיות חדשות של כותרות",
@@ -454,7 +469,7 @@ export const htmlQuestions = [
     subTopic: "html5_apis",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "איזו מהאפשרויות הבאות קשורה ל-<span dir='ltr'>Web Storage</span>?",
     options: [
       "<span dir='ltr'>localStorage</span> ו-<span dir='ltr'>sessionStorage</span>",
@@ -468,12 +483,17 @@ export const htmlQuestions = [
     id: "html_apis_3",
     courseId: "html_fundamentals",
     subTopic: "html5_apis",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "<span dir='ltr'>Geolocation API</span> יכולה לאפשר לאתר לבקש את מיקום המשתמש, בכפוף לאישורו.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה API מאפשר לאתר לקבל את מיקום המשתמש לאחר קבלת הרשאה?",
+    options: [
+      "Geolocation API",
+      "Canvas API",
+      "Storage API",
+      "Forms API"
+    ],
+    correctAnswer: "Geolocation API"
   },
   {
     id: "html_apis_4",
@@ -570,3 +590,4 @@ export const htmlQuestions = [
     correctAnswer: "נכון"
   }
 ];
+
