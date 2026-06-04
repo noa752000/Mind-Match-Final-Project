@@ -8,10 +8,15 @@ export const systemDesignQuestions = [
     subTopic: "architecture",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
-    question: "מהי ארכיטקטורת תוכנה?",
-    options: ["קוד בלבד", "מבנה המערכת", "טבלה", "משתנה"],
-    correctAnswer: "מבנה המערכת"
+    learningType: "knowledge",
+    question: "מהי המטרה המרכזית של ארכיטקטורת תוכנה?",
+    options: [
+      "להגדיר את המבנה והרכיבים של המערכת",
+      "לכתוב קוד בצורה מהירה יותר",
+      "ליצור מסד נתונים",
+      "לבדוק ביצועים בלבד"
+    ],
+    correctAnswer: "להגדיר את המבנה והרכיבים של המערכת"
   },
   {
     id: "arch_2",
@@ -19,54 +24,79 @@ export const systemDesignQuestions = [
     subTopic: "architecture",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
-    question: "מה היתרון של ארכיטקטורת שכבות?",
-    options: ["מורכבות", "הפרדה", "איטיות", "מחיקה"],
-    correctAnswer: "הפרדה"
+    learningType: "knowledge",
+    question: "מהו היתרון המרכזי של ארכיטקטורת שכבות (Layered Architecture)?",
+    options: [
+      "הפרדת אחריות בין רכיבי המערכת",
+      "ביצועים גבוהים יותר תמיד",
+      "ביטול הצורך במסד נתונים",
+      "הקטנת מספר המשתמשים"
+    ],
+    correctAnswer: "הפרדת אחריות בין רכיבי המערכת"
   },
   {
     id: "arch_3",
     courseId: "systems_analysis",
     subTopic: "architecture",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "ארכיטקטורה מגדירה מבנה מערכת.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה מהמשפטים הבאים נכון לגבי ארכיטקטורת תוכנה?",
+    options: [
+      "היא מגדירה את מבנה המערכת ואת הקשרים בין רכיביה",
+      "היא מחליפה את שלב האפיון",
+      "היא עוסקת רק בעיצוב ממשק משתמש",
+      "היא רלוונטית רק למערכות גדולות"
+    ],
+    correctAnswer: "היא מגדירה את מבנה המערכת ואת הקשרים בין רכיביה"
   },
   {
     id: "arch_4",
     courseId: "systems_analysis",
     subTopic: "architecture",
-    difficulty: 2,
+    difficulty: 3,
     format: "mcq",
     learningType: "analysis",
-    question: "מה היתרון של Microservices?",
-    options: ["תלות גבוהה", "סקייל", "קוד אחד", "איטי"],
-    correctAnswer: "סקייל"
+    question: "חברה מפתחת מערכת גדולה המורכבת ממספר שירותים עצמאיים. כל צוות אחראי על שירות אחר ורוצה לפרוס עדכונים בנפרד. איזו ארכיטקטורה תתאים ביותר?",
+    options: [
+      "Microservices",
+      "Monolith",
+      "Client-Server בסיסית",
+      "Single Layer"
+    ],
+    correctAnswer: "Microservices"
   },
   {
     id: "arch_5",
     courseId: "systems_analysis",
     subTopic: "architecture",
-    difficulty: 3,
+    difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מתי נבחר Monolith?",
-    options: ["מערכת קטנה", "מערכת ענקית", "אין הבדל", "תמיד"],
-    correctAnswer: "מערכת קטנה"
+    question: "סטארטאפ קטן מפתח מערכת ראשונית עם צוות פיתוח מצומצם ודרישות פשוטות יחסית. איזו ארכיטקטורה תהיה הבחירה המתאימה ביותר בשלב זה?",
+    options: [
+      "Monolith",
+      "Microservices",
+      "Event Driven",
+      "Serverless"
+    ],
+    correctAnswer: "Monolith"
   },
   {
     id: "arch_6",
     courseId: "systems_analysis",
     subTopic: "architecture",
     difficulty: 2,
-    format: "true_false",
+    format: "mcq",
     learningType: "analysis",
-    question: "Microservices מאפשרים פיתוח עצמאי לכל שירות.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "מהו היתרון המרכזי של Microservices לעומת Monolith?",
+    options: [
+      "ניתן לפתח, לבדוק ולפרוס כל שירות בנפרד",
+      "אין צורך בתקשורת בין רכיבים",
+      "המערכת תמיד מהירה יותר",
+      "אין צורך בתחזוקה"
+    ],
+    correctAnswer: "ניתן לפתח, לבדוק ולפרוס כל שירות בנפרד"
   },
   {
     id: "arch_7",
@@ -114,10 +144,15 @@ export const systemDesignQuestions = [
     subTopic: "uml",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
-    question: "מהו UML?",
-    options: ["שפה גרפית", "קוד", "טבלה", "DB"],
-    correctAnswer: "שפה גרפית"
+    learningType: "knowledge",
+    question: "מהי המטרה המרכזית של UML?",
+    options: [
+      "לתאר ולתכנן מערכות באמצעות דיאגרמות",
+      "לכתוב קוד באופן אוטומטי",
+      "לנהל מסדי נתונים",
+      "לבצע בדיקות תוכנה"
+    ],
+    correctAnswer: "לתאר ולתכנן מערכות באמצעות דיאגרמות"
   },
   {
     id: "uml_2",
@@ -125,21 +160,31 @@ export const systemDesignQuestions = [
     subTopic: "uml",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
-    question: "מה מציג Class Diagram?",
-    options: ["נתונים", "מבנה מחלקות", "שרת", "רשת"],
-    correctAnswer: "מבנה מחלקות"
+    learningType: "knowledge",
+    question: "איזה מידע ניתן למצוא ב-Class Diagram?",
+    options: [
+      "מחלקות, מאפיינים, פעולות וקשרים ביניהן",
+      "סדר הפעולות במערכת",
+      "מסכי המערכת",
+      "בדיקות המערכת"
+    ],
+    correctAnswer: "מחלקות, מאפיינים, פעולות וקשרים ביניהן"
   },
   {
     id: "uml_3",
     courseId: "systems_analysis",
     subTopic: "uml",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "UML משמש להצגה גרפית.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה מהמשפטים הבאים נכון לגבי UML?",
+    options: [
+      "UML הוא תקן מקובל לתיאור מערכות תוכנה",
+      "UML משמש רק לפיתוח אתרים",
+      "UML מחליף את שלב האפיון",
+      "UML מיועד רק למסדי נתונים"
+    ],
+    correctAnswer: "UML הוא תקן מקובל לתיאור מערכות תוכנה"
   },
   {
     id: "uml_4",
@@ -148,31 +193,46 @@ export const systemDesignQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מה מציג Use Case?",
-    options: ["שדות", "אינטראקציה משתמש", "שרת", "SQL"],
-    correctAnswer: "אינטראקציה משתמש"
+    question: "מנהל הפרויקט רוצה להבין אילו משתמשים מתקשרים עם המערכת ואילו פעולות הם מבצעים. איזו דיאגרמה תהיה המתאימה ביותר?",
+    options: [
+      "Use Case Diagram",
+      "Class Diagram",
+      "Sequence Diagram",
+      "Activity Diagram"
+    ],
+    correctAnswer: "Use Case Diagram"
   },
   {
     id: "uml_5",
     courseId: "systems_analysis",
     subTopic: "uml",
-    difficulty: 3,
+    difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מה מציג Sequence Diagram?",
-    options: ["זרימה בזמן", "טבלה", "קוד", "מחלקות"],
-    correctAnswer: "זרימה בזמן"
+    question: "צוות הפיתוח מעוניין לתאר את סדר ההודעות בין אובייקטים במהלך תהליך התחברות למערכת. איזו דיאגרמה תתאים ביותר?",
+    options: [
+      "Sequence Diagram",
+      "Class Diagram",
+      "Use Case Diagram",
+      "Component Diagram"
+    ],
+    correctAnswer: "Sequence Diagram"
   },
   {
     id: "uml_6",
     courseId: "systems_analysis",
     subTopic: "uml",
-    difficulty: 2,
-    format: "true_false",
+    difficulty: 3,
+    format: "mcq",
     learningType: "analysis",
-    question: "Sequence מציג סדר פעולות.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "הארכיטקט רוצה להבין את מבנה המחלקות והקשרים ביניהן, אך אינו מעוניין להציג את רצף הפעולות במערכת. איזו דיאגרמה תספק את המידע המתאים ביותר?",
+    options: [
+      "Class Diagram",
+      "Sequence Diagram",
+      "Use Case Diagram",
+      "Activity Diagram"
+    ],
+    correctAnswer: "Class Diagram"
   },
   {
     id: "uml_7",
@@ -220,10 +280,15 @@ export const systemDesignQuestions = [
     subTopic: "requirements",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
-    question: "מהו ניתוח דרישות?",
-    options: ["קוד", "הבנת צרכים", "DB", "שרת"],
-    correctAnswer: "הבנת צרכים"
+    learningType: "knowledge",
+    question: "מהי המטרה המרכזית של שלב ניתוח הדרישות?",
+    options: [
+      "להבין ולתעד את צרכי המשתמשים והמערכת",
+      "לכתוב את קוד המערכת",
+      "לבצע בדיקות תוכנה",
+      "להקים את מסד הנתונים"
+    ],
+    correctAnswer: "להבין ולתעד את צרכי המשתמשים והמערכת"
   },
   {
     id: "req_2",
@@ -231,21 +296,31 @@ export const systemDesignQuestions = [
     subTopic: "requirements",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
-    question: "מהי דרישה פונקציונלית?",
-    options: ["ביצועים", "מה המערכת עושה", "UI", "אבטחה"],
-    correctAnswer: "מה המערכת עושה"
+    learningType: "knowledge",
+    question: "איזו מהאפשרויות הבאות היא דוגמה לדרישה פונקציונלית?",
+    options: [
+      "המשתמש יוכל להתחבר למערכת באמצעות שם משתמש וסיסמה",
+      "זמן התגובה של המערכת יהיה עד 2 שניות",
+      "המערכת תהיה זמינה 99% מהזמן",
+      "המידע יוצפן בזמן העברה"
+    ],
+    correctAnswer: "המשתמש יוכל להתחבר למערכת באמצעות שם משתמש וסיסמה"
   },
   {
     id: "req_3",
     courseId: "systems_analysis",
     subTopic: "requirements",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "דרישות מגדירות צרכים.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה מהמשפטים הבאים נכון לגבי דרישות מערכת?",
+    options: [
+      "דרישות מגדירות מה המערכת צריכה לעשות",
+      "דרישות נכתבות רק לאחר הפיתוח",
+      "דרישות מיועדות רק למתכנתים",
+      "דרישות מחליפות את שלב הבדיקות"
+    ],
+    correctAnswer: "דרישות מגדירות מה המערכת צריכה לעשות"
   },
   {
     id: "req_4",
@@ -254,9 +329,14 @@ export const systemDesignQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מהי דרישה לא פונקציונלית?",
-    options: ["מה עושה", "איך עובד", "קוד", "טבלה"],
-    correctAnswer: "איך עובד"
+    question: "לקוח מבקש שהמערכת תגיב תוך פחות משתי שניות לכל פעולה. לאיזה סוג דרישה שייך הבקשה?",
+    options: [
+      "דרישה לא פונקציונלית",
+      "דרישה פונקציונלית",
+      "Use Case",
+      "תרחיש משתמש"
+    ],
+    correctAnswer: "דרישה לא פונקציונלית"
   },
   {
     id: "req_5",
@@ -265,20 +345,30 @@ export const systemDesignQuestions = [
     difficulty: 3,
     format: "mcq",
     learningType: "analysis",
-    question: "מה חשוב בדרישות?",
-    options: ["דיוק", "בלבול", "כפילויות", "איטיות"],
-    correctAnswer: "דיוק"
+    question: "במסמך הדרישות נכתב: 'המערכת תהיה ידידותית למשתמש'. מה הבעיה המרכזית בדרישה זו?",
+    options: [
+      "הדרישה אינה מדידה וברורה",
+      "הדרישה מפורטת מדי",
+      "הדרישה טכנית מדי",
+      "אין שום בעיה בדרישה"
+    ],
+    correctAnswer: "הדרישה אינה מדידה וברורה"
   },
   {
     id: "req_6",
     courseId: "systems_analysis",
     subTopic: "requirements",
     difficulty: 2,
-    format: "true_false",
+    format: "mcq",
     learningType: "analysis",
-    question: "דרישות לא ברורות גורמות לטעויות.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "במהלך הפיתוח התברר שכל חבר צוות פירש את אותה דרישה בצורה שונה. מה הסיבה הסבירה ביותר לכך?",
+    options: [
+      "הדרישה נוסחה באופן לא ברור",
+      "מסד הנתונים לא תוכנן נכון",
+      "נבחרה ארכיטקטורה לא מתאימה",
+      "לא נוצרו דיאגרמות UML"
+    ],
+    correctAnswer: "הדרישה נוסחה באופן לא ברור"
   },
   {
     id: "req_7",
@@ -326,10 +416,15 @@ export const systemDesignQuestions = [
     subTopic: "methodologies",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
-    question: "מהי מתודולוגיה?",
-    options: ["קוד", "שיטת עבודה", "DB", "טבלה"],
-    correctAnswer: "שיטת עבודה"
+    learningType: "knowledge",
+    question: "מהי מתודולוגיית פיתוח תוכנה?",
+    options: [
+      "גישה מסודרת לניהול וביצוע תהליך הפיתוח",
+      "שפת תכנות",
+      "סוג של מסד נתונים",
+      "כלי לבדיקות תוכנה"
+    ],
+    correctAnswer: "גישה מסודרת לניהול וביצוע תהליך הפיתוח"
   },
   {
     id: "meth_2",
@@ -337,21 +432,31 @@ export const systemDesignQuestions = [
     subTopic: "methodologies",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
-    question: "מה זה Agile?",
-    options: ["קשיח", "גמיש", "DB", "קוד"],
-    correctAnswer: "גמיש"
+    learningType: "knowledge",
+    question: "מהו אחד העקרונות המרכזיים של Agile?",
+    options: [
+      "יכולת להסתגל לשינויים במהלך הפרויקט",
+      "תכנון מלא של כל המערכת מראש בלבד",
+      "מניעת תקשורת עם הלקוח",
+      "פיתוח כל המערכת בגרסה אחת"
+    ],
+    correctAnswer: "יכולת להסתגל לשינויים במהלך הפרויקט"
   },
   {
     id: "meth_3",
     courseId: "systems_analysis",
     subTopic: "methodologies",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "Agile גמיש.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה מהמשפטים הבאים נכון לגבי Agile?",
+    options: [
+      "הפיתוח מתבצע באיטרציות קצרות",
+      "הלקוח מעורב רק בסוף הפרויקט",
+      "לא מתבצע תכנון כלל",
+      "אין צורך בבדיקות"
+    ],
+    correctAnswer: "הפיתוח מתבצע באיטרציות קצרות"
   },
   {
     id: "meth_4",
@@ -360,31 +465,46 @@ export const systemDesignQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מה Waterfall?",
-    options: ["שלבים", "אקראי", "מהיר", "לא מסודר"],
-    correctAnswer: "שלבים"
+    question: "פרויקט כולל דרישות יציבות ומוגדרות היטב מראש, עם מעט מאוד שינויים צפויים. איזו מתודולוגיה עשויה להתאים יותר?",
+    options: [
+      "Waterfall",
+      "Agile",
+      "Scrum בלבד",
+      "Kanban בלבד"
+    ],
+    correctAnswer: "Waterfall"
   },
   {
     id: "meth_5",
     courseId: "systems_analysis",
     subTopic: "methodologies",
-    difficulty: 3,
+    difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מתי Agile עדיף?",
-    options: ["שינויים", "יציב", "קבוע", "לא חשוב"],
-    correctAnswer: "שינויים"
+    question: "לקוח משנה דרישות לעיתים קרובות במהלך הפרויקט. איזו גישה תהיה המתאימה ביותר?",
+    options: [
+      "Agile",
+      "Waterfall",
+      "Big Bang",
+      "Code and Fix"
+    ],
+    correctAnswer: "Agile"
   },
   {
     id: "meth_6",
     courseId: "systems_analysis",
     subTopic: "methodologies",
-    difficulty: 2,
-    format: "true_false",
+    difficulty: 3,
+    format: "mcq",
     learningType: "analysis",
-    question: "Waterfall קשיח.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "צוות פיתוח מעוניין לקבל משוב מהלקוח לאורך כל הפרויקט ולשחרר גרסאות בתדירות גבוהה. איזו מתודולוגיה תתמוך בצורה הטובה ביותר בדרישה זו?",
+    options: [
+      "Agile",
+      "Waterfall",
+      "V-Model",
+      "Spiral בלבד"
+    ],
+    correctAnswer: "Agile"
   },
   {
     id: "meth_7",

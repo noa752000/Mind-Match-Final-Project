@@ -21,7 +21,7 @@ const allQuestions = [
 ];
 
 async function uploadQuestions() {
-  console.log("Uploading questions...");
+  console.log("Uploading all questions...");
 
   for (const question of allQuestions) {
     await setDoc(doc(db, "questions", question.id), question);
@@ -31,7 +31,27 @@ async function uploadQuestions() {
   console.log(`Finished uploading ${allQuestions.length} questions.`);
 }
 
-uploadQuestions().catch((error) => {
-  console.error("Upload failed:", error);
-  process.exit(1);
-});
+async function uploadSystemDesignQuestions() {
+  console.log("Uploading systems_analysis (systemDesignQuestions)...");
+
+  for (const question of systemDesignQuestions) {
+    await setDoc(doc(db, "questions", question.id), question);
+    console.log("Uploaded:", question.id);
+  }
+
+  console.log(`Finished uploading ${systemDesignQuestions.length} systemDesign questions.`);
+}
+
+const isSystemDesignOnly = process.argv.includes("--system-design");
+
+if (isSystemDesignOnly) {
+  uploadSystemDesignQuestions().catch((error) => {
+    console.error("Upload failed:", error);
+    process.exit(1);
+  });
+} else {
+  uploadQuestions().catch((error) => {
+    console.error("Upload failed:", error);
+    process.exit(1);
+  });
+}
