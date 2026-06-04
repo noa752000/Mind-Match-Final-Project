@@ -1,390 +1,96 @@
-import { ArrowRight, BookOpen, Clock, Users, Star, Award, CheckCircle, Circle, PlayCircle, TrendingUp, Calculator, BarChart, Activity, Sparkles, MessageCircle, Brain, Database, Shield, Code, FileText, DollarSign, Grid3x3 } from 'lucide-react';
+import { ArrowRight, BookOpen, Clock, Users, Star, Award, CheckCircle, TrendingUp, Calculator, BarChart, Activity, Sparkles, MessageCircle, Brain, Database, Shield, Code, FileText, DollarSign, Grid3x3, Plus, Trash2 } from 'lucide-react';
 import { Card } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { Progress } from '../components/ui/progress';
 import { useState } from 'react';
 import { coursesData } from '../data/coursesData';
+import { useAuth } from '../contexts/AuthContext';
 
 // נושאי תרגול לפי קורס
 const courseTopics: Record<string, Array<{
   title: string;
+  description: string;
   icon: typeof TrendingUp;
   iconColor: string;
   bgColor: string;
-  hoverColor: string;
   totalQuestions: number;
-  multipleChoice: number;
-  trueFalse: number;
-  openEnded: number;
 }>> = {
   'calculus1': [
     {
       title: 'גבולות',
+      description: 'גבול של פונקציה מתאר את ההתנהגות של הפונקציה כאשר המשתנה מתקרב לערך מסוים. נושא זה הוא הבסיס להבנת רציפות, נגזרות ואינטגרלים.',
       icon: TrendingUp,
       iconColor: 'text-blue-600',
       bgColor: 'bg-blue-100',
-      hoverColor: 'hover:border-blue-500 hover:bg-blue-50',
       totalQuestions: 15,
-      multipleChoice: 8,
-      trueFalse: 4,
-      openEnded: 3,
     },
     {
       title: 'נגזרות',
+      description: 'הנגזרת מודדת את שיעור השינוי המיידי של פונקציה. נתרגל כללי גזירה, כלל השרשרת ויישומים כמו מציאת נקודות קיצון.',
       icon: Calculator,
       iconColor: 'text-green-600',
       bgColor: 'bg-green-100',
-      hoverColor: 'hover:border-green-500 hover:bg-green-50',
       totalQuestions: 22,
-      multipleChoice: 12,
-      trueFalse: 6,
-      openEnded: 4,
     },
     {
       title: 'חקירת פונקציות',
+      description: 'ניתוח מלא של פונקציה: תחום הגדרה, נקודות קיצון, נקודות פיתול, תחומי עלייה וירידה ושרטוט הגרף.',
       icon: BarChart,
       iconColor: 'text-purple-600',
       bgColor: 'bg-purple-100',
-      hoverColor: 'hover:border-purple-500 hover:bg-purple-50',
       totalQuestions: 18,
-      multipleChoice: 10,
-      trueFalse: 5,
-      openEnded: 3,
     },
     {
       title: 'אינטגרלים',
+      description: 'האינטגרל הוא הפעולה ההופכית לנגזרת ומשמש לחישוב שטחים ונפחים. נתרגל שיטות אינטגרציה כמו הצבה ואינטגרציה בחלקים.',
       icon: Activity,
       iconColor: 'text-orange-600',
       bgColor: 'bg-orange-100',
-      hoverColor: 'hover:border-orange-500 hover:bg-orange-50',
       totalQuestions: 20,
-      multipleChoice: 11,
-      trueFalse: 5,
-      openEnded: 4,
     },
   ],
   'sql': [
-    {
-      title: 'SELECT ו-WHERE',
-      icon: Database,
-      iconColor: 'text-blue-600',
-      bgColor: 'bg-blue-100',
-      hoverColor: 'hover:border-blue-500 hover:bg-blue-50',
-      totalQuestions: 18,
-      multipleChoice: 10,
-      trueFalse: 5,
-      openEnded: 3,
-    },
-    {
-      title: 'JOINs',
-      icon: Grid3x3,
-      iconColor: 'text-green-600',
-      bgColor: 'bg-green-100',
-      hoverColor: 'hover:border-green-500 hover:bg-green-50',
-      totalQuestions: 24,
-      multipleChoice: 14,
-      trueFalse: 6,
-      openEnded: 4,
-    },
-    {
-      title: 'נורמליזציה',
-      icon: BarChart,
-      iconColor: 'text-purple-600',
-      bgColor: 'bg-purple-100',
-      hoverColor: 'hover:border-purple-500 hover:bg-purple-50',
-      totalQuestions: 16,
-      multipleChoice: 9,
-      trueFalse: 4,
-      openEnded: 3,
-    },
-    {
-      title: 'אופטימיזציה',
-      icon: TrendingUp,
-      iconColor: 'text-orange-600',
-      bgColor: 'bg-orange-100',
-      hoverColor: 'hover:border-orange-500 hover:bg-orange-50',
-      totalQuestions: 20,
-      multipleChoice: 12,
-      trueFalse: 5,
-      openEnded: 3,
-    },
+    { title: 'SELECT ו-WHERE', description: 'פקודות הבסיס לשליפת נתונים ממסד נתונים. נתרגל סינון שורות, מיון תוצאות ושימוש בפונקציות אגרגציה כמו COUNT, SUM ו-AVG.', icon: Database, iconColor: 'text-blue-600', bgColor: 'bg-blue-100', totalQuestions: 18 },
+    { title: 'JOINs', description: 'חיבור טבלאות מאפשר לשלוף נתונים ממספר טבלאות בו-זמנית. נתרגל INNER JOIN, LEFT JOIN, RIGHT JOIN ואת ההבדלים ביניהם.', icon: Grid3x3, iconColor: 'text-green-600', bgColor: 'bg-green-100', totalQuestions: 24 },
+    { title: 'נורמליזציה', description: 'תהליך ארגון הנתונים למניעת כפילויות ושמירה על שלמות הנתונים. נלמד את הצורות הנורמליות 1NF, 2NF ו-3NF עם דוגמאות מעשיות.', icon: BarChart, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 16 },
+    { title: 'אופטימיזציה', description: 'שיפור ביצועי שאילתות SQL באמצעות אינדקסים, ניתוח תוכניות ביצוע ואסטרטגיות שאילתה יעילות.', icon: TrendingUp, iconColor: 'text-orange-600', bgColor: 'bg-orange-100', totalQuestions: 20 },
   ],
   'information-security': [
-    {
-      title: 'הצפנה סימטרית',
-      icon: Shield,
-      iconColor: 'text-blue-600',
-      bgColor: 'bg-blue-100',
-      hoverColor: 'hover:border-blue-500 hover:bg-blue-50',
-      totalQuestions: 17,
-      multipleChoice: 9,
-      trueFalse: 5,
-      openEnded: 3,
-    },
-    {
-      title: 'הצפנה אסימטרית',
-      icon: Shield,
-      iconColor: 'text-green-600',
-      bgColor: 'bg-green-100',
-      hoverColor: 'hover:border-green-500 hover:bg-green-50',
-      totalQuestions: 21,
-      multipleChoice: 12,
-      trueFalse: 5,
-      openEnded: 4,
-    },
-    {
-      title: 'Hash Functions',
-      icon: Code,
-      iconColor: 'text-purple-600',
-      bgColor: 'bg-purple-100',
-      hoverColor: 'hover:border-purple-500 hover:bg-purple-50',
-      totalQuestions: 15,
-      multipleChoice: 8,
-      trueFalse: 4,
-      openEnded: 3,
-    },
-    {
-      title: 'אבטחת רשתות',
-      icon: Activity,
-      iconColor: 'text-orange-600',
-      bgColor: 'bg-orange-100',
-      hoverColor: 'hover:border-orange-500 hover:bg-orange-50',
-      totalQuestions: 19,
-      multipleChoice: 11,
-      trueFalse: 5,
-      openEnded: 3,
-    },
+    { title: 'הצפנה סימטרית', description: 'שיטת הצפנה בה אותו מפתח משמש להצפנה ולפענוח. נתרגל אלגוריתמים כמו AES ו-DES, יתרונות וחסרונות ומקרי שימוש.', icon: Shield, iconColor: 'text-blue-600', bgColor: 'bg-blue-100', totalQuestions: 17 },
+    { title: 'הצפנה אסימטרית', description: 'שיטת הצפנה עם זוג מפתחות — ציבורי ופרטי. נתרגל RSA, יישומים בחתימות דיגיטליות ואימות זהות.', icon: Shield, iconColor: 'text-green-600', bgColor: 'bg-green-100', totalQuestions: 21 },
+    { title: 'Hash Functions', description: 'פונקציות חד-כיווניות שממירות נתונים לתמצית בגודל קבוע. נתרגל MD5, SHA-256 ויישומים באימות סיסמאות ושלמות קבצים.', icon: Code, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 15 },
+    { title: 'אבטחת רשתות', description: 'הגנה על תשתיות תקשורת מפני איומים. נתרגל Firewalls, IDS/IPS, VPN ופרוטוקולי אבטחה כמו TLS ו-IPSec.', icon: Activity, iconColor: 'text-orange-600', bgColor: 'bg-orange-100', totalQuestions: 19 },
   ],
   'oop': [
-    {
-      title: 'מחלקות ואובייקטים',
-      icon: Code,
-      iconColor: 'text-blue-600',
-      bgColor: 'bg-blue-100',
-      hoverColor: 'hover:border-blue-500 hover:bg-blue-50',
-      totalQuestions: 16,
-      multipleChoice: 9,
-      trueFalse: 4,
-      openEnded: 3,
-    },
-    {
-      title: 'הורשה',
-      icon: BarChart,
-      iconColor: 'text-green-600',
-      bgColor: 'bg-green-100',
-      hoverColor: 'hover:border-green-500 hover:bg-green-50',
-      totalQuestions: 20,
-      multipleChoice: 11,
-      trueFalse: 6,
-      openEnded: 3,
-    },
-    {
-      title: 'פולימורפיזם',
-      icon: Grid3x3,
-      iconColor: 'text-purple-600',
-      bgColor: 'bg-purple-100',
-      hoverColor: 'hover:border-purple-500 hover:bg-purple-50',
-      totalQuestions: 18,
-      multipleChoice: 10,
-      trueFalse: 5,
-      openEnded: 3,
-    },
-    {
-      title: 'דפוסי עיצוב',
-      icon: Sparkles,
-      iconColor: 'text-orange-600',
-      bgColor: 'bg-orange-100',
-      hoverColor: 'hover:border-orange-500 hover:bg-orange-50',
-      totalQuestions: 22,
-      multipleChoice: 13,
-      trueFalse: 5,
-      openEnded: 4,
-    },
+    { title: 'מחלקות ואובייקטים', description: 'עקרון הבסיס של OOP — מחלקה כתבנית ואובייקט כמימוש. נתרגל יצירת מחלקות, שדות, מתודות, קונסטרקטורים ועיטוף.', icon: Code, iconColor: 'text-blue-600', bgColor: 'bg-blue-100', totalQuestions: 16 },
+    { title: 'הורשה', description: 'מנגנון שמאפשר למחלקה לרשת תכונות ממחלקה אחרת. נתרגל super, override, מחלקות מופשטות ויחסי is-a.', icon: BarChart, iconColor: 'text-green-600', bgColor: 'bg-green-100', totalQuestions: 20 },
+    { title: 'פולימורפיזם', description: 'יכולת אובייקטים שונים להגיב שונה לאותה הודעה. נתרגל method overriding, ממשקים (interface) ו-casting.', icon: Grid3x3, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 18 },
+    { title: 'דפוסי עיצוב', description: 'פתרונות מוכחים לבעיות עיצוב נפוצות בתכנות מונחה עצמים. נתרגל Singleton, Factory, Observer ו-Strategy.', icon: Sparkles, iconColor: 'text-orange-600', bgColor: 'bg-orange-100', totalQuestions: 22 },
   ],
   'html': [
-    {
-      title: 'סמנטיקה',
-      icon: FileText,
-      iconColor: 'text-blue-600',
-      bgColor: 'bg-blue-100',
-      hoverColor: 'hover:border-blue-500 hover:bg-blue-50',
-      totalQuestions: 14,
-      multipleChoice: 8,
-      trueFalse: 4,
-      openEnded: 2,
-    },
-    {
-      title: 'טפסים',
-      icon: Code,
-      iconColor: 'text-green-600',
-      bgColor: 'bg-green-100',
-      hoverColor: 'hover:border-green-500 hover:bg-green-50',
-      totalQuestions: 19,
-      multipleChoice: 11,
-      trueFalse: 5,
-      openEnded: 3,
-    },
-    {
-      title: 'נגישות',
-      icon: Users,
-      iconColor: 'text-purple-600',
-      bgColor: 'bg-purple-100',
-      hoverColor: 'hover:border-purple-500 hover:bg-purple-50',
-      totalQuestions: 16,
-      multipleChoice: 9,
-      trueFalse: 5,
-      openEnded: 2,
-    },
-    {
-      title: 'HTML5 APIs',
-      icon: Activity,
-      iconColor: 'text-orange-600',
-      bgColor: 'bg-orange-100',
-      hoverColor: 'hover:border-orange-500 hover:bg-orange-50',
-      totalQuestions: 17,
-      multipleChoice: 10,
-      trueFalse: 4,
-      openEnded: 3,
-    },
+    { title: 'סמנטיקה', description: 'שימוש בתגיות HTML5 בעלות משמעות כמו header, nav, main, section ו-article לתיאור מבנה הדף בצורה ברורה ונגישה.', icon: FileText, iconColor: 'text-blue-600', bgColor: 'bg-blue-100', totalQuestions: 14 },
+    { title: 'טפסים', description: 'יצירת טפסים אינטראקטיביים עם input types שונים, validation, labels ועקרונות נגישות בטפסים.', icon: Code, iconColor: 'text-green-600', bgColor: 'bg-green-100', totalQuestions: 19 },
+    { title: 'נגישות', description: 'הנגשת אתרים לאנשים עם מוגבלויות באמצעות ARIA attributes, ניגודיות צבעים וניווט מקלדת תקני.', icon: Users, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 16 },
+    { title: 'HTML5 APIs', description: 'ממשקי תכנות מתקדמים של HTML5 כמו Local Storage, Geolocation, Canvas ו-Web Workers לאפליקציות עשירות.', icon: Activity, iconColor: 'text-orange-600', bgColor: 'bg-orange-100', totalQuestions: 17 },
   ],
   'linear-algebra': [
-    {
-      title: 'וקטורים',
-      icon: TrendingUp,
-      iconColor: 'text-blue-600',
-      bgColor: 'bg-blue-100',
-      hoverColor: 'hover:border-blue-500 hover:bg-blue-50',
-      totalQuestions: 15,
-      multipleChoice: 8,
-      trueFalse: 4,
-      openEnded: 3,
-    },
-    {
-      title: 'מטריצות',
-      icon: Grid3x3,
-      iconColor: 'text-green-600',
-      bgColor: 'bg-green-100',
-      hoverColor: 'hover:border-green-500 hover:bg-green-50',
-      totalQuestions: 21,
-      multipleChoice: 12,
-      trueFalse: 5,
-      openEnded: 4,
-    },
-    {
-      title: 'טרנספורמציות',
-      icon: Activity,
-      iconColor: 'text-purple-600',
-      bgColor: 'bg-purple-100',
-      hoverColor: 'hover:border-purple-500 hover:bg-purple-50',
-      totalQuestions: 18,
-      multipleChoice: 10,
-      trueFalse: 5,
-      openEnded: 3,
-    },
-    {
-      title: 'ערכים עצמיים',
-      icon: Calculator,
-      iconColor: 'text-orange-600',
-      bgColor: 'bg-orange-100',
-      hoverColor: 'hover:border-orange-500 hover:bg-orange-50',
-      totalQuestions: 19,
-      multipleChoice: 11,
-      trueFalse: 5,
-      openEnded: 3,
-    },
+    { title: 'וקטורים', description: 'גדלים בעלי כיוון ועוצמה. נתרגל חיבור וקטורים, כפל בסקלר, מכפלה סקלרית, מכפלה וקטורית ותכונות גיאומטריות.', icon: TrendingUp, iconColor: 'text-blue-600', bgColor: 'bg-blue-100', totalQuestions: 15 },
+    { title: 'מטריצות', description: 'מערכים דו-ממדיים של מספרים. נתרגל פעולות מטריצות, כפל מטריצות, מציאת מטריצה הופכית וחישוב דטרמיננטה.', icon: Grid3x3, iconColor: 'text-green-600', bgColor: 'bg-green-100', totalQuestions: 21 },
+    { title: 'טרנספורמציות', description: 'העברת וקטורים ממרחב אחד לאחר. נתרגל טרנספורמציות לינאריות, גרעין ותמונה ומטריצת ייצוג.', icon: Activity, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 18 },
+    { title: 'ערכים עצמיים', description: 'סקלרים מיוחדים המקיימים Av=λv. נתרגל מציאת ערכים וקטורים עצמיים, פולינום אופייני ואלכסון מטריצה.', icon: Calculator, iconColor: 'text-orange-600', bgColor: 'bg-orange-100', totalQuestions: 19 },
   ],
   'requirements-design': [
-    {
-      title: 'ניתוח דרישות',
-      icon: FileText,
-      iconColor: 'text-blue-600',
-      bgColor: 'bg-blue-100',
-      hoverColor: 'hover:border-blue-500 hover:bg-blue-50',
-      totalQuestions: 16,
-      multipleChoice: 9,
-      trueFalse: 4,
-      openEnded: 3,
-    },
-    {
-      title: 'UML Diagrams',
-      icon: BarChart,
-      iconColor: 'text-green-600',
-      bgColor: 'bg-green-100',
-      hoverColor: 'hover:border-green-500 hover:bg-green-50',
-      totalQuestions: 22,
-      multipleChoice: 13,
-      trueFalse: 5,
-      openEnded: 4,
-    },
-    {
-      title: 'ארכיטקטורה',
-      icon: Grid3x3,
-      iconColor: 'text-purple-600',
-      bgColor: 'bg-purple-100',
-      hoverColor: 'hover:border-purple-500 hover:bg-purple-50',
-      totalQuestions: 18,
-      multipleChoice: 10,
-      trueFalse: 5,
-      openEnded: 3,
-    },
-    {
-      title: 'מתודולוגיות',
-      icon: Users,
-      iconColor: 'text-orange-600',
-      bgColor: 'bg-orange-100',
-      hoverColor: 'hover:border-orange-500 hover:bg-orange-50',
-      totalQuestions: 20,
-      multipleChoice: 12,
-      trueFalse: 5,
-      openEnded: 3,
-    },
+    { title: 'ניתוח דרישות', description: 'תהליך זיהוי, ניתוח ותיעוד דרישות מערכת מהלקוח. נתרגל Use Cases, דרישות פונקציונליות ולא-פונקציונליות.', icon: FileText, iconColor: 'text-blue-600', bgColor: 'bg-blue-100', totalQuestions: 16 },
+    { title: 'UML Diagrams', description: 'שפת מידול גרפית לתיאור מערכות תוכנה. נתרגל Class Diagrams, Sequence Diagrams, Activity Diagrams ו-Use Case Diagrams.', icon: BarChart, iconColor: 'text-green-600', bgColor: 'bg-green-100', totalQuestions: 22 },
+    { title: 'ארכיטקטורה', description: 'תכנון המבנה הכללי של מערכת תוכנה. נתרגל דפוסי ארכיטקטורה כמו MVC, Layer Architecture ו-Microservices.', icon: Grid3x3, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 18 },
+    { title: 'מתודולוגיות', description: 'שיטות פיתוח תוכנה שונות. נתרגל Waterfall, Agile, Scrum ו-Kanban — יתרונות, חסרונות ומתי להשתמש בכל אחד.', icon: Users, iconColor: 'text-orange-600', bgColor: 'bg-orange-100', totalQuestions: 20 },
   ],
   'mis-economics': [
-    {
-      title: 'ROI וניתוח השקעות',
-      icon: DollarSign,
-      iconColor: 'text-blue-600',
-      bgColor: 'bg-blue-100',
-      hoverColor: 'hover:border-blue-500 hover:bg-blue-50',
-      totalQuestions: 17,
-      multipleChoice: 10,
-      trueFalse: 4,
-      openEnded: 3,
-    },
-    {
-      title: 'ניהול פרויקטים',
-      icon: Users,
-      iconColor: 'text-green-600',
-      bgColor: 'bg-green-100',
-      hoverColor: 'hover:border-green-500 hover:bg-green-50',
-      totalQuestions: 20,
-      multipleChoice: 12,
-      trueFalse: 5,
-      openEnded: 3,
-    },
-    {
-      title: 'ניהול סיכונים',
-      icon: Shield,
-      iconColor: 'text-purple-600',
-      bgColor: 'bg-purple-100',
-      hoverColor: 'hover:border-purple-500 hover:bg-purple-50',
-      totalQuestions: 16,
-      multipleChoice: 9,
-      trueFalse: 4,
-      openEnded: 3,
-    },
-    {
-      title: 'אסטרטגיה דיגיטלית',
-      icon: TrendingUp,
-      iconColor: 'text-orange-600',
-      bgColor: 'bg-orange-100',
-      hoverColor: 'hover:border-orange-500 hover:bg-orange-50',
-      totalQuestions: 18,
-      multipleChoice: 11,
-      trueFalse: 4,
-      openEnded: 3,
-    },
+    { title: 'ROI וניתוח השקעות', description: 'מדידת כדאיות כלכלית של השקעות ב-IT. נתרגל חישוב ROI, NPV, IRR ותקופת החזר עם דוגמאות מהעולם האמיתי.', icon: DollarSign, iconColor: 'text-blue-600', bgColor: 'bg-blue-100', totalQuestions: 17 },
+    { title: 'ניהול פרויקטים', description: 'תכנון ובקרת פרויקטי IT. נתרגל Gantt charts, WBS, ניהול סיכונים, ניהול משאבים ועמידה בלוחות זמנים.', icon: Users, iconColor: 'text-green-600', bgColor: 'bg-green-100', totalQuestions: 20 },
+    { title: 'ניהול סיכונים', description: 'זיהוי, הערכה וטיפול בסיכונים בפרויקטי IT. נתרגל מטריצת סיכונים, הסתברות ועוצמה ואסטרטגיות תגובה.', icon: Shield, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 16 },
+    { title: 'אסטרטגיה דיגיטלית', description: 'תכנון אסטרטגי של טרנספורמציה דיגיטלית. נתרגל ניתוח SWOT, יתרון תחרותי, חדשנות ומדדי הצלחה דיגיטליים.', icon: TrendingUp, iconColor: 'text-orange-600', bgColor: 'bg-orange-100', totalQuestions: 18 },
   ],
 };
 
@@ -467,18 +173,90 @@ const quizQuestions = {
   ],
 };
 
+const questionTypeDescriptions: Record<string, { knowledge: string; analysis: string; visuals: string }> = {
+  'calculus1': {
+    knowledge: 'הגדרות מתמטיות של גבולות, רציפות, נגזרות ואינטגרלים. בוחנות הבנת מושגי יסוד כמו כלל לופיטל, משפט הערך הממוצע ושיטות אינטגרציה.',
+    analysis: 'פתרון תרגילי חישוב מורכבים — חישוב גבולות, נגזרות של פונקציות מורכבות, בעיות אופטימיזציה ומציאת שטחים באמצעות אינטגרלים.',
+    visuals: 'קריאה וניתוח של גרפי פונקציות, זיהוי נקודות קיצון ופיתול מתרשים, והבנת התנהגות פונקציה לפי צורת הגרף.',
+  },
+  'linear-algebra': {
+    knowledge: 'הגדרות של מרחבים וקטוריים, תלות ואי-תלות לינארית, מטריצות, טרנספורמציות לינאריות וערכים עצמיים.',
+    analysis: 'חישוב דטרמיננטה, מציאת מטריצה הופכית, פתרון מערכות משוואות לינאריות ומציאת ערכים וקטורים עצמיים.',
+    visuals: 'קריאת מטריצות וביצוע פעולות עליהן, ייצוג גיאומטרי של וקטורים ותרשימי טרנספורמציות במישור.',
+  },
+  'oop': {
+    knowledge: 'מושגי יסוד בתכנות מונחה עצמים — מחלקות, אובייקטים, עיטוף, הורשה, פולימורפיזם וממשקים.',
+    analysis: 'ניתוח תרחישי תכנות, בחירת דפוס עיצוב מתאים (Singleton, Factory, Observer) ופתרון בעיות ארכיטקטורת קוד.',
+    visuals: 'קריאת קוד Java ו-Python, ניתוח class diagrams וזיהוי יחסי ירושה וקומפוזיציה בין מחלקות.',
+  },
+  'html': {
+    knowledge: 'תגיות HTML5 ומשמעותן הסמנטית, מושגי נגישות, ARIA attributes ותקני Web מודרניים.',
+    analysis: 'ניתוח מבנה דפי אינטרנט, בחירת תגית סמנטית מתאימה ופתרון בעיות נגישות וולידציה של טפסים.',
+    visuals: 'קריאת קוד HTML ו-CSS, זיהוי שגיאות במבנה הדף ופירוש תרשימי פריסה ו-DOM.',
+  },
+  'sql': {
+    knowledge: 'מושגי יסוד של מסדי נתונים יחסיים — מפתחות ראשיים וזרים, נורמליזציה, פקודות DDL ו-DML.',
+    analysis: 'ניתוח שאילתות SQL מורכבות, פתרון בעיות נורמליזציה וזיהוי צווארי בקבוק בביצועי שאילתות.',
+    visuals: 'קריאת שאילתות SQL וניחוש התוצאה, ניתוח תרשימי ERD וקריאת תוצאות JOIN בין טבלאות.',
+  },
+  'requirements-design': {
+    knowledge: 'מושגי UML, סוגי דרישות מערכת (פונקציונליות ולא-פונקציונליות) ומתודולוגיות פיתוח כמו Agile ו-Waterfall.',
+    analysis: 'ניתוח תרחישי מערכת, זיהוי דרישות מתוך תיאור לקוח ובחירת ארכיטקטורה ומתודולוגיה מתאימה.',
+    visuals: 'קריאת דיאגרמות UML — Use Case, Class, Sequence ו-Activity Diagrams וזיהוי יחסים בין רכיבי המערכת.',
+  },
+  'information-security': {
+    knowledge: 'מושגי הצפנה סימטרית ואסימטרית, פרוטוקולי אבטחה (TLS, IPSec), Hash Functions ועקרונות ה-CIA Triad.',
+    analysis: 'ניתוח תרחישי אבטחה, זיהוי פגיעויות (OWASP Top 10, SQL Injection, XSS) ובחירת מנגנון הגנה מתאים.',
+    visuals: 'קריאת תרשימי רשת ופרוטוקולים, ניתוח קוד הצפנה ופירוש תרשימי תקשורת מאובטחת.',
+  },
+  'mis-economics': {
+    knowledge: 'מושגי ROI, NPV, TCO, ניהול פרויקטי IT וכלי תכנון כמו WBS ותרשים Gantt.',
+    analysis: 'חישוב ROI ותקופת החזר, ניתוח עלות-תועלת של השקעות IT וזיהוי סיכונים בפרויקטים.',
+    visuals: 'קריאת תרשימי Gantt, גרפי עלות-זמן, מטריצות סיכונים ותרשימי מבנה ארגוני של פרויקטים.',
+  },
+};
+
+const defaultQuestionTypes = {
+  knowledge: 'הגדרות ומושגי יסוד של הקורס. בוחנות הבנת עקרונות בסיסיים ועובדות מרכזיות.',
+  analysis: 'ניתוח תרחישים, פתרון בעיות והשוואה בין מושגים. דורשות חשיבה ביקורתית ויישום.',
+  visuals: 'קריאה וניתוח של חומר ויזואלי — תרשימים, גרפים ודוגמאות הרלוונטיות לקורס.',
+};
+
 interface CourseDetailPageProps {
   courseId: string;
   onBack?: () => void;
   onOpenTutor?: (courseId: string) => void;
+  onOpenPractice?: (courseId: string) => void;
 }
 
-export function CourseDetailPage({ courseId, onBack, onOpenTutor }: CourseDetailPageProps) {
-  const course = coursesData[courseId] || coursesData['sql']; // Default to SQL if not found
+export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice }: CourseDetailPageProps) {
+  const course = coursesData[courseId] || coursesData['sql'];
+  const { user, addUserCourse, removeUserCourse } = useAuth();
+
+  const isInMyCourses = user?.selectedCourses?.includes(courseId) ?? false;
+  const [toggling, setToggling] = useState(false);
+
+  const handleToggleCourse = async () => {
+    setToggling(true);
+    if (isInMyCourses) {
+      await removeUserCourse(courseId);
+    } else {
+      await addUserCourse(courseId);
+    }
+    setToggling(false);
+  };
 
   const handleOpenChat = () => {
     if (onOpenTutor) {
       onOpenTutor(courseId);
+    }
+  };
+
+  const qTypes = questionTypeDescriptions[courseId] || defaultQuestionTypes;
+
+  const handleStartPractice = () => {
+    if (onOpenPractice) {
+      onOpenPractice(courseId);
     }
   };
 
@@ -493,14 +271,30 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor }: CourseDetail
             onClick={onBack}
           >
             <ArrowRight className="w-4 h-4 ml-2" />
-            חזרה לקטלוג הקור��ים
+            חזרה לקטלוג הקורסים
           </Button>
 
-          <div className="flex items-center justify-start gap-4">
-            <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${course.color} flex items-center justify-center`}>
-              <Calculator className="w-8 h-8 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${course.color} flex items-center justify-center`}>
+                <Calculator className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold text-gray-900">{course.title}</h1>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900">{course.title}</h1>
+            <Button
+              onClick={handleToggleCourse}
+              disabled={toggling}
+              size="lg"
+              className={isInMyCourses
+                ? 'bg-green-100 text-green-700 hover:bg-red-50 hover:text-red-600 border-2 border-green-300 hover:border-red-300 transition-all gap-2 px-6'
+                : 'bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white gap-2 px-6 shadow-lg shadow-teal-200 hover:shadow-teal-300 transition-all scale-100 hover:scale-105 font-bold text-base'
+              }
+            >
+              {isInMyCourses
+                ? <><CheckCircle className="w-5 h-5" />בקורסים שלי</>
+                : <><Plus className="w-5 h-5" />הוסף לקורסים שלי</>
+              }
+            </Button>
           </div>
         </div>
       </div>
@@ -527,26 +321,63 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor }: CourseDetail
                 <span>{course.students.toLocaleString()} סטודנטים</span>
               </div>
               <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5" />
-                <span>{course.duration}</span>
+                <BookOpen className="w-5 h-5" />
+                <span>{course.syllabus.length} נושאים עיקריים</span>
               </div>
             </div>
           </Card>
 
-          {/* כפתור תרגול מהיר */}
-          <Card className="p-6 bg-gradient-to-l from-blue-600 to-indigo-600 text-white hover:shadow-xl transition-shadow cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div className="text-right">
-                <h2 className="text-xl font-bold mb-1">התחל תרגול</h2>
-                <p className="text-blue-100 text-sm">
-                  המערכת תבחר שאלות מותאמות לרמתך
-                </p>
+          {/* סוגי שאלות */}
+          <Card className="p-8">
+            <div className="flex items-center justify-end gap-3 mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">מבנה השאלות בקורס</h2>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-white" />
               </div>
-              <Button className="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3 text-base font-semibold">
-                <Brain className="w-5 h-5 ml-2" />
-                התחל עכשיו
-              </Button>
             </div>
+
+            <p className="text-gray-600 text-right mb-6 leading-relaxed">
+              כל קורס מכיל <span className="font-bold text-gray-900">36 שאלות תרגול</span> המחולקות לשלושה סוגים, המיועדים לחזק היבטים שונים של ההבנה:
+            </p>
+
+            <div className="grid grid-cols-3 gap-6">
+              {/* Knowledge */}
+              <div className="bg-blue-50 rounded-2xl p-6 text-right border border-blue-100">
+                <div className="flex items-center justify-end gap-3 mb-3">
+                  <h3 className="text-lg font-bold text-blue-900">Knowledge</h3>
+                  <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-bold text-sm">K</span>
+                  </div>
+                </div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">12 שאלות</div>
+                <p className="text-sm text-blue-700 leading-relaxed">{qTypes.knowledge}</p>
+              </div>
+
+              {/* Analysis */}
+              <div className="bg-purple-50 rounded-2xl p-6 text-right border border-purple-100">
+                <div className="flex items-center justify-end gap-3 mb-3">
+                  <h3 className="text-lg font-bold text-purple-900">Analysis</h3>
+                  <div className="w-10 h-10 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-bold text-sm">A</span>
+                  </div>
+                </div>
+                <div className="text-3xl font-bold text-purple-600 mb-2">12 שאלות</div>
+                <p className="text-sm text-purple-700 leading-relaxed">{qTypes.analysis}</p>
+              </div>
+
+              {/* Visuals */}
+              <div className="bg-green-50 rounded-2xl p-6 text-right border border-green-100">
+                <div className="flex items-center justify-end gap-3 mb-3">
+                  <h3 className="text-lg font-bold text-green-900">Visuals</h3>
+                  <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-bold text-sm">V</span>
+                  </div>
+                </div>
+                <div className="text-3xl font-bold text-green-600 mb-2">12 שאלות</div>
+                <p className="text-sm text-green-700 leading-relaxed">{qTypes.visuals}</p>
+              </div>
+            </div>
+
           </Card>
 
           {/* קטגוריות תרגול לפי נושאים */}
@@ -556,35 +387,16 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor }: CourseDetail
             </h2>
             <div className="grid grid-cols-3 gap-6">
               {courseTopics[courseId]?.map((topic) => (
-                <Card key={topic.title} className="p-8 hover:shadow-lg transition-shadow">
-                  <div className={courseId === 'linear-algebra' || courseId === 'oop' ? 'text-left' : 'text-right'}>
-                    <div className={`flex items-center ${courseId === 'linear-algebra' || courseId === 'oop' ? 'justify-start' : 'justify-end'} gap-4 mb-4`}>
-                      <div className={`w-16 h-16 rounded-xl ${topic.bgColor} flex items-center justify-center`}>
-                        <topic.icon className={`w-8 h-8 ${topic.iconColor}`} />
-                      </div>
-                      <h3 className="text-2xl font-bold text-gray-900">{topic.title}</h3>
+                <Card key={topic.title} className="p-8 hover:shadow-lg transition-shadow flex flex-col">
+                  <div className="flex items-center justify-start gap-4 mb-4">
+                    <h3 className="text-xl font-bold text-gray-900 text-left flex-1">{topic.title}</h3>
+                    <div className={`w-14 h-14 rounded-xl ${topic.bgColor} flex items-center justify-center flex-shrink-0`}>
+                      <topic.icon className={`w-7 h-7 ${topic.iconColor}`} />
                     </div>
-                    <p className="text-gray-600 mb-4 text-lg">
-                      {topic.totalQuestions} שאלות זמינות
-                    </p>
-                    <div className="space-y-2 mb-6">
-                      <button className={`w-full p-3 ${courseId === 'linear-algebra' || courseId === 'oop' ? 'text-left' : 'text-right'} rounded-lg border-2 border-gray-200 ${topic.hoverColor} transition-all flex items-center justify-between group`}>
-                        <span className="font-medium text-gray-700">אמריקאיות</span>
-                        <Badge variant="secondary" className={`${topic.bgColor} ${topic.iconColor.replace('text-', 'text-')} group-hover:bg-opacity-80`}>{topic.multipleChoice} שאלות</Badge>
-                      </button>
-                      <button className={`w-full p-3 ${courseId === 'linear-algebra' || courseId === 'oop' ? 'text-left' : 'text-right'} rounded-lg border-2 border-gray-200 ${topic.hoverColor} transition-all flex items-center justify-between group`}>
-                        <span className="font-medium text-gray-700">נכון/לא נכון</span>
-                        <Badge variant="secondary" className={`${topic.bgColor} ${topic.iconColor.replace('text-', 'text-')} group-hover:bg-opacity-80`}>{topic.trueFalse} שאלות</Badge>
-                      </button>
-                      <button className={`w-full p-3 ${courseId === 'linear-algebra' || courseId === 'oop' ? 'text-left' : 'text-right'} rounded-lg border-2 border-gray-200 ${topic.hoverColor} transition-all flex items-center justify-between group`}>
-                        <span className="font-medium text-gray-700">פתוחות</span>
-                        <Badge variant="secondary" className={`${topic.bgColor} ${topic.iconColor.replace('text-', 'text-')} group-hover:bg-opacity-80`}>{topic.openEnded} שאלות</Badge>
-                      </button>
-                    </div>
-                    <Button variant="outline" className="w-full h-12 text-base font-semibold">
-                      כל סוגי השאלות
-                    </Button>
                   </div>
+                  <p className="text-gray-600 text-right leading-relaxed mb-6 flex-1">
+                    {topic.description}
+                  </p>
                 </Card>
               ))}
 
@@ -601,15 +413,15 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor }: CourseDetail
                     35 שאלות ממבחנים קודמים
                   </p>
                   <div className="grid grid-cols-3 gap-3 mb-6">
-                    <button className="p-3 text-right rounded-lg border-2 border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all group">
+                    <button onClick={handleStartPractice} className="p-3 text-right rounded-lg border-2 border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all group">
                       <span className="font-medium text-gray-700 block mb-1">אמריקאיות</span>
                       <Badge variant="secondary" className="bg-red-100 text-red-700 group-hover:bg-red-200">20 שאלות</Badge>
                     </button>
-                    <button className="p-3 text-right rounded-lg border-2 border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all group">
+                    <button onClick={handleStartPractice} className="p-3 text-right rounded-lg border-2 border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all group">
                       <span className="font-medium text-gray-700 block mb-1">נכון/לא נכון</span>
                       <Badge variant="secondary" className="bg-red-100 text-red-700 group-hover:bg-red-200">10 שאלות</Badge>
                     </button>
-                    <button className="p-3 text-right rounded-lg border-2 border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all group">
+                    <button onClick={handleStartPractice} className="p-3 text-right rounded-lg border-2 border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all group">
                       <span className="font-medium text-gray-700 block mb-1">פתוחות</span>
                       <Badge variant="secondary" className="bg-red-100 text-red-700 group-hover:bg-red-200">5 שאלות</Badge>
                     </button>
@@ -622,55 +434,6 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor }: CourseDetail
             </div>
           </div>
 
-          {/* שאלות אחרונות */}
-          <Card className="p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-right">
-              השאלות האחרונות שלך
-            </h3>
-            <div className="space-y-4">
-              {recentQuestions[courseId]?.map((question) => (
-                <div key={question.title} className="flex items-center justify-between p-5 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <div className="text-left">
-                    <p className="font-bold text-gray-900 text-lg mb-1">{question.title}</p>
-                    <p className="text-sm text-gray-600">{question.topic} • {question.daysAgo}</p>
-                  </div>
-                  <Button variant="ghost" size="sm" className="text-blue-600 font-semibold">
-                    המשך
-                    <ArrowRight className="w-4 h-4 mr-2" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* קישורים לעזרה וניתוח */}
-          <div className="grid grid-cols-2 gap-8">
-            <Card className="p-8 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-blue-200">
-              <div className="text-right">
-                <MessageCircle className="w-12 h-12 text-blue-600 mb-4 mr-auto" />
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">צריך הסבר?</h3>
-                <p className="text-gray-600 mb-6 text-lg leading-relaxed">
-                  שאל את המורה AI או קבל הסבר מפורט על כל נושא בקורס
-                </p>
-                <Button variant="outline" className="w-full h-12 text-base font-semibold" onClick={handleOpenChat}>
-                  פתח צ'אט עם מורה AI
-                </Button>
-              </div>
-            </Card>
-
-            <Card className="p-8 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-green-200">
-              <div className="text-right">
-                <BarChart className="w-12 h-12 text-green-600 mb-4 mr-auto" />
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">צפה בניתוח הלמידה שלך</h3>
-                <p className="text-gray-600 mb-6 text-lg leading-relaxed">
-                  תובנות והמלצות מותאמות אישית על סמך ההתקדמות שלך
-                </p>
-                <Button variant="outline" className="w-full h-12 text-base font-semibold">
-                  עבור לניתוח ותובנות
-                </Button>
-              </div>
-            </Card>
-          </div>
         </div>
       </div>
     </div>

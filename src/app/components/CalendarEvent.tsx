@@ -54,7 +54,7 @@ export function CalendarEvent({ type, title, location, time, duration, top }: Ca
 
   return (
     <div
-      className={`absolute right-0 left-0 mx-1 rounded-lg ${style.bg} ${style.border} p-2 hover:shadow-md transition-all cursor-pointer group`}
+      className={`absolute right-0 left-0 mx-1 rounded-lg ${style.bg} ${style.border} p-2 hover:shadow-md transition-all cursor-pointer group pointer-events-auto`}
       style={{ top: `${top}px`, height: `${height}px` }}
     >
       <div className="flex items-start gap-2 justify-end">

@@ -25,7 +25,7 @@ const courses: Course[] = [
     rating: 4.7,
     duration: '14 שבועות',
     description: 'מבוא לחשבון דיפרנציאלי ואינטגרלי - גבולות, נגזרות, אינטגרלים ושימושים',
-    color: 'from-teal-500 to-teal-600',
+    color: 'from-blue-500 to-blue-600',
   },
   {
     id: 'linear-algebra',
@@ -193,10 +193,10 @@ export function CoursesPage({ onCourseSelect }: CoursesPageProps) {
                   {/* Course Stats */}
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">משך</span>
+                      <span className="text-gray-500">נושאים</span>
                       <div className="flex items-center gap-2 text-gray-600">
-                        <span>{course.duration}</span>
-                        <Clock className="w-4 h-4" />
+                        <span>4 נושאים עיקריים</span>
+                        <BookOpen className="w-4 h-4" />
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-sm">

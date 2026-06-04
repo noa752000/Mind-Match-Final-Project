@@ -4,9 +4,10 @@ import { AIRecommendations } from '../components/AIRecommendations';
 
 interface DashboardPageProps {
   onOpenPractice: (courseId: string) => void;
+  onNavigateToCourses?: () => void;
 }
 
-export function DashboardPage({ onOpenPractice }: DashboardPageProps) {
+export function DashboardPage({ onOpenPractice, onNavigateToCourses }: DashboardPageProps) {
   return (
     <div className="min-h-screen bg-gray-50 mr-64 pt-16" dir="rtl">
       <main className="pt-8 px-8 pb-8">
@@ -19,7 +20,7 @@ export function DashboardPage({ onOpenPractice }: DashboardPageProps) {
           <ProgressOverview />
 
           {/* Courses List */}
-          <CoursesList onOpenPractice={onOpenPractice} />
+          <CoursesList onOpenPractice={onOpenPractice} onNavigateToCourses={onNavigateToCourses} />
 
           <AIRecommendations />
         </div>

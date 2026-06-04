@@ -1,4 +1,4 @@
-import { Clock, Calendar } from 'lucide-react';
+import { Clock, Calendar, X } from 'lucide-react';
 import { Card } from './ui/card';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
@@ -13,6 +13,7 @@ interface CourseCardProps {
   color: string;
   status: 'active' | 'completed' | 'upcoming';
   onContinue?: () => void;
+  onRemove?: () => void;
 }
 
 export function CourseCard({
@@ -24,6 +25,7 @@ export function CourseCard({
   color,
   status,
   onContinue,
+  onRemove,
 }: CourseCardProps) {
   const statusLabels = {
     active: 'פעיל',
@@ -43,9 +45,20 @@ export function CourseCard({
         <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform mr-2`}>
           <span className="text-xl text-white font-bold">{title.charAt(0)}</span>
         </div>
-        <Badge className={statusColors[status]}>
-          {statusLabels[status]}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge className={statusColors[status]}>
+            {statusLabels[status]}
+          </Badge>
+          {onRemove && (
+            <button
+              onClick={e => { e.stopPropagation(); onRemove(); }}
+              className="p-1 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+              title="הסר מהקורסים שלי"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="text-right mb-4">

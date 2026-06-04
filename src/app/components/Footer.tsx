@@ -6,14 +6,7 @@ export function Footer() {
     <footer className="bg-gray-900 text-gray-300 py-16 px-16" dir="rtl">
       <div className="max-w-[1440px] mx-auto">
         <div className="flex flex-row gap-12 mb-12 items-start">
-          {/* Brand - Right side (first in RTL flex) */}
-          <div className="flex-shrink-0">
-            <div className="mb-6 flex justify-start">
-              <img src={logoImage} alt="MindMatch Logo" className="h-20 w-auto" />
-            </div>
-          </div>
-
-          {/* Text Sections Container - Left side */}
+          {/* Text Sections Container - Right side in RTL */}
           <div className="flex flex-row gap-12 flex-1">
             {/* Quick Links */}
             <div className="text-right">
@@ -56,6 +49,13 @@ export function Footer() {
                   <MapPin className="w-5 h-5 text-teal-400 flex-shrink-0" />
                 </li>
               </ul>
+            </div>
+          </div>
+
+          {/* Brand - Left side (last in RTL flex) */}
+          <div className="flex-shrink-0">
+            <div className="mb-6 flex justify-start">
+              <img src={logoImage} alt="MindMatch Logo" className="h-20 w-auto" />
             </div>
           </div>
         </div>

@@ -3,7 +3,9 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { CourseCard } from './CourseCard';
 import { Button } from './ui/button';
+import { BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+
 
 interface Course {
   courseId: string;
@@ -18,145 +20,133 @@ interface Course {
 
 interface CoursesListProps {
   onOpenPractice?: (courseId: string) => void;
+  onNavigateToCourses?: () => void;
 }
 
-const courseTitleMap: Record<string, string> = {
-  calculus1: 'חדו"א 1',
-  linear_algebra: 'אלגברה לינארית',
-  sql: 'SQL',
-  oop: 'תכנות מונחה עצמים',
-  systems_analysis: 'ניתוח מערכות',
-  html_fundamentals: 'יסודות HTML',
-  cyber_security: 'אבטחת סייבר ואבטחת מידע',
-  information_systems_economics: 'כלכלת מערכות מידע',
-
-  // גיבויים אם עדיין יש מזהים ישנים
-  course_1: 'SQL',
-  course_2: 'ניתוח מערכות',
-  course_3: 'תכנות מונחה עצמים',
-  course_4: 'חדו"א 1',
-  course_5: 'אלגברה לינארית',
-  course_6: 'יסודות HTML',
-  course_7: 'אבטחת סייבר ואבטחת מידע',
-  course_8: 'כלכלת מערכות מידע',
+const COURSE_META: Record<string, { title: string; color: string }> = {
+  'calculus1':          { title: 'חדו"א 1',               color: 'from-blue-500 to-blue-600' },
+  'linear-algebra':     { title: 'אלגברה לינארית',         color: 'from-purple-500 to-purple-600' },
+  'oop':                { title: 'תכנות מונחה עצמים',       color: 'from-green-500 to-green-600' },
+  'html':               { title: 'HTML',                   color: 'from-orange-500 to-orange-600' },
+  'sql':                { title: 'SQL',                    color: 'from-cyan-500 to-cyan-600' },
+  'requirements-design':{ title: 'אפיון ותכן',             color: 'from-indigo-500 to-indigo-600' },
+  'information-security':{ title: 'אבטחת מידע',            color: 'from-red-500 to-red-600' },
+  'mis-economics':      { title: 'כלכלת מערכות מידע',       color: 'from-amber-500 to-amber-600' },
 };
 
-function normalizeCourseId(data: any, docId: string) {
-  const rawId = data.id || data.courseId || docId;
-  const title = (data.title || '').trim();
-
-  if (rawId === 'calculus1' || title === 'Calculus 1' || title === 'חדו"א 1') return 'calculus1';
-  if (rawId === 'sql' || title === 'SQL') return 'sql';
-  if (rawId === 'oop' || title.includes('Object-Oriented Programming') || title.includes('OOP')) return 'oop';
-  if (rawId === 'systems_analysis' || title.includes('Systems Analysis') || title.includes('Use Cases')) return 'systems_analysis';
-  if (rawId === 'html_fundamentals' || title.includes('HTML')) return 'html_fundamentals';
-  if (rawId === 'linear_algebra' || title.includes('Linear Algebra')) return 'linear_algebra';
-  if (rawId === 'cyber_security' || title.includes('Cyber Security')) return 'cyber_security';
-  if (
-    rawId === 'information_systems_economics' ||
-    title.includes('Information Systems Economics')
-  ) {
-    return 'information_systems_economics';
-  }
-
-  return rawId;
-}
-
-function normalizeCourseTitle(courseId: string, originalTitle: string) {
-  return courseTitleMap[courseId] || originalTitle || 'קורס ללא שם';
-}
-
-export function CoursesList({ onOpenPractice }: CoursesListProps) {
+export function CoursesList({ onOpenPractice, onNavigateToCourses }: CoursesListProps) {
+  const { user, removeUserCourse } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
-  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  const selectedCourses = user?.selectedCourses ?? [];
 
   useEffect(() => {
-    const fetchCoursesAndInteractions = async () => {
+    const buildCourses = async () => {
+      setLoading(true);
       try {
+        if (selectedCourses.length === 0) {
+          setCourses([]);
+          return;
+        }
+
         const userId = user?.userId || 'user_1';
 
-        const coursesSnapshot = await getDocs(collection(db, 'courses'));
-
-        const interactionsQuery = query(
-          collection(db, 'interactions'),
-          where('userId', '==', userId)
-        );
-        const interactionsSnapshot = await getDocs(interactionsQuery);
-        const interactions = interactionsSnapshot.docs.map((doc) => doc.data());
-
+        // Fetch progress for each selected course
         const progressQuery = query(
           collection(db, 'course_progress'),
           where('userId', '==', userId)
         );
-        const progressSnapshot = await getDocs(progressQuery);
-        const progressByCourseId = progressSnapshot.docs.reduce((acc, doc) => {
-          const data = doc.data();
-          acc[data.courseId] = data.progress ?? 0;
-          return acc;
-        }, {} as Record<string, number>);
+        const progressSnap = await getDocs(progressQuery);
+        const progressMap: Record<string, number> = {};
+        progressSnap.docs.forEach(d => {
+          const data = d.data();
+          progressMap[data.courseId] = data.progress ?? 0;
+        });
 
-        const coursesData: Course[] = coursesSnapshot.docs.map((doc) => {
-          const data = doc.data();
-          const courseId = normalizeCourseId(data, doc.id);
-
-          const courseInteractions = interactions.filter(
-            (interaction: any) =>
-              interaction.courseId === courseId ||
-              interaction.courseId === data.courseId ||
-              interaction.courseId === doc.id
-          );
-
-          const courseProgress = progressByCourseId[courseId] ?? 0;
-          const interactionProgress = Math.min(courseInteractions.length * 10, 100);
-          const progress = courseProgress || interactionProgress;
-
+        const built: Course[] = selectedCourses.map(courseId => {
+          const meta = COURSE_META[courseId];
+          const progress = progressMap[courseId] ?? 0;
           return {
             courseId,
-            title: normalizeCourseTitle(courseId, data.title || ''),
-            semester:
-              data.year === 1
-                ? 'שנה א׳'
-                : data.year === 2
-                ? 'שנה ב׳'
-                : data.year === 3
-                ? 'שנה ג׳'
-                : 'שנה לא ידועה',
+            title: meta?.title ?? courseId,
+            semester: '',
             progress,
             nextLesson: 'המשך תרגול',
             dueDate: '',
-            color: 'from-teal-500 to-teal-600',
+            color: meta?.color ?? 'from-teal-500 to-teal-600',
             status: progress === 100 ? 'completed' : 'active',
           };
         });
 
-        console.log('Merged courses with progress:', coursesData);
-        setCourses(coursesData);
-      } catch (error) {
-        console.error('Error fetching courses/interactions:', error);
+        setCourses(built);
+      } catch (err) {
+        console.error('Error building courses list:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchCoursesAndInteractions();
-  }, [user]);
+    buildCourses();
+  }, [selectedCourses.join(','), user?.userId]);
+
+  if (loading) {
+    return (
+      <section className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">הקורסים שלי</h2>
+        <div className="grid grid-cols-12 gap-6">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="col-span-4">
+              <div className="h-48 bg-gray-100 rounded-xl animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (courses.length === 0) {
+    return (
+      <section className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">הקורסים שלי</h2>
+        <div className="flex flex-col items-center justify-center py-16 bg-white rounded-xl border-2 border-dashed border-gray-200 text-center gap-4">
+          <div className="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center">
+            <BookOpen className="w-8 h-8 text-teal-500" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 mb-1">עדיין לא הוספת קורסים</h3>
+            <p className="text-gray-500 text-sm">גלה את הקורסים הזמינים והוסף את אלו שמעניינים אותך</p>
+          </div>
+          <Button
+            className="bg-teal-600 hover:bg-teal-700 text-white mt-2"
+            onClick={onNavigateToCourses}
+          >
+            עבור לקטלוג הקורסים
+          </Button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900">הקורסים שלי</h2>
-
-        <div className="flex items-center gap-4">
-          <Button className="text-sm text-teal-600 hover:text-teal-700 bg-transparent hover:bg-teal-50 border-0 shadow-none p-0">
-            כל הקורסים ←
-          </Button>
-        </div>
+        <Button
+          className="text-sm text-teal-600 hover:text-teal-700 bg-transparent hover:bg-teal-50 border-0 shadow-none p-0"
+          onClick={onNavigateToCourses}
+        >
+          כל הקורסים ←
+        </Button>
       </div>
 
       <div className="grid grid-cols-12 gap-6">
-        {courses.map((course) => (
+        {courses.map(course => (
           <div key={course.courseId} className="col-span-4">
             <CourseCard
               {...course}
               onContinue={() => onOpenPractice?.(course.courseId)}
+              onRemove={() => removeUserCourse(course.courseId)}
             />
           </div>
         ))}

@@ -1,15 +1,20 @@
 import { Bell, Search, User } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { useAuth } from '../contexts/AuthContext';
 
 export function DashboardHeader() {
+  // Display the logged-in user's name instead of a hardcoded name
+  const { user } = useAuth();
+  const displayName = user?.fullName || user?.username || 'סטודנט';
+
   return (
     <header className="fixed top-0 left-0 right-64 bg-white/95 backdrop-blur-sm border-b border-gray-200 z-30">
       <div className="px-8 py-4">
         <div className="flex items-center justify-between">
           {/* Greeting - Right side for RTL */}
           <div className="text-right">
-            <h1 className="text-2xl font-bold text-gray-900">שלום, הדס!</h1>
+            <h1 className="text-2xl font-bold text-gray-900">שלום, {displayName}!</h1>
             <p className="text-sm text-gray-600">בואי נמשיך ללמוד היום</p>
           </div>
 

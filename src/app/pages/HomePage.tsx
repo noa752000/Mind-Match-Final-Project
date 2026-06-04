@@ -1,7 +1,6 @@
 import { Hero } from '../components/Hero';
 import { AIExplanation } from '../components/AIExplanation';
 import { Features } from '../components/Features';
-import { DashboardPreview } from '../components/DashboardPreview';
 import { Testimonials } from '../components/Testimonials';
 import { Footer } from '../components/Footer';
 import { Navigation } from '../components/Navigation';
@@ -23,7 +22,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
         <Hero onNavigate={handleNavigate} />
         <AIExplanation />
         <Features />
-        <DashboardPreview onNavigate={handleNavigate} />
         <Testimonials />
       </main>
       <Footer />
