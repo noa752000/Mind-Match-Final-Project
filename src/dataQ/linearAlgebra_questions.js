@@ -15,7 +15,7 @@ export const linearAlgebraQuestions = [
     subTopic: "matrices",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהי מטריצה ריבועית?",
     options: [
       "מטריצה שבה מספר השורות שווה למספר העמודות",
@@ -31,7 +31,7 @@ export const linearAlgebraQuestions = [
     subTopic: "matrices",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מתי ניתן לבצע כפל בין שתי מטריצות?",
     options: [
       "כאשר מספר השורות בשתי המטריצות שווה",
@@ -45,12 +45,17 @@ export const linearAlgebraQuestions = [
     id: "linalg_matrices_3",
     courseId: "linear_algebra",
     subTopic: "matrices",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "מטריצת יחידה היא בהכרח מטריצה ריבועית.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה מהמאפיינים הבאים נכון לגבי מטריצת יחידה?",
+    options: [
+      "כל איבריה שווים ל-1",
+      "היא בהכרח מטריצה ריבועית ובאלכסון הראשי שלה מופיעים 1",
+      "היא תמיד מטריצה שאינה ריבועית",
+      "כל איבריה שווים ל-0"
+    ],
+    correctAnswer: "היא בהכרח מטריצה ריבועית ובאלכסון הראשי שלה מופיעים 1"
   },
   {
     id: "linalg_matrices_4",
@@ -156,7 +161,7 @@ export const linearAlgebraQuestions = [
     subTopic: "vectors",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מה מאפיין וקטור במרחב?",
     options: [
       "יש לו רק גודל",
@@ -172,7 +177,7 @@ export const linearAlgebraQuestions = [
     subTopic: "vectors",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מתי שני וקטורים נקראים תלויים ליניארית?",
     options: [
       "כאשר הם מאונכים זה לזה",
@@ -186,12 +191,17 @@ export const linearAlgebraQuestions = [
     id: "linalg_vectors_3",
     courseId: "linear_algebra",
     subTopic: "vectors",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "מכפלה סקלרית של שני וקטורים יכולה להיות שלילית.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "מתי המכפלה הסקלרית של שני וקטורים תהיה שלילית?",
+    options: [
+      "כאשר הזווית ביניהם גדולה מ-90°",
+      "כאשר הווקטורים זהים",
+      "כאשר אחד הווקטורים הוא וקטור האפס",
+      "כאשר הווקטורים מקבילים ובאותו כיוון"
+    ],
+    correctAnswer: "כאשר הזווית ביניהם גדולה מ-90°"
   },
   {
     id: "linalg_vectors_4",
@@ -297,7 +307,7 @@ export const linearAlgebraQuestions = [
     subTopic: "transformations",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהי טרנספורמציה ליניארית?",
     options: [
       "כל פונקציה בין שני מרחבים וקטוריים",
@@ -313,7 +323,7 @@ export const linearAlgebraQuestions = [
     subTopic: "transformations",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "איזה תנאי הכרחי כדי שפונקציה <span dir='ltr'>T</span> תהיה ליניארית?",
     options: [
       "<span dir='ltr'>T(u+v)=T(u)+T(v)</span> וגם <span dir='ltr'>T(cu)=cT(u)</span>",
@@ -327,12 +337,17 @@ export const linearAlgebraQuestions = [
     id: "linalg_transformations_3",
     courseId: "linear_algebra",
     subTopic: "transformations",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "בכל טרנספורמציה ליניארית מתקיים <span dir='ltr'>T(0)=0</span>.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "איזה מהמאפיינים הבאים מתקיים בכל טרנספורמציה ליניארית?",
+    options: [
+      "T(0)=0",
+      "T(0)=1",
+      "הטרנספורמציה תמיד הפיכה",
+      "הטרנספורמציה תמיד שומרת מרחקים"
+    ],
+    correctAnswer: "T(0)=0"
   },
   {
     id: "linalg_transformations_4",
@@ -422,7 +437,7 @@ export const linearAlgebraQuestions = [
     subTopic: "transformations",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "אם טרנספורמציה שומרת את הראשית במקומה ומבצעת רק מתיחה או סיבוב, ייתכן שהיא ליניארית.",
     imageUrl: "",
     options: ["נכון", "לא נכון"],
@@ -438,7 +453,7 @@ export const linearAlgebraQuestions = [
     subTopic: "eigenvalues",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו ערך עצמי של מטריצה?",
     options: [
       "מספר שמקיים <span dir='ltr'>Av = \lambda v</span> עבור וקטור לא אפס <span dir='ltr'>v</span>",
@@ -454,7 +469,7 @@ export const linearAlgebraQuestions = [
     subTopic: "eigenvalues",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו וקטור עצמי של מטריצה <span dir='ltr'>A</span>?",
     options: [
       "כל וקטור ששייך למטריצה",
@@ -468,12 +483,17 @@ export const linearAlgebraQuestions = [
     id: "linalg_eigenvalues_3",
     courseId: "linear_algebra",
     subTopic: "eigenvalues",
-    difficulty: 1,
-    format: "true_false",
-    learningType: "concept",
-    question: "הווקטור האפס אינו יכול להיות וקטור עצמי.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    difficulty: 2,
+    format: "mcq",
+    learningType: "knowledge",
+    question: "מדוע הווקטור האפס אינו יכול להיות וקטור עצמי?",
+    options: [
+      "מכיוון שווקטור עצמי חייב להיות וקטור לא אפס",
+      "מכיוון שהווקטור האפס אינו שייך למרחב וקטורי",
+      "מכיוון שהווקטור האפס תמיד ערך עצמי",
+      "מכיוון שהווקטור האפס מאונך לכל הווקטורים"
+    ],
+    correctAnswer: "מכיוון שווקטור עצמי חייב להיות וקטור לא אפס"
   },
   {
     id: "linalg_eigenvalues_4",
@@ -570,3 +590,4 @@ export const linearAlgebraQuestions = [
     correctAnswer: "נכון"
   }
 ];
+
