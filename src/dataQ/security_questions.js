@@ -8,7 +8,7 @@ export const securityQuestions = [
     subTopic: "hash_functions",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהי פונקציית Hash?",
     options: ["הצפנה הפיכה", "מיפוי חד כיווני", "מיון נתונים", "מחיקה"],
     correctAnswer: "מיפוי חד כיווני"
@@ -19,7 +19,7 @@ export const securityQuestions = [
     subTopic: "hash_functions",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מה מאפיין Hash טוב?",
     options: ["חוזר על עצמו", "קשה להפוך", "איטי", "קצר"],
     correctAnswer: "קשה להפוך"
@@ -30,10 +30,15 @@ export const securityQuestions = [
     subTopic: "hash_functions",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
-    question: "Hash הוא חד כיווני.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "איזה מאפיין הופך פונקציית Hash לשימושית לאחסון סיסמאות?",
+    options: [
+      "היא מאפשרת לשחזר את הסיסמה המקורית בקלות",
+      "היא מייצרת פלט חד-כיווני שקשה להחזיר לקלט המקורי",
+      "היא שומרת את הסיסמה במסד הנתונים ללא שינוי",
+      "היא מוחקת סיסמאות ישנות אוטומטית"
+    ],
+    correctAnswer: "היא מייצרת פלט חד-כיווני שקשה להחזיר לקלט המקורי"
   },
   {
     id: "hash_4",
@@ -42,9 +47,14 @@ export const securityQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "למה משתמשים ב-Hash לסיסמאות?",
-    options: ["להצפין", "להגן", "לשמור בצורה בטוחה", "למחוק"],
-    correctAnswer: "לשמור בצורה בטוחה"
+    question: "למה נהוג לשמור סיסמאות באמצעות Hash ולא כטקסט רגיל?",
+    options: [
+      "כדי שניתן יהיה לשחזר אותן בקלות",
+      "כדי להגן על הסיסמאות במקרה של דליפת נתונים",
+      "כדי להאיץ את חיבור האינטרנט",
+      "כדי לחסוך מקום בדיסק"
+    ],
+    correctAnswer: "כדי להגן על הסיסמאות במקרה של דליפת נתונים"
   },
   {
     id: "hash_5",
@@ -64,9 +74,9 @@ export const securityQuestions = [
     difficulty: 2,
     format: "true_false",
     learningType: "analysis",
-    question: "Collision הוא מצב שבו שני קלטים נותנים אותו פלט.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "ארגון גילה ששני קבצים שונים יצרו אותו ערך Hash. כיצד נקרא מצב זה?",
+    options: ["Encryption", "Collision", "Authentication", "Decryption"],
+    correctAnswer: "Collision"
   },
   {
     id: "hash_7",
@@ -114,7 +124,7 @@ export const securityQuestions = [
     subTopic: "asymmetric_encryption",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהי הצפנה אסימטרית?",
     options: ["מפתח אחד", "שני מפתחות", "ללא מפתח", "Hash"],
     correctAnswer: "שני מפתחות"
@@ -125,7 +135,7 @@ export const securityQuestions = [
     subTopic: "asymmetric_encryption",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו Public Key?",
     options: ["סודי", "גלוי", "לא קיים", "איטי"],
     correctAnswer: "גלוי"
@@ -136,10 +146,15 @@ export const securityQuestions = [
     subTopic: "asymmetric_encryption",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
-    question: "יש שני מפתחות בהצפנה אסימטרית.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "מהו מאפיין מרכזי של הצפנה אסימטרית?",
+    options: [
+      "היא משתמשת באותו מפתח להצפנה ולפענוח",
+      "היא משתמשת בזוג מפתחות: ציבורי ופרטי",
+      "היא אינה דורשת מפתחות כלל",
+      "היא משמשת רק למחיקת נתונים"
+    ],
+    correctAnswer: "היא משתמשת בזוג מפתחות: ציבורי ופרטי"
   },
   {
     id: "asym_4",
@@ -148,9 +163,14 @@ export const securityQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מה עושה Private Key?",
-    options: ["גלוי", "סודי", "משותף", "נמחק"],
-    correctAnswer: "סודי"
+    question: "מהו תפקידו העיקרי של ה-Private Key בהצפנה אסימטרית?",
+    options: [
+      "לשתף מידע עם כל המשתמשים",
+      "לפענח מידע שהוצפן באמצעות ה-Public Key המתאים",
+      "להחליף את ה-Public Key",
+      "למחוק הודעות מוצפנות"
+    ],
+    correctAnswer: "לפענח מידע שהוצפן באמצעות ה-Public Key המתאים"
   },
   {
     id: "asym_5",
@@ -170,9 +190,14 @@ export const securityQuestions = [
     difficulty: 2,
     format: "true_false",
     learningType: "analysis",
-    question: "Private Key חייב להישאר סודי.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "מה עלול לקרות אם ה-Private Key של משתמש נחשף?",
+    options: [
+      "לא תהיה השפעה על אבטחת המידע",
+      "ניתן יהיה לפענח מידע שיועד למשתמש",
+      "ה-Public Key יימחק אוטומטית",
+      "ההצפנה תהפוך למהירה יותר"
+    ],
+    correctAnswer: "ניתן יהיה לפענח מידע שיועד למשתמש"
   },
   {
     id: "asym_7",
@@ -220,7 +245,7 @@ export const securityQuestions = [
     subTopic: "symmetric_encryption",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהי הצפנה סימטרית?",
     options: ["מפתח אחד", "שני מפתחות", "Hash", "אין"],
     correctAnswer: "מפתח אחד"
@@ -231,7 +256,7 @@ export const securityQuestions = [
     subTopic: "symmetric_encryption",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "יתרון הצפנה סימטרית?",
     options: ["איטי", "מהיר", "לא בטוח", "מורכב"],
     correctAnswer: "מהיר"
@@ -242,10 +267,15 @@ export const securityQuestions = [
     subTopic: "symmetric_encryption",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
-    question: "אותו מפתח להצפנה ופענוח.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "איזה מאפיין נכון לגבי הצפנה סימטרית?",
+    options: [
+      "היא משתמשת בשני מפתחות שונים",
+      "היא משתמשת באותו מפתח להצפנה ולפענוח",
+      "היא אינה דורשת מפתח",
+      "היא מבוססת רק על פונקציית Hash"
+    ],
+    correctAnswer: "היא משתמשת באותו מפתח להצפנה ולפענוח"
   },
   {
     id: "sym_4",
@@ -254,9 +284,14 @@ export const securityQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "חיסרון?",
-    options: ["שיתוף מפתח", "מהיר", "קל", "פשוט"],
-    correctAnswer: "שיתוף מפתח"
+    question: "מהו אחד האתגרים המרכזיים בשימוש בהצפנה סימטרית?",
+    options: [
+      "מהירות נמוכה מאוד",
+      "הצורך להעביר את המפתח המשותף בצורה מאובטחת",
+      "חוסר יכולת להצפין קבצים",
+      "שימוש בשני מפתחות שונים"
+    ],
+    correctAnswer: "הצורך להעביר את המפתח המשותף בצורה מאובטחת"
   },
   {
     id: "sym_5",
@@ -276,9 +311,14 @@ export const securityQuestions = [
     difficulty: 2,
     format: "true_false",
     learningType: "analysis",
-    question: "הצפנה סימטרית מהירה.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "מדוע ארגונים משתמשים לעיתים קרובות בהצפנה סימטרית להעברת כמויות גדולות של מידע?",
+    options: [
+      "היא אינה דורשת מפתחות",
+      "היא מהירה ויעילה יחסית",
+      "היא מבטלת את הצורך באבטחת מידע",
+      "היא מונעת כל מתקפה אפשרית"
+    ],
+    correctAnswer: "היא מהירה ויעילה יחסית"
   },
   {
     id: "sym_7",
@@ -326,7 +366,7 @@ export const securityQuestions = [
     subTopic: "network_cyber_security",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהי אבטחת רשת?",
     options: ["קוד", "הגנה על רשת", "DB", "טבלה"],
     correctAnswer: "הגנה על רשת"
@@ -337,7 +377,7 @@ export const securityQuestions = [
     subTopic: "network_cyber_security",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו Firewall?",
     options: ["חומה", "מסנן תעבורה", "קוד", "DB"],
     correctAnswer: "מסנן תעבורה"
@@ -348,10 +388,15 @@ export const securityQuestions = [
     subTopic: "network_cyber_security",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
-    question: "Firewall מסנן תעבורה.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "מהו התפקיד המרכזי של Firewall ברשת ארגונית?",
+    options: [
+      "הצפנת מסדי נתונים",
+      "סינון ובקרת תעבורת רשת",
+      "יצירת גיבויים אוטומטיים",
+      "מחיקת וירוסים מכל מחשב"
+    ],
+    correctAnswer: "סינון ובקרת תעבורת רשת"
   },
   {
     id: "net_4",
@@ -360,9 +405,14 @@ export const securityQuestions = [
     difficulty: 2,
     format: "mcq",
     learningType: "analysis",
-    question: "מהי מתקפת DDoS?",
-    options: ["עומס", "הצפנה", "Hash", "מפתח"],
-    correctAnswer: "עומס"
+    question: "מהי המטרה העיקרית של מתקפת DDoS?",
+    options: [
+      "להצפין מידע בארגון",
+      "ליצור עומס חריג על שירות עד שאינו זמין למשתמשים",
+      "לשנות סיסמאות משתמשים",
+      "למחוק מסדי נתונים"
+    ],
+    correctAnswer: "ליצור עומס חריג על שירות עד שאינו זמין למשתמשים"
   },
   {
     id: "net_5",
@@ -371,8 +421,8 @@ export const securityQuestions = [
     difficulty: 3,
     format: "mcq",
     learningType: "analysis",
-    question: "איך מגנים?",
-    options: ["Firewall", "DELETE", "JOIN", "HTML"],
+    question: "ארגון חושש מגישה לא מורשית לרשת הפנימית שלו. איזה אמצעי הגנה יסייע ביותר?",
+    options: ["Firewall", "HTML", "JOIN", "DELETE"],
     correctAnswer: "Firewall"
   },
   {
@@ -382,9 +432,14 @@ export const securityQuestions = [
     difficulty: 2,
     format: "true_false",
     learningType: "analysis",
-    question: "DDoS מעמיס על שרת.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    question: "מהי ההשפעה העיקרית של מתקפת DDoS על שרת?",
+    options: [
+      "האצת ביצועי השרת",
+      "יצירת עומס שמונע ממשתמשים לקבל שירות",
+      "הצפנת כל הנתונים בשרת",
+      "מחיקת מסד הנתונים"
+    ],
+    correctAnswer: "יצירת עומס שמונע ממשתמשים לקבל שירות"
   },
   {
     id: "net_7",
