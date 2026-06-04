@@ -15,7 +15,7 @@ export const oopQuestions = [
     subTopic: "classes_objects",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו התפקיד המרכזי של מחלקה בתכנות מונחה עצמים?",
     options: [
       "לשמור נתונים באופן זמני בלבד",
@@ -31,7 +31,7 @@ export const oopQuestions = [
     subTopic: "classes_objects",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מה ההבדל הנכון בין מחלקה לאובייקט?",
     options: [
       "מחלקה היא מופע שנוצר בזמן ריצה, ואובייקט הוא תבנית",
@@ -47,10 +47,15 @@ export const oopQuestions = [
     subTopic: "classes_objects",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
-    question: "ניתן ליצור מספר אובייקטים שונים מאותה מחלקה.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "מה ניתן להסיק ממחלקה אחת בתכנות מונחה עצמים?",
+    options: [
+      "ניתן ליצור ממנה מספר אובייקטים שונים",
+      "ניתן ליצור ממנה אובייקט אחד בלבד",
+      "היא אינה יכולה להכיל שדות",
+      "היא אינה יכולה להכיל מתודות"
+    ],
+    correctAnswer: "ניתן ליצור ממנה מספר אובייקטים שונים"
   },
   {
     id: "oop_classes_objects_4",
@@ -156,7 +161,7 @@ export const oopQuestions = [
     subTopic: "inheritance",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו היתרון המרכזי של ירושה?",
     options: [
       "היא מונעת שימוש במתודות",
@@ -172,15 +177,15 @@ export const oopQuestions = [
     subTopic: "inheritance",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
-    question: "אם <span dir='ltr'>Dog</span> יורשת מ-<span dir='ltr'>Animal</span>, מה נכון?",
+    learningType: "knowledge",
+    question: "אם המחלקה Dog יורשת מהמחלקה Animal, מה המשמעות הנכונה של הקשר ביניהן?",
     options: [
-      "<span dir='ltr'>Animal</span> יורשת מ-<span dir='ltr'>Dog</span>",
-      "<span dir='ltr'>Dog</span> יכולה לקבל שדות ומתודות של <span dir='ltr'>Animal</span>",
-      "<span dir='ltr'>Dog</span> לא יכולה להוסיף מתודות חדשות",
-      "אין קשר של "
+      "Dog יכולה לרשת שדות ומתודות מ-Animal",
+      "Animal יורשת את כל ההתנהגות של Dog",
+      "Dog אינה יכולה להוסיף מתודות חדשות",
+      "אין קשר בין המחלקות"
     ],
-    correctAnswer: "<span dir='ltr'>Dog</span> יכולה לקבל שדות ומתודות של <span dir='ltr'>Animal</span>"
+    correctAnswer: "Dog יכולה לרשת שדות ומתודות מ-Animal"
   },
   {
     id: "oop_inheritance_3",
@@ -188,10 +193,15 @@ export const oopQuestions = [
     subTopic: "inheritance",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
-    question: "מחלקת בן יכולה להוסיף התנהגות חדשה מעבר למה שירשה ממחלקת האב.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "איזה מהמשפטים הבאים נכון לגבי מחלקת בן בירושה?",
+    options: [
+      "מחלקת בן יכולה להוסיף שדות ומתודות מעבר למה שירשה ממחלקת האב",
+      "מחלקת בן חייבת להיות זהה לחלוטין למחלקת האב",
+      "מחלקת בן אינה יכולה להשתמש במתודות של מחלקת האב",
+      "מחלקת בן אינה יכולה להכיל בנאי"
+    ],
+    correctAnswer: "מחלקת בן יכולה להוסיף שדות ומתודות מעבר למה שירשה ממחלקת האב"
   },
   {
     id: "oop_inheritance_4",
@@ -297,7 +307,7 @@ export const oopQuestions = [
     subTopic: "polymorphism",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו פולימורפיזם בתכנות מונחה עצמים?",
     options: [
       "שימוש במחלקה אחת בלבד בכל המערכת",
@@ -313,15 +323,15 @@ export const oopQuestions = [
     subTopic: "polymorphism",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
-    question: "מה מאפשר להחזיק מופע של מחלקת בן במשתנה מטיפוס מחלקת האב?",
+    learningType: "knowledge",
+    question: "מה מאפשר פולימורפיזם כאשר משתמשים במשתנה מטיפוס מחלקת אב?",
     options: [
-      "כמסה",
-      "פולימורפיזם",
-      "בנאי",
-      "שדה סטטי"
+      "להפנות למופעים של מחלקות בן ולהפעיל התנהגות מתאימה בזמן ריצה",
+      "למנוע יצירת אובייקטים חדשים",
+      "להפוך את כל השדות לציבוריים",
+      "לבטל את הצורך בירושה"
     ],
-    correctAnswer: "פולימורפיזם"
+    correctAnswer: "להפנות למופעים של מחלקות בן ולהפעיל התנהגות מתאימה בזמן ריצה"
   },
   {
     id: "oop_polymorphism_3",
@@ -329,10 +339,15 @@ export const oopQuestions = [
     subTopic: "polymorphism",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
-    question: "בפולימורפיזם, הקריאה למתודה נקבעת לפי הטיפוס האמיתי של האובייקט בזמן ריצה.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "בפולימורפיזם, לפי מה נקבעת גרסת המתודה שתופעל בזמן ריצה?",
+    options: [
+      "לפי הטיפוס האמיתי של האובייקט שנוצר",
+      "לפי שם המשתנה בלבד",
+      "לפי מספר השדות במחלקה",
+      "לפי סדר המחלקות בקובץ"
+    ],
+    correctAnswer: "לפי הטיפוס האמיתי של האובייקט שנוצר"
   },
   {
     id: "oop_polymorphism_4",
@@ -438,7 +453,7 @@ export const oopQuestions = [
     subTopic: "design_patterns",
     difficulty: 1,
     format: "mcq",
-    learningType: "concept",
+    learningType: "knowledge",
     question: "מהו דפוס עיצוב <span dir='ltr'>(Design Pattern)</span>?",
     options: [
       "קוד מוכן להעתקה לכל מצב",
@@ -454,15 +469,15 @@ export const oopQuestions = [
     subTopic: "design_patterns",
     difficulty: 2,
     format: "mcq",
-    learningType: "concept",
-    question: "מהי המטרה המרכזית של דפוס <span dir='ltr'>Singleton</span>?",
+    learningType: "knowledge",
+    question: "באיזה מצב דפוס Singleton מתאים במיוחד?",
     options: [
-      "לאפשר יצירה של מופעים רבים ככל האפשר",
-      "להבטיח מופע יחיד ולספק אליו גישה גלובלית מבוקרת",
-      "להחליף ממשקים",
-      "למנוע שימוש בבנאים"
+      "כאשר רוצים להבטיח שקיים מופע יחיד של מחלקה ולספק אליו גישה מבוקרת",
+      "כאשר רוצים ליצור מופע חדש בכל קריאה",
+      "כאשר רוצים למנוע שימוש במחלקות",
+      "כאשר רוצים להחליף כל ממשק בירושה"
     ],
-    correctAnswer: "להבטיח מופע יחיד ולספק אליו גישה גלובלית מבוקרת"
+    correctAnswer: "כאשר רוצים להבטיח שקיים מופע יחיד של מחלקה ולספק אליו גישה מבוקרת"
   },
   {
     id: "oop_design_patterns_3",
@@ -470,10 +485,15 @@ export const oopQuestions = [
     subTopic: "design_patterns",
     difficulty: 1,
     format: "true_false",
-    learningType: "concept",
-    question: "דפוסי עיצוב אינם מחליפים חשיבה תכנונית, אלא מסייעים לארגן פתרונות מוכרים.",
-    options: ["נכון", "לא נכון"],
-    correctAnswer: "נכון"
+    learningType: "knowledge",
+    question: "מהו תפקידם של דפוסי עיצוב בתכנון תוכנה?",
+    options: [
+      "לספק פתרונות כלליים לבעיות תכנוניות חוזרות",
+      "להחליף את הצורך בהבנת הבעיה",
+      "למנוע שימוש במחלקות ואובייקטים",
+      "לשמש רק כקוד מוכן להעתקה"
+    ],
+    correctAnswer: "לספק פתרונות כלליים לבעיות תכנוניות חוזרות"
   },
   {
     id: "oop_design_patterns_4",
