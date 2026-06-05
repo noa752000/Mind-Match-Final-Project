@@ -8,11 +8,13 @@ interface PersonalInfoProps {
   institution: string;
   academicYear: string;
   studentId: string;
+  selectedCourses?: string[];
   onFullNameChange: (v: string) => void;
   onPhoneChange: (v: string) => void;
   onInstitutionChange: (v: string) => void;
   onAcademicYearChange: (v: string) => void;
   onStudentIdChange: (v: string) => void;
+  onToggleCourse?: (courseId: string) => void;
 }
 
 const fieldClass =
@@ -21,20 +23,35 @@ const readonlyClass =
   'w-full px-4 py-3 text-right bg-gray-50 rounded-lg text-gray-900 font-medium text-sm select-all';
 
 export function PersonalInfo({
-  fullName, email,
-  phone, institution, academicYear, studentId,
-  onFullNameChange, onPhoneChange, onInstitutionChange, onAcademicYearChange, onStudentIdChange,
+  fullName,
+  email,
+  phone,
+  institution,
+  academicYear,
+  studentId,
+  selectedCourses = [],
+  onFullNameChange,
+  onPhoneChange,
+  onInstitutionChange,
+  onAcademicYearChange,
+  onStudentIdChange,
+  onToggleCourse,
 }: PersonalInfoProps) {
   return (
     <Card className="p-8 border-gray-100">
       <h3 className="text-xl font-bold text-gray-900 mb-6 text-right">מידע אישי</h3>
 
       <div className="space-y-5">
-        {/* Name + Email — read-only from auth */}
+        {/* Name + Email */}
         <div className="grid grid-cols-2 gap-5">
           <div className="text-right">
             <label className="text-sm text-gray-500 block mb-1.5">שם מלא</label>
-            <div className={readonlyClass}>{fullName}</div>
+            <input
+              type="text"
+              value={fullName}
+              onChange={e => onFullNameChange(e.target.value)}
+              className={fieldClass}
+            />
           </div>
           <div className="text-right">
             <label className="text-sm text-gray-500 block mb-1.5">דואר אלקטרוני</label>
@@ -138,6 +155,33 @@ export function PersonalInfo({
               className={`${fieldClass} pr-10`}
             />
             <GraduationCap className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+          </div>
+        </div>
+
+        {/* Courses — editable checkboxes */}
+        <div className="text-right mt-4">
+          <label className="text-sm text-gray-600 block mb-1.5">קורסים</label>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { id: 'sql', label: 'SQL' },
+              { id: 'systems_analysis', label: 'Systems Analysis' },
+              { id: 'oop', label: 'OOP' },
+              { id: 'calculus1', label: 'Calculus I' },
+              { id: 'linear_algebra', label: 'Linear Algebra' },
+              { id: 'html_fundamentals', label: 'HTML Fundamentals' },
+              { id: 'information_systems_economics', label: 'Information Systems Economics' },
+              { id: 'cyber_security', label: 'Cyber Security' }
+            ].map(c => (
+              <label key={c.id} className="inline-flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={selectedCourses?.includes(c.id)}
+                  onChange={() => onToggleCourse?.(c.id)}
+                  className="w-4 h-4"
+                />
+                <span className="text-gray-700">{c.label}</span>
+              </label>
+            ))}
           </div>
         </div>
       </div>

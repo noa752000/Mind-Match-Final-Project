@@ -118,29 +118,14 @@ export function ProfileHeader() {
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Email and small badges remain; stats removed to keep Profile focused on personal info */}
         <div className="flex-1 text-right">
-          <p className="text-lg text-gray-500 mb-6 leading-relaxed">
+          <p className="text-lg text-gray-500 mb-1 leading-relaxed">
             {user?.email}
           </p>
-
-          <div className="grid grid-cols-4 gap-6 pt-6 border-t border-gray-200">
-            <div className="text-right">
-              <div className="text-3xl font-bold text-gray-900 mb-1">87</div>
-              <div className="text-sm text-gray-600">ממוצע כללי</div>
-            </div>
-            <div className="text-right">
-              <div className="text-3xl font-bold text-gray-900 mb-1">42</div>
-              <div className="text-sm text-gray-600">נקודות זכות</div>
-            </div>
-            <div className="text-right">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{user?.selectedCourses?.length || 0}</div>
-              <div className="text-sm text-gray-600">קורסים פעילים</div>
-            </div>
-            <div className="text-right">
-              <div className="text-3xl font-bold text-gray-900 mb-1">156</div>
-              <div className="text-sm text-gray-600">ימי למידה</div>
-            </div>
+          <div className="flex items-center gap-3 justify-start mt-2">
+            <Badge className="bg-green-100 text-green-700 text-sm">חשבון מאומת</Badge>
+            <Badge className="bg-teal-100 text-teal-700 text-sm">סטודנט פעיל</Badge>
           </div>
         </div>
       </div>

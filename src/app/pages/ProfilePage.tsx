@@ -9,6 +9,7 @@ import { updateProfile } from 'firebase/auth';
 
 export function ProfilePage() {
   const { user, updateUserProfile } = useAuth();
+  const { addUserCourse, removeUserCourse } = useAuth();
 
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
@@ -44,6 +45,13 @@ export function ProfilePage() {
     setInstitution(user?.institution || '');
     setAcademicYear(user?.academicYear || '');
     setStudentId(user?.studentId || '');
+  };
+
+  const toggleCourse = async (courseId: string) => {
+    if (!user) return;
+    const has = (user.selectedCourses || []).includes(courseId);
+    if (has) await removeUserCourse(courseId);
+    else await addUserCourse(courseId);
   };
 
   return (
@@ -88,6 +96,8 @@ export function ProfilePage() {
             onInstitutionChange={setInstitution}
             onAcademicYearChange={setAcademicYear}
             onStudentIdChange={setStudentId}
+            selectedCourses={user?.selectedCourses || []}
+            onToggleCourse={toggleCourse}
           />
 
         </div>
