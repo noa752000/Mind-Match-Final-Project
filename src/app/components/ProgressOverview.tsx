@@ -94,29 +94,29 @@ export function ProgressOverview() {
     {
       icon: Award,
       label: 'ממוצע כללי',
-      value: hasData ? stats.averageGrade.toString() : 'אין מספיק נתונים',
-      subtext: hasData ? 'ציון ממוצע' : '',
+      value: hasData ? stats.averageGrade.toString() : '—',
+      subtext: hasData ? 'ציון ממוצע' : 'אין נתונים עדיין',
       color: 'from-orange-500 to-orange-600',
     },
     {
       icon: CheckCircle,
       label: 'שאלות שנפתרו',
-      value: hasData ? stats.completedQuestions.toString() : 'אין מספיק נתונים',
-      subtext: hasData ? 'סה״כ שאלות' : '',
+      value: hasData ? stats.completedQuestions.toString() : '—',
+      subtext: hasData ? 'סה״כ שאלות' : 'אין נתונים עדיין',
       color: 'from-green-500 to-green-600',
     },
     {
       icon: BookOpen,
       label: 'קורסים פעילים',
       value: stats.activeCourses.toString(),
-      subtext: 'מספר קורסים',
+      subtext: 'קורסים נבחרים',
       color: 'from-blue-500 to-blue-600',
     },
     {
       icon: Clock,
       label: 'שעות למידה',
-      value: hasData ? stats.studyHours.toFixed(1) : 'אין מספיק נתונים',
-      subtext: hasData ? 'שעות מצטברות' : '',
+      value: hasData ? stats.studyHours.toFixed(1) : '—',
+      subtext: hasData ? 'שעות מצטברות' : 'אין נתונים עדיין',
       color: 'from-purple-500 to-purple-600',
     },
   ];
@@ -124,10 +124,10 @@ export function ProgressOverview() {
   if (loading) {
     return (
       <section className="mb-8">
-        <div className="grid grid-cols-12 gap-6">
+        <div className="grid grid-cols-12 auto-rows-[140px] gap-6">
           {[...Array(4)].map((_, index) => (
             <div key={index} className="col-span-3">
-              <Card className="p-6 h-[140px] animate-pulse">
+              <Card className="p-6 h-full animate-pulse">
                 <div className="flex items-start gap-3 h-full">
                   <div className="w-10 h-10 bg-gray-200 rounded-xl"></div>
                   <div className="flex-1">
@@ -146,13 +146,13 @@ export function ProgressOverview() {
 
   return (
     <section className="mb-8" dir="rtl">
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-12 auto-rows-[140px] gap-6">
         {statsConfig.map((stat, index) => {
           const Icon = stat.icon;
 
           return (
             <div key={index} className="col-span-3">
-              <Card className="p-6 hover:shadow-lg transition-all border-gray-100 h-full min-h-[140px] overflow-hidden">
+              <Card className="p-6 hover:shadow-lg transition-all border-gray-100 h-full overflow-hidden">
                 <div className="flex items-start gap-3 h-full">
                   <div
                     className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center flex-shrink-0`}
@@ -161,15 +161,15 @@ export function ProgressOverview() {
                   </div>
 
                   <div className="text-right flex-1 min-w-0">
-                    <p className="text-base text-gray-600 leading-tight">
+                    <p className="text-sm text-gray-600 leading-tight truncate">
                       {stat.label}
                     </p>
 
-                    <p className="text-2xl font-bold text-gray-900 mb-2 leading-none mt-3">
+                    <p className="text-2xl font-bold text-gray-900 leading-tight mt-2 mb-1">
                       {stat.value}
                     </p>
 
-                    <p className="text-sm text-gray-500 leading-tight whitespace-nowrap">
+                    <p className="text-xs text-gray-500 leading-tight truncate">
                       {stat.subtext}
                     </p>
                   </div>

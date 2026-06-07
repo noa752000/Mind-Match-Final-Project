@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Bell } from 'lucide-react';
-import logoImage from '../../assets/logo.png';
+import logoImage from '../../assets/new.png';
 import { NotificationsPanel } from './NotificationsPanel';
 import { useAuth } from '../contexts/AuthContext';
 

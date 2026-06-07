@@ -81,6 +81,23 @@
 }
 
 @theme inline {
+  /* ===== Mind Match Brand Palette ===== */
+  --color-teal-50:  #e8f8fa;
+  --color-teal-100: #c8eef2;
+  --color-teal-200: #9de1e8;
+  --color-teal-300: #7ad5de;
+  --color-teal-400: #65c9d3;
+  --color-teal-500: #52D1DC;
+  --color-teal-600: #3ab8c5;
+  --color-teal-700: #4D969B;
+  --color-teal-800: #4A797B;
+  --color-teal-900: #344443;
+  --color-teal-950: #212d2d;
+  --color-cyan-400: #65c9d3;
+  --color-cyan-500: #52D1DC;
+  --color-cyan-600: #4D969B;
+  /* ===================================== */
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

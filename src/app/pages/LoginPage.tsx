@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { GraduationCap, Sparkles, TrendingUp, Users, Eye, EyeOff, UserPlus, LogIn } from 'lucide-react';
-import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
-import { Logo } from '../components/Logo';
+import { Sparkles, TrendingUp, Users, Eye, EyeOff, UserPlus, LogIn, ArrowRight } from 'lucide-react';
+import logoImage from '../../assets/new.png';
 
 interface LoginPageProps {
   onLogin: () => Promise<boolean>;
@@ -35,28 +33,19 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
   const [error, setError] = useState('');
 
   const resetForm = () => {
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
-    setFullName('');
-    setError('');
-    setShowPassword(false);
-    setShowConfirmPassword(false);
+    setEmail(''); setPassword(''); setConfirmPassword('');
+    setFullName(''); setError('');
+    setShowPassword(false); setShowConfirmPassword(false);
   };
 
-  const switchMode = (newMode: Mode) => {
-    setMode(newMode);
-    resetForm();
-  };
+  const switchMode = (newMode: Mode) => { setMode(newMode); resetForm(); };
 
   const handleGoogleLogin = async () => {
     setError('');
     setIsGoogleLoading(true);
     try {
       const success = await onLogin();
-      if (!success) {
-        setError('התחברות עם Google נכשלה. אנא נסי שוב.');
-      }
+      if (!success) setError('התחברות עם Google נכשלה. אנא נסה שוב.');
     } catch (err: any) {
       setError(err?.message || 'אירעה שגיאה בעת ההתחברות עם Google');
     } finally {
@@ -67,58 +56,37 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
     if (mode === 'register') {
-      if (password !== confirmPassword) {
-        setError('הסיסמאות אינן תואמות');
-        return;
-      }
-      if (password.length < 6) {
-        setError('הסיסמה חייבת להכיל לפחות 6 תווים');
-        return;
-      }
+      if (password !== confirmPassword) { setError('הסיסמאות אינן תואמות'); return; }
+      if (password.length < 6) { setError('הסיסמה חייבת להכיל לפחות 6 תווים'); return; }
     }
-
     setIsLoading(true);
     try {
-      if (mode === 'login') {
-        await onLoginWithEmail(email, password);
-      } else {
-        await onRegisterWithEmail(fullName, email, password);
-      }
+      if (mode === 'login') await onLoginWithEmail(email, password);
+      else await onRegisterWithEmail(fullName, email, password);
     } catch (err: any) {
-      setError(err?.message || 'אירעה שגיאה. אנא נסי שוב.');
+      setError(err?.message || 'אירעה שגיאה. אנא נסה שוב.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50" dir="rtl">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Logo />
-            <Button variant="ghost" onClick={onBackToHome} className="text-gray-600">
-              חזרה לדף הבית
-            </Button>
-          </div>
-        </div>
-      </div>
+    <div className="h-screen flex overflow-hidden" dir="rtl">
 
-      <div className="flex items-center justify-center px-8 py-12">
-        <div className="w-full max-w-6xl grid grid-cols-2 gap-12 items-start">
-          {/* Right Side - Auth Card */}
-          <Card className="p-10 bg-white/80 backdrop-blur-sm shadow-xl">
-            {/* Tab switcher */}
+      {/* ===== RIGHT SIDE — Auth Form ===== */}
+      <div className="w-1/2 bg-white flex flex-col overflow-y-auto">
+
+        <div className="px-12 pt-8 flex-shrink-0" />
+
+        <div className="flex-1 flex flex-col justify-center px-16 py-8">
+          <div className="w-full max-w-md mx-auto">
+
             <div className="flex rounded-xl bg-gray-100 p-1 mb-8">
               <button
                 onClick={() => switchMode('login')}
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all ${
-                  mode === 'login'
-                    ? 'bg-white text-teal-700 shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
+                  mode === 'login' ? 'bg-white text-teal-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
                 <LogIn className="w-4 h-4" />
@@ -127,9 +95,7 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
               <button
                 onClick={() => switchMode('register')}
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all ${
-                  mode === 'register'
-                    ? 'bg-white text-teal-700 shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
+                  mode === 'register' ? 'bg-white text-teal-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
                 <UserPlus className="w-4 h-4" />
@@ -137,30 +103,25 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
               </button>
             </div>
 
-            <div className="text-right mb-6">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            <div className="text-right mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-1">
                 {mode === 'login' ? 'ברוך שובך!' : 'הצטרף אלינו'}
               </h2>
-              <p className="text-gray-500 text-base">
+              <p className="text-gray-500">
                 {mode === 'login'
                   ? 'התחבר לחשבון שלך כדי להמשיך ללמוד'
-                  : 'צור חשבון חדש ותתחיל ללמוד בחינם'}
+                  : 'צור חשבון חדש והתחל ללמוד בחינם'}
               </p>
             </div>
 
-            {/* Email/Password Form */}
             <form onSubmit={handleEmailSubmit} className="space-y-4">
               {mode === 'register' && (
                 <div className="space-y-1">
                   <label className="block text-right text-sm font-medium text-gray-700">שם מלא</label>
                   <input
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-4 py-2.5 text-right border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
-                    placeholder="הזן שם מלא"
-                    required
-                    dir="rtl"
+                    type="text" value={fullName} onChange={e => setFullName(e.target.value)}
+                    className="w-full px-4 py-3 text-right border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm bg-gray-50 focus:bg-white"
+                    placeholder="הזן שם מלא" required dir="rtl"
                   />
                 </div>
               )}
@@ -168,13 +129,9 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
               <div className="space-y-1">
                 <label className="block text-right text-sm font-medium text-gray-700">אימייל</label>
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 text-left border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
-                  placeholder="example@email.com"
-                  required
-                  dir="ltr"
+                  type="email" value={email} onChange={e => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 text-left border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm bg-gray-50 focus:bg-white"
+                  placeholder="example@email.com" required dir="ltr"
                 />
               </div>
 
@@ -182,19 +139,13 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
                 <label className="block text-right text-sm font-medium text-gray-700">סיסמה</label>
                 <div className="relative">
                   <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-2.5 pr-10 text-right border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
-                    placeholder={mode === 'register' ? 'לפחות 6 תווים' : '••••••••'}
-                    required
-                    dir="rtl"
+                    type={showPassword ? 'text' : 'password'} value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="w-full px-4 py-3 pr-10 text-right border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm bg-gray-50 focus:bg-white"
+                    placeholder={mode === 'register' ? 'לפחות 6 תווים' : '••••••••'} required dir="rtl"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
+                  <button type="button" onClick={() => setShowPassword(!showPassword)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
@@ -205,19 +156,13 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
                   <label className="block text-right text-sm font-medium text-gray-700">אימות סיסמה</label>
                   <div className="relative">
                     <input
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-4 py-2.5 pr-10 text-right border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
-                      placeholder="הזן את הסיסמה שוב"
-                      required
-                      dir="rtl"
+                      type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
+                      className="w-full px-4 py-3 pr-10 text-right border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm bg-gray-50 focus:bg-white"
+                      placeholder="הזן את הסיסמה שוב" required dir="rtl"
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
+                    <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                       {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
@@ -225,127 +170,99 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
               )}
 
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-right">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-right">
                   <p className="text-red-600 text-sm">{error}</p>
                 </div>
               )}
 
-              <Button
-                type="submit"
-                className="w-full h-11 bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold"
-                disabled={isLoading || isGoogleLoading}
+              <button
+                type="submit" disabled={isLoading || isGoogleLoading}
+                className="w-full h-12 bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 {isLoading
-                  ? mode === 'login' ? 'מתחבר...' : 'נרשם...'
-                  : mode === 'login' ? 'התחבר' : 'הירשם'}
-              </Button>
+                  ? (mode === 'login' ? 'מתחבר...' : 'נרשם...')
+                  : (mode === 'login' ? 'התחבר' : 'הירשם')}
+              </button>
             </form>
 
-            {/* Divider */}
-            <div className="flex items-center gap-3 mt-5">
+            <div className="flex items-center gap-3 my-5">
               <div className="flex-1 h-px bg-gray-200" />
               <span className="text-gray-400 text-sm">או</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
 
-            {/* Google Button */}
             <button
-              onClick={handleGoogleLogin}
-              disabled={isGoogleLoading || isLoading}
-              className="w-full flex items-center justify-center gap-3 px-6 py-3 mt-5 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleGoogleLogin} disabled={isGoogleLoading || isLoading}
+              className="w-full flex items-center justify-center gap-3 px-6 py-3 border border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <GoogleIcon />
               <span className="text-gray-700 font-medium text-sm">
-                {isGoogleLoading
-                  ? 'מתחבר...'
-                  : mode === 'login'
-                  ? 'התחבר עם Google'
-                  : 'הירשם עם Google'}
+                {isGoogleLoading ? 'מתחבר...' : (mode === 'login' ? 'התחבר עם Google' : 'הירשם עם Google')}
               </span>
             </button>
+          </div>
+        </div>
 
-            <div className="mt-5 text-center">
-              <p className="text-sm text-gray-500">
-                {mode === 'login' ? 'עדיין אין לך חשבון? ' : 'כבר יש לך חשבון? '}
-                <button
-                  onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}
-                  className="text-teal-600 hover:text-teal-700 font-semibold"
-                >
-                  {mode === 'login' ? 'הירשם כאן' : 'התחבר כאן'}
-                </button>
-              </p>
-            </div>
-          </Card>
+      </div>
 
-          {/* Left Side - Benefits */}
-          <div className="space-y-8">
+      {/* ===== LEFT SIDE — Marketing ===== */}
+      <div className="w-1/2 flex flex-col relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0f2d4a 0%, #1a5272 50%, #2a7a8a 100%)' }}>
+
+        <div className="absolute -top-24 -right-24 w-80 h-80 bg-white/10 rounded-full z-0" />
+        <div className="absolute bottom-0 -left-20 w-64 h-64 bg-teal-800/20 rounded-full z-0" />
+        <div className="absolute top-1/2 right-1/3 w-40 h-40 bg-white/5 rounded-full z-0" />
+
+        {/* Header with logo + back button */}
+        <div className="px-10 pt-8 flex items-center justify-between" style={{ position: 'relative' }}>
+          <img src={logoImage} alt="Mind Match" className="h-32 w-auto" />
+          <button
+            onClick={onBackToHome}
+            className="flex items-center gap-2 text-teal-100 hover:text-white transition-colors text-sm font-medium"
+          >
+            <ArrowRight className="w-4 h-4" />
+            חזרה לדף הבית
+          </button>
+        </div>
+
+        {/* Main marketing content */}
+        <div className="relative flex-1 flex flex-col justify-center px-12 pb-12">
+          <div className="text-right mb-12">
+            <h2 className="text-5xl font-bold text-white leading-tight mb-4">
+              למידה חכמה,<br />
+              <span className="text-teal-100">תוצאות מדהימות</span>
+            </h2>
+            <p className="text-teal-100 text-lg leading-relaxed">
+              הפלטפורמה המתקדמת ביותר ללמידה<br />אקדמית עם בינה מלאכותית
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            {[
+              { icon: Sparkles, title: 'מורה AI אישי', desc: 'קבל תשובות מיידיות והסברים מפורטים לכל שאלה' },
+              { icon: TrendingUp, title: 'ניתוח ותובנות', desc: 'עקוב אחר ההתקדמות שלך וקבל המלצות מותאמות' },
+              { icon: Users, title: 'למידה מותאמת', desc: 'תרגול שמתאים את עצמו לרמה ולקצב הלמידה שלך' },
+            ].map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-right">
+                  <p className="text-white font-semibold">{title}</p>
+                  <p className="text-teal-100 text-sm">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 self-end">
             <div className="text-right">
-              <h3 className="text-4xl font-bold text-gray-900 mb-4">
-                למידה חכמה,<br />
-                <span className="bg-gradient-to-l from-teal-500 to-teal-600 bg-clip-text text-transparent">
-                  תוצאות מדהימות
-                </span>
-              </h3>
-              <p className="text-xl text-gray-600 leading-relaxed">
-                הפלטפורמה המתקדמת ביותר ללמידה אקדמית עם בינה מלאכותית
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="w-7 h-7 text-teal-600" />
-                </div>
-                <div className="text-right">
-                  <h4 className="text-xl font-bold text-gray-900 mb-1">מורה AI אישי</h4>
-                  <p className="text-gray-600 leading-relaxed">
-                    קבל תשובות מיידיות והסברים מפורטים לכל שאלה בקורס
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="w-7 h-7 text-green-600" />
-                </div>
-                <div className="text-right">
-                  <h4 className="text-xl font-bold text-gray-900 mb-1">ניתוח ותובנות</h4>
-                  <p className="text-gray-600 leading-relaxed">
-                    עקוב אחר ההתקדמות שלך וקבל המלצות מותאמות אישית
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center flex-shrink-0">
-                  <Users className="w-7 h-7 text-purple-600" />
-                </div>
-                <div className="text-right">
-                  <h4 className="text-xl font-bold text-gray-900 mb-1">למידה מותאמת</h4>
-                  <p className="text-gray-600 leading-relaxed">
-                    תרגול חכם שמתאים את עצמו לרמה ולקצב הלמידה שלך
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6 bg-gradient-to-l from-teal-500 to-teal-600 rounded-2xl text-white">
-              <div className="flex items-center justify-between">
-                <div className="text-right">
-                  <p className="text-teal-100 text-sm mb-1">
-                    {mode === 'login' ? 'מצטרפים אלינו' : 'הצטרפו אלינו'}
-                  </p>
-                  <p className="text-3xl font-bold">8,500+ סטודנטים</p>
-                  {mode === 'register' && (
-                    <p className="text-teal-100 text-sm mt-2">וכל יום מצטרפים עוד...</p>
-                  )}
-                </div>
-                <GraduationCap className="w-16 h-16 text-teal-200" />
-              </div>
+              <p className="text-xl font-bold text-white">+8,500 סטודנטים</p>
+              <p className="text-teal-100 text-xs">מצטרפים אלינו כל יום</p>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   );
 }

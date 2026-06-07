@@ -1,5 +1,5 @@
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
-import logoImage from '../../assets/logo.png';
+import logoImage from '../../assets/new.png';
 
 export function Footer() {
   return (
@@ -55,7 +55,7 @@ export function Footer() {
           {/* Brand - Left side (last in RTL flex) */}
           <div className="flex-shrink-0">
             <div className="mb-6 flex justify-start">
-              <img src={logoImage} alt="MindMatch Logo" className="h-20 w-auto" />
+              <img src={logoImage} alt="MindMatch Logo" className="h-36 w-auto" />
             </div>
           </div>
         </div>

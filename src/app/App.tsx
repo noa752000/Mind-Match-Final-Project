@@ -26,6 +26,7 @@ function AppContent() {
   const [selectedCourseId, setSelectedCourseId] = useState<string>('');
   const [tutorCourseId, setTutorCourseId] = useState<string>('');
   const [practiceCourseId, setPracticeCourseId] = useState<string>('');
+  const [guestMode, setGuestMode] = useState(false);
 
   const handleCourseSelect = (courseId: string) => {
     setSelectedCourseId(courseId);
@@ -73,12 +74,21 @@ function AppContent() {
   }
 
   if (!isAuthenticated) {
+    if (guestMode) {
+      return (
+        <HomePage
+          onNavigate={() => {}}
+          isGuest
+          onLoginClick={() => setGuestMode(false)}
+        />
+      );
+    }
     return (
       <LoginPage
         onLogin={loginWithGoogle}
         onLoginWithEmail={loginWithEmail}
         onRegisterWithEmail={registerWithEmail}
-        onBackToHome={() => {}}
+        onBackToHome={() => setGuestMode(true)}
       />
     );
   }

@@ -22,7 +22,7 @@ export function DashboardPage({ onOpenPractice, onNavigateToCourses }: Dashboard
           {/* Courses List */}
           <CoursesList onOpenPractice={onOpenPractice} onNavigateToCourses={onNavigateToCourses} />
 
-          <AIRecommendations />
+          <AIRecommendations onOpenPractice={onOpenPractice} />
         </div>
       </main>
     </div>

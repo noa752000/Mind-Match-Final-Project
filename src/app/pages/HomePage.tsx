@@ -7,17 +7,24 @@ import { Navigation } from '../components/Navigation';
 
 interface HomePageProps {
   onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'course-detail') => void;
+  isGuest?: boolean;
+  onLoginClick?: () => void;
 }
 
-export function HomePage({ onNavigate }: HomePageProps) {
+export function HomePage({ onNavigate, isGuest, onLoginClick }: HomePageProps) {
   const handleNavigate = (page: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'course-detail') => {
-    if (onNavigate) {
-      onNavigate(page);
-    }
+    if (onNavigate) onNavigate(page);
   };
 
   return (
-    <div className="mr-64 pt-16 min-h-screen bg-white" dir="rtl">
+    <div className={`${isGuest ? 'pt-16' : 'mr-64 pt-16'} min-h-screen bg-white`} dir="rtl">
+      {isGuest && (
+        <Navigation
+          onNavigate={() => {}}
+          isAuthenticated={false}
+          onLoginClick={onLoginClick}
+        />
+      )}
       <main>
         <Hero onNavigate={handleNavigate} />
         <AIExplanation />
