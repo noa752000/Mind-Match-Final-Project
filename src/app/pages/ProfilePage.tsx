@@ -7,6 +7,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { auth } from '../../firebase';
 import { updateProfile } from 'firebase/auth';
 
+const YEAR_LETTER_TO_NUMBER: Record<string, number> = { 'א': 1, 'ב': 2, 'ג': 3, 'ד': 4 };
+
+function yearFromAcademicYear(academicYear: string): number | undefined {
+  const letter = academicYear.match(/שנה\s*([אבגד])/)?.[1];
+  return letter ? YEAR_LETTER_TO_NUMBER[letter] : undefined;
+}
+
 export function ProfilePage() {
   const { user, updateUserProfile } = useAuth();
   const { addUserCourse, removeUserCourse } = useAuth();
@@ -31,7 +38,11 @@ export function ProfilePage() {
 
   const handleSave = async () => {
     setSaveStatus('saving');
-    await updateUserProfile({ fullName, phone, institution, academicYear, studentId });
+    const year = yearFromAcademicYear(academicYear);
+    await updateUserProfile({
+      fullName, phone, institution, academicYear, studentId,
+      ...(year !== undefined ? { year } : {}),
+    });
     // Also update Firebase Auth displayName
     if (auth.currentUser && fullName !== auth.currentUser.displayName) {
       await updateProfile(auth.currentUser, { displayName: fullName }).catch(() => {});

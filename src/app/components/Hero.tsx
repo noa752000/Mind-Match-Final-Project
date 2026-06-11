@@ -1,6 +1,11 @@
+import { useEffect, useState } from 'react';
 import { ArrowLeft, Sparkles } from 'lucide-react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase';
 import { Button } from './ui/button';
 import { useAuth } from '../contexts/AuthContext';
+
+const TOTAL_COURSES = 8;
 
 interface HeroProps {
   onRegisterClick?: () => void;
@@ -11,6 +16,29 @@ export function Hero({ onRegisterClick, onNavigate }: HeroProps) {
   // Display the logged-in user's name instead of a hardcoded name
   const { user } = useAuth();
   const displayName = user?.fullName || user?.username || 'סטודנט';
+
+  const [studentsCount, setStudentsCount] = useState<number | null>(null);
+  const [studyHours, setStudyHours] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const snap = await getDocs(collection(db, 'users'));
+        setStudentsCount(snap.size);
+
+        const minutes = snap.docs
+          .map(d => d.data().totalStudyMinutes)
+          .filter((m): m is number => typeof m === 'number')
+          .reduce((sum, m) => sum + m, 0);
+
+        setStudyHours(Math.round(minutes / 60));
+      } catch (error) {
+        console.error('Failed to fetch homepage stats:', error);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   return (
     <section className="relative pt-8 pb-20 px-16 overflow-hidden">
@@ -50,15 +78,19 @@ export function Hero({ onRegisterClick, onNavigate }: HeroProps) {
             {/* Stats */}
             <div className="flex items-center gap-12 mt-12 justify-start">
               <div className="text-right">
-                <div className="text-3xl font-bold text-gray-900">10,000+</div>
+                <div className="text-3xl font-bold text-gray-900">
+                  {studentsCount !== null ? studentsCount.toLocaleString() : '...'}
+                </div>
                 <div className="text-sm text-gray-600">סטודנטים פעילים</div>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-gray-900">95%</div>
-                <div className="text-sm text-gray-600">שביעות רצון</div>
+                <div className="text-3xl font-bold text-gray-900">
+                  {studyHours !== null ? `${studyHours.toLocaleString()}+` : '...'}
+                </div>
+                <div className="text-sm text-gray-600">שעות למידה</div>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-gray-900">50+</div>
+                <div className="text-3xl font-bold text-gray-900">{TOTAL_COURSES}</div>
                 <div className="text-sm text-gray-600">קורסים</div>
               </div>
             </div>

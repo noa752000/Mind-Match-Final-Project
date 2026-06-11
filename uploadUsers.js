@@ -15,6 +15,37 @@ const courseIds = [
 const learningTypes = ["knowledge", "analysis", "visual"];
 const studentLevels = ["beginner", "intermediate", "advanced"];
 
+const institutions = [
+  "אוניברסיטת תל אביב",
+  "האוניברסיטה העברית בירושלים",
+  "אוניברסיטת בר-אילן",
+  "אוניברסיטת חיפה",
+  "אוניברסיטת בן-גוריון בנגב",
+  "אוניברסיטת אריאל בשומרון",
+  "האוניברסיטה הפתוחה",
+  "הטכניון - מכון טכנולוגי לישראל",
+  "המכללה האקדמית תל אביב-יפו (MTA)",
+  "מכללת אפקה - המכללה האקדמית להנדסה בתל אביב",
+  "מכללת רופין",
+  "המכללה האקדמית נתניה",
+  "המכללה האקדמית ספיר",
+  "המכללה האקדמית עמק יזרעאל",
+  "המכללה האקדמית כנרת",
+  "המכללה האקדמית גליל מערבי",
+  "מכללת אשקלון",
+  "המרכז האקדמי פרס",
+  "המכללה האקדמית הדסה",
+  "מכללת סמי שמעון"
+];
+
+const YEAR_LETTERS = ["א", "ב", "ג", "ד"];
+
+function academicYearForYear(year) {
+  const letter = YEAR_LETTERS[year - 1] || "א";
+  const semester = pickRandom(["א", "ב"]);
+  return `שנה ${letter}׳, סמסטר ${semester}׳`;
+}
+
 const firstNames = [
   "Noa",
   "Ariel",
@@ -197,22 +228,28 @@ function createUsers() {
       weeklyStudyMinutes = Math.max(30, Math.floor(totalStudyMinutes * 0.2));
     }
 
-    const email = `${firstName.toLowerCase()}.${lastName.toLowerCase().replace(/[^a-z]/g, "")}@mindmatch.com`;
+    const username = `${firstName.toLowerCase()}.${lastName.toLowerCase().replace(/[^a-z]/g, "")}`;
+    const email = `${username}@mindmatch.com`;
 
     users.push({
       userId,
+      username,
       fullName,
       email,
       phone: createPhoneNumber(),
+      institution: pickRandom(institutions),
       year,
-      courses,
+      academicYear: academicYearForYear(year),
+      selectedCourses: courses,
       preferredLearningType,
       studentLevel,
       averageGrade,
       completedQuestions,
       totalStudyMinutes,
       weeklyStudyMinutes,
-      createdAt: Timestamp.now()
+      isDemoUser: true,
+      createdAt: Timestamp.now(),
+      lastLoginAt: Timestamp.now()
     });
   }
 

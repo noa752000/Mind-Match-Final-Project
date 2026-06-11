@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { collection, getDocs, query, where, doc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, doc, setDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { calculus1Questions } from '../../dataQ/calculus1_questions.js';
 import { linearAlgebraQuestions } from '../../dataQ/linearAlgebra_questions.js';
@@ -42,6 +42,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
   const [showFeedback, setShowFeedback] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sessionStartTime] = useState(Date.now());
+  const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [answers, setAnswers] = useState<{ questionId: string; isCorrect: boolean; timeSpent: number }[]>([]);
 
   useEffect(() => {
@@ -131,12 +132,17 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
     }
   }, [courseId]);
 
-  // Save practice session when finished
+  // Refresh course_progress when finished
   useEffect(() => {
     if (currentQuestionIndex >= questions.length && answers.length > 0) {
-      savePracticeSession();
+      updateCourseProgress();
     }
   }, [currentQuestionIndex, questions.length, answers.length]);
+
+  // Reset per-question timer whenever a new question is shown
+  useEffect(() => {
+    setQuestionStartTime(Date.now());
+  }, [currentQuestionIndex]);
 
   const question = questions[currentQuestionIndex];
 
@@ -157,79 +163,104 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
     setAnswers(prev => [...prev, newAnswer]);
 
     // Save individual answer to practice_results
+    const timeSpentSeconds = Math.round((Date.now() - questionStartTime) / 1000);
     try {
-      await setDoc(doc(db, 'practice_results', `${appUserId}_${courseId}_${question.id}`), {
+      await setDoc(doc(db, 'practice_results', `${appUserId}_${question.id}`), {
         userId: appUserId,
         courseId,
         questionId: question.id,
         isCorrect,
-        timeSpent,
-        timestamp: new Date()
+        difficulty: question.difficulty ?? 1,
+        learningType: question.learningType ?? 'concept',
+        timeSpentSeconds,
+        answeredAt: Timestamp.now()
       });
       console.log('Answer saved to practice_results:', { userId: appUserId, questionId: question.id, isCorrect });
     } catch (error) {
       console.error('Error saving answer:', error);
     }
 
-    // Update course_progress immediately after each answer
+    // Recompute and save the course_progress summary from all practice_results so far
+    await updateCourseProgress();
+  };
+
+  const updateCourseProgress = async () => {
     try {
-      const updatedAnswers = [...answers, newAnswer];
-      const correctAnswers = updatedAnswers.filter(a => a.isCorrect).length;
-      const totalAnswers = updatedAnswers.length;
-      const progress = Math.round((correctAnswers / totalAnswers) * 100);
-      const practicedMinutes = Math.round((Date.now() - sessionStartTime) / 60000); // Convert to minutes
+      const resultsQuery = query(
+        collection(db, 'practice_results'),
+        where('userId', '==', appUserId)
+      );
+      const snapshot = await getDocs(resultsQuery);
+
+      let totalAnswers = 0;
+      let correctAnswers = 0;
+      let knowledgeTotal = 0;
+      let knowledgeCorrect = 0;
+      let analysisTotal = 0;
+      let analysisCorrect = 0;
+      let visualTotal = 0;
+      let visualCorrect = 0;
+      let totalSeconds = 0;
+
+      snapshot.docs.forEach((resultDoc) => {
+        const data = resultDoc.data();
+        if (data.courseId !== courseId) return;
+
+        totalAnswers += 1;
+        if (data.isCorrect) correctAnswers += 1;
+        totalSeconds += data.timeSpentSeconds || 0;
+
+        if (data.learningType === 'knowledge') {
+          knowledgeTotal += 1;
+          if (data.isCorrect) knowledgeCorrect += 1;
+        } else if (data.learningType === 'analysis') {
+          analysisTotal += 1;
+          if (data.isCorrect) analysisCorrect += 1;
+        } else if (data.learningType === 'visual') {
+          visualTotal += 1;
+          if (data.isCorrect) visualCorrect += 1;
+        }
+      });
+
+      const wrongAnswers = totalAnswers - correctAnswers;
+      const accuracy = totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
+      const practicedMinutes = Math.round(totalSeconds / 60);
 
       await setDoc(doc(db, 'course_progress', `${appUserId}_${courseId}`), {
         userId: appUserId,
         courseId,
-        correctAnswers,
         totalAnswers,
-        progress,
+        correctAnswers,
+        wrongAnswers,
+        accuracy,
+        knowledgeTotal,
+        knowledgeCorrect,
+        analysisTotal,
+        analysisCorrect,
+        visualTotal,
+        visualCorrect,
         practicedMinutes,
-        lastUpdated: new Date()
+        lastPracticedAt: Timestamp.now(),
+        updatedAt: Timestamp.now()
       }, { merge: true });
 
       console.log('Updated course_progress:', {
         userId: appUserId,
         courseId,
-        correctAnswers,
         totalAnswers,
-        progress,
+        correctAnswers,
+        wrongAnswers,
+        accuracy,
+        knowledgeTotal,
+        knowledgeCorrect,
+        analysisTotal,
+        analysisCorrect,
+        visualTotal,
+        visualCorrect,
         practicedMinutes
       });
     } catch (error) {
       console.error('Error updating course_progress:', error);
-    }
-  };
-
-  const savePracticeSession = async () => {
-    if (answers.length === 0) return;
-
-    const correctAnswers = answers.filter(a => a.isCorrect).length;
-    const totalAnswers = answers.length;
-    const progress = Math.round((correctAnswers / totalAnswers) * 100);
-    const practicedMinutes = Math.round((Date.now() - sessionStartTime) / 60000); // Convert to minutes
-
-    try {
-      await setDoc(doc(db, 'course_progress', `${appUserId}_${courseId}`), {
-        userId: appUserId,
-        courseId,
-        correctAnswers,
-        totalAnswers,
-        progress,
-        practicedMinutes,
-        lastUpdated: new Date()
-      });
-      console.log('Practice session saved to course_progress:', {
-        userId: appUserId,
-        courseId,
-        correctAnswers,
-        totalAnswers,
-        progress,
-        practicedMinutes
-      });
-    } catch (error) {
-      console.error('Error saving practice session:', error);
     }
   };
 
@@ -242,7 +273,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
       return;
     }
 
-    await savePracticeSession();
+    await updateCourseProgress();
     onBack();
   };
 
