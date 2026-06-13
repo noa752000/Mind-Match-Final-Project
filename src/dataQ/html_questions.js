@@ -130,7 +130,7 @@ export const htmlQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בתרשים אחד מוצג ניגודיות נמוכה בין הטקסט לרקע, ובתרשים שני ניגודיות גבוהה. מה עדיף מבחינת נגישות?",
-    imageUrl: "",
+    imageUrl: "/question-images/contrast-example.png",
     options: [
       "ניגודיות נמוכה",
       "ניגודיות גבוהה",
@@ -259,7 +259,7 @@ export const htmlQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "באיור מוצג טופס עם שדה חיפוש, שדה אימייל וכפתור שליחה. איזו תגית מתאימה לקיבוץ כל הרכיבים יחד?",
-    imageUrl: "",
+    imageUrl: "/question-images/form-example.png",
     options: [
       "<span dir='ltr'>&lt;header&gt;</span>",
       "<span dir='ltr'>&lt;form&gt;</span>",
@@ -276,7 +276,7 @@ export const htmlQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בשרטוט מוצגת קבוצת אפשרויות שבה רק אפשרות אחת יכולה להיות מסומנת בכל פעם. איזה סוג קלט מתאים?",
-    imageUrl: "",
+    imageUrl: "/question-images/radio-vs-checkbox.png",
     options: [
       "<span dir='ltr'>checkbox</span>",
       "<span dir='ltr'>radio</span>",
@@ -293,7 +293,7 @@ export const htmlQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "אם שדה מוצג כבחירה מרובה בתרשים, בדרך כלל <span dir='ltr'>checkbox</span> יתאים יותר מ-<span dir='ltr'>radio</span>.",
-    imageUrl: "",
+    imageUrl: "/question-images/radio-vs-checkbox.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -405,7 +405,7 @@ export const htmlQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בתרשים מופיעים אזור עליון עם לוגו וכותרת, אזור ניווט, תוכן מרכזי ותחתית עמוד. איזו תגית מתאימה לאזור העליון?",
-    imageUrl: "",
+    imageUrl: "/question-images/semantic-layout.png",
     options: [
       "<span dir='ltr'>&lt;footer&gt;</span>",
       "<span dir='ltr'>&lt;header&gt;</span>",
@@ -422,7 +422,7 @@ export const htmlQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "באיור נראה תוכן ראשי של הדף, שהוא המרכזי והייחודי לעמוד. איזו תגית הכי מתאימה?",
-    imageUrl: "",
+    imageUrl: "/question-images/semantic-layout.png",
     options: [
       "<span dir='ltr'>&lt;main&gt;</span>",
       "<span dir='ltr'>&lt;nav&gt;</span>",
@@ -439,7 +439,7 @@ export const htmlQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "אם מבנה העמוד בתרשים ברור יותר בזכות תגיות כמו <span dir='ltr'>&lt;header&gt;</span>, <span dir='ltr'>&lt;nav&gt;</span> ו-<span dir='ltr'>&lt;main&gt;</span>, יש לכך ערך סמנטי אמיתי.",
-    imageUrl: "",
+    imageUrl: "/question-images/semantic-layout.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -551,7 +551,7 @@ export const htmlQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "באיור נראה אתר ששומר את העדפת המשתמש למצב כהה גם לאחר סגירת הדפדפן. איזו טכנולוגיה מתאימה לכך?",
-    imageUrl: "",
+    imageUrl: "/question-images/html-apis-example.png",
     options: [
       "<span dir='ltr'>sessionStorage</span>",
       "<span dir='ltr'>localStorage</span>",
@@ -568,7 +568,7 @@ export const htmlQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בתרשים מוצג יישום מפה שמבקש גישה למיקום הנוכחי של המשתמש. לאיזה <span dir='ltr'>API</span> זה שייך?",
-    imageUrl: "",
+    imageUrl: "/question-images/html-apis-example.png",
     options: [
       "<span dir='ltr'>Geolocation API</span>",
       "<span dir='ltr'>Canvas API</span>",
@@ -585,7 +585,7 @@ export const htmlQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "אם ביישום מוצג ציור אינטראקטיבי שמתעדכן בעזרת קוד, ייתכן שהוא משתמש ב-<span dir='ltr'>Canvas API</span>.",
-    imageUrl: "",
+    imageUrl: "/question-images/html-apis-example.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   }

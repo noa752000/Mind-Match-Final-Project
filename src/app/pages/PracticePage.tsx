@@ -20,6 +20,17 @@ interface PracticePageProps {
   onBack: () => void;
 }
 
+// Maps course catalog IDs (used in CoursesPage / selectedCourses) to the
+// courseId values used in the questions data (Firestore "questions" collection
+// and src/dataQ/* files), where they differ.
+const QUESTION_DATA_COURSE_ID: Record<string, string> = {
+  'html': 'html_fundamentals',
+  'linear-algebra': 'linear_algebra',
+  'requirements-design': 'systems_analysis',
+  'information-security': 'cyber_security',
+  'mis-economics': 'information_systems_economics',
+};
+
 interface Question {
   id: string;
   courseId?: string;
@@ -51,13 +62,15 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
         setLoading(true);
         console.log('Loading questions from Firestore...');
 
+        const questionDataCourseId = QUESTION_DATA_COURSE_ID[courseId] || courseId;
+
         let loadedQuestions: Question[] = [];
         let firestoreLoaded = false;
 
         try {
           const q = query(
             collection(db, 'questions'),
-            where('courseId', '==', courseId)
+            where('courseId', '==', questionDataCourseId)
           );
 
           const querySnapshot = await getDocs(q);
@@ -80,7 +93,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
           });
 
           loadedQuestions.sort((a, b) => (a.difficulty || 0) - (b.difficulty || 0));
-          firestoreLoaded = true;
+          firestoreLoaded = loadedQuestions.length > 0;
           console.log('Questions loaded successfully');
         } catch (firebaseError) {
           console.error('Firestore error, loading local questions instead:', firebaseError);
@@ -99,7 +112,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
               ];
 
               loadedQuestions = allLocalQuestions
-                .filter((q: any) => q.courseId === courseId)
+                .filter((q: any) => q.courseId === questionDataCourseId)
                 .map((q: any) => ({
                   id: q.id,
                   courseId: q.courseId,
