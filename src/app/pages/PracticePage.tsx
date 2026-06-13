@@ -148,7 +148,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
   // Refresh course_progress when finished
   useEffect(() => {
     if (currentQuestionIndex >= questions.length && answers.length > 0) {
-      updateCourseProgress();
+      updateCourseProgress().then(() => updateUserAggregateStats());
     }
   }, [currentQuestionIndex, questions.length, answers.length]);
 
@@ -195,6 +195,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
 
     // Recompute and save the course_progress summary from all practice_results so far
     await updateCourseProgress();
+    await updateUserAggregateStats();
   };
 
   const updateCourseProgress = async () => {
@@ -277,6 +278,76 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
     }
   };
 
+  // Recompute the user's aggregate stats (users/{uid}) from all of their course_progress docs
+  const updateUserAggregateStats = async () => {
+    try {
+      const progressQuery = query(
+        collection(db, 'course_progress'),
+        where('userId', '==', appUserId)
+      );
+      const snapshot = await getDocs(progressQuery);
+
+      let totalAnswers = 0;
+      let correctAnswers = 0;
+      let knowledgeTotal = 0;
+      let knowledgeCorrect = 0;
+      let analysisTotal = 0;
+      let analysisCorrect = 0;
+      let visualTotal = 0;
+      let visualCorrect = 0;
+      let practicedMinutes = 0;
+      let lastPracticedAt: Timestamp | null = null;
+
+      snapshot.docs.forEach((progressDoc) => {
+        const data = progressDoc.data();
+        totalAnswers += data.totalAnswers || 0;
+        correctAnswers += data.correctAnswers || 0;
+        knowledgeTotal += data.knowledgeTotal || 0;
+        knowledgeCorrect += data.knowledgeCorrect || 0;
+        analysisTotal += data.analysisTotal || 0;
+        analysisCorrect += data.analysisCorrect || 0;
+        visualTotal += data.visualTotal || 0;
+        visualCorrect += data.visualCorrect || 0;
+        practicedMinutes += data.practicedMinutes || 0;
+
+        if (data.lastPracticedAt && (!lastPracticedAt || data.lastPracticedAt.seconds > lastPracticedAt.seconds)) {
+          lastPracticedAt = data.lastPracticedAt;
+        }
+      });
+
+      const averageGrade = totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
+
+      const accuracies: { type: 'knowledge' | 'analysis' | 'visual'; value: number }[] = [
+        { type: 'knowledge', value: knowledgeTotal > 0 ? knowledgeCorrect / knowledgeTotal : -1 },
+        { type: 'analysis', value: analysisTotal > 0 ? analysisCorrect / analysisTotal : -1 },
+        { type: 'visual', value: visualTotal > 0 ? visualCorrect / visualTotal : -1 },
+      ];
+      const bestType = accuracies.reduce((best, curr) => (curr.value > best.value ? curr : best), accuracies[0]);
+      const preferredLearningType = bestType.value >= 0 ? bestType.type : null;
+
+      let studentLevel: 'beginner' | 'intermediate' | 'advanced';
+      if (averageGrade < 60) {
+        studentLevel = 'beginner';
+      } else if (averageGrade <= 79) {
+        studentLevel = 'intermediate';
+      } else {
+        studentLevel = 'advanced';
+      }
+
+      await setDoc(doc(db, 'users', appUserId), {
+        averageGrade,
+        completedQuestions: totalAnswers,
+        preferredLearningType,
+        studentLevel,
+        totalStudyMinutes: practicedMinutes,
+        weeklyStudyMinutes: practicedMinutes,
+        lastPracticedAt: lastPracticedAt || Timestamp.now(),
+      }, { merge: true });
+    } catch (error) {
+      console.error('Error updating user aggregate stats:', error);
+    }
+  };
+
   const handleNextQuestion = async () => {
     setSelectedAnswer(null);
     setShowFeedback(false);
@@ -287,6 +358,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
     }
 
     await updateCourseProgress();
+    await updateUserAggregateStats();
     onBack();
   };
 
