@@ -153,7 +153,7 @@ async function fetchAIInsight(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
-      max_tokens: 120,
+      max_tokens: 250,
       messages: [
         {
           role: 'system',

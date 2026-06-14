@@ -101,7 +101,7 @@ export const economicsQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה מודדים במטריצת סיכונים?",
-    imageUrl: "",
+    imageUrl: "/question-images/risk_7.png",
     options: ["השפעה והסתברות", "קוד", "טבלה", "JOIN"],
     correctAnswer: "השפעה והסתברות"
   },
@@ -113,7 +113,7 @@ export const economicsQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מהו סיכון גבוה?",
-    imageUrl: "",
+    imageUrl: "/question-images/risk_8.png",
     options: ["השפעה גבוהה", "נמוכה", "אין", "קוד"],
     correctAnswer: "השפעה גבוהה"
   },
@@ -125,7 +125,7 @@ export const economicsQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "סיכון גבוה דורש טיפול.",
-    imageUrl: "",
+    imageUrl: "/question-images/risk_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -227,7 +227,7 @@ export const economicsQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה מציג גאנט?",
-    imageUrl: "",
+    imageUrl: "/question-images/proj_7.png",
     options: ["לו\"ז", "קוד", "טבלה", "DB"],
     correctAnswer: "לו\"ז"
   },
@@ -239,7 +239,7 @@ export const economicsQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה מודדים בפרויקט?",
-    imageUrl: "",
+    imageUrl: "/question-images/proj_8.png",
     options: ["זמן", "עלות", "איכות", "כולם"],
     correctAnswer: "כולם"
   },
@@ -251,7 +251,7 @@ export const economicsQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "גאנט מציג משימות.",
-    imageUrl: "",
+    imageUrl: "/question-images/proj_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -353,7 +353,7 @@ export const economicsQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה מודדים ב-ROI?",
-    imageUrl: "",
+    imageUrl: "/question-images/roi_7.png",
     options: ["רווח", "השקעה", "יחס", "כולם"],
     correctAnswer: "כולם"
   },
@@ -365,7 +365,7 @@ export const economicsQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה טוב?",
-    imageUrl: "",
+    imageUrl: "/question-images/roi_8.png",
     options: ["ROI גבוה", "ROI נמוך", "אין", "קוד"],
     correctAnswer: "ROI גבוה"
   },
@@ -377,7 +377,7 @@ export const economicsQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "ROI מודד רווחיות.",
-    imageUrl: "",
+    imageUrl: "/question-images/roi_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -479,7 +479,7 @@ export const economicsQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה משפיע?",
-    imageUrl: "",
+    imageUrl: "/question-images/dig_7.png",
     options: ["שוק", "טכנולוגיה", "לקוחות", "כולם"],
     correctAnswer: "כולם"
   },
@@ -491,7 +491,7 @@ export const economicsQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה יתרון?",
-    imageUrl: "",
+    imageUrl: "/question-images/dig_8.png",
     options: ["מהירות", "חדשנות", "יתרון", "כולם"],
     correctAnswer: "כולם"
   },
@@ -503,7 +503,7 @@ export const economicsQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "אסטרטגיה דיגיטלית עוזרת לארגון.",
-    imageUrl: "",
+    imageUrl: "/question-images/dig_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   }

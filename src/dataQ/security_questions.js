@@ -86,7 +86,7 @@ export const securityQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "איזו פונקציה היא Hash?",
-    imageUrl: "",
+    imageUrl: "/question-images/hash_7.png",
     options: ["SHA-256", "SELECT", "JOIN", "HTML"],
     correctAnswer: "SHA-256"
   },
@@ -98,7 +98,7 @@ export const securityQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה קורה אם משנים תו אחד בקלט?",
-    imageUrl: "",
+    imageUrl: "/question-images/hash_8.png",
     options: ["אין שינוי", "שינוי קטן", "שינוי גדול", "שגיאה"],
     correctAnswer: "שינוי גדול"
   },
@@ -110,7 +110,7 @@ export const securityQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "Hash משתנה משמעותית עם שינוי קטן בקלט.",
-    imageUrl: "",
+    imageUrl: "/question-images/hash_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -207,7 +207,7 @@ export const securityQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "איזה אלגוריתם אסימטרי?",
-    imageUrl: "",
+    imageUrl: "/question-images/asym_7.png",
     options: ["RSA", "AES", "MD5", "SHA"],
     correctAnswer: "RSA"
   },
@@ -219,7 +219,7 @@ export const securityQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה סודי?",
-    imageUrl: "",
+    imageUrl: "/question-images/asym_8.png",
     options: ["Private Key", "Public Key", "Both", "None"],
     correctAnswer: "Private Key"
   },
@@ -231,7 +231,7 @@ export const securityQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "Public Key ניתן לשיתוף.",
-    imageUrl: "",
+    imageUrl: "/question-images/asym_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -328,7 +328,7 @@ export const securityQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "איזה אלגוריתם סימטרי?",
-    imageUrl: "",
+    imageUrl: "/question-images/sym_7.png",
     options: ["AES", "RSA", "SHA", "MD5"],
     correctAnswer: "AES"
   },
@@ -340,7 +340,7 @@ export const securityQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "כמה מפתחות?",
-    imageUrl: "",
+    imageUrl: "/question-images/sym_8.png",
     options: ["1", "2", "3", "אין"],
     correctAnswer: "1"
   },
@@ -352,7 +352,7 @@ export const securityQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "משתמשים במפתח אחד.",
-    imageUrl: "",
+    imageUrl: "/question-images/sym_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -449,7 +449,7 @@ export const securityQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה מגן על רשת?",
-    imageUrl: "",
+    imageUrl: "/question-images/net_7.png",
     options: ["Firewall", "SQL", "HTML", "CSS"],
     correctAnswer: "Firewall"
   },
@@ -461,7 +461,7 @@ export const securityQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "מה חוסם תעבורה?",
-    imageUrl: "",
+    imageUrl: "/question-images/net_8.png",
     options: ["Firewall", "JOIN", "SELECT", "Loop"],
     correctAnswer: "Firewall"
   },
@@ -473,7 +473,7 @@ export const securityQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "Firewall מגן על רשת.",
-    imageUrl: "",
+    imageUrl: "/question-images/net_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   }

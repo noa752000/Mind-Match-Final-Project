@@ -4,12 +4,13 @@ import { Card } from './ui/card';
 import { Switch } from './ui/switch';
 import { Button } from './ui/button';
 import { ChangePasswordModal } from './ChangePasswordModal';
-import { WeeklySummaryModal } from './WeeklySummaryModal';
+import { useAuth } from '../contexts/AuthContext';
 
 export function AccountSettings() {
+  const { user, updateUserProfile } = useAuth();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [showWeeklySummary, setShowWeeklySummary] = useState(false);
-  const [weeklySummaryEnabled, setWeeklySummaryEnabled] = useState(false);
+
+  const weeklySummaryEnabled = user?.weeklySummaryEnabled !== false;
 
   return (
     <>
@@ -51,17 +52,14 @@ export function AccountSettings() {
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
               <Switch
                 checked={weeklySummaryEnabled}
-                onCheckedChange={(v) => {
-                  setWeeklySummaryEnabled(v);
-                  if (v) setShowWeeklySummary(true);
-                }}
+                onCheckedChange={(v) => updateUserProfile({ weeklySummaryEnabled: v })}
               />
               <div className="text-right flex-1 mr-4">
                 <p className="font-medium text-gray-900">סיכומים שבועיים</p>
                 <p className="text-sm text-gray-600">
                   {weeklySummaryEnabled
-                    ? <button onClick={() => setShowWeeklySummary(true)} className="text-teal-600 hover:underline">לחצי לצפייה בסיכום השבועי ←</button>
-                    : 'דוח התקדמות מופק על ידי AI'}
+                    ? 'דוח התקדמות מופק על ידי AI ומוצג בלוח המחוונים'
+                    : 'הסיכום השבועי לא יוצג בלוח המחוונים'}
                 </p>
               </div>
             </div>
@@ -96,9 +94,6 @@ export function AccountSettings() {
 
     {showPasswordModal && (
       <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />
-    )}
-    {showWeeklySummary && (
-      <WeeklySummaryModal onClose={() => setShowWeeklySummary(false)} />
     )}
     </>
   );

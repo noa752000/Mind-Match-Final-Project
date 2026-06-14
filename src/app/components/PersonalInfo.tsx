@@ -1,4 +1,4 @@
-import { Mail, Calendar, GraduationCap, MapPin, Phone } from 'lucide-react';
+import { Mail, Calendar, MapPin, Phone } from 'lucide-react';
 import { Card } from './ui/card';
 
 interface PersonalInfoProps {
@@ -144,33 +144,19 @@ export function PersonalInfo({
           </div>
         </div>
 
-        {/* Degree — editable */}
-        <div className="text-right">
-          <label className="text-sm text-gray-600 block mb-1.5">תואר / תוכנית לימודים</label>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="לדוגמה: תואר ראשון במערכות מידע"
-              dir="rtl"
-              className={`${fieldClass} pr-10`}
-            />
-            <GraduationCap className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-          </div>
-        </div>
-
         {/* Courses — editable checkboxes */}
         <div className="text-right mt-4">
           <label className="text-sm text-gray-600 block mb-1.5">קורסים</label>
           <div className="grid grid-cols-2 gap-3">
             {[
               { id: 'sql', label: 'SQL' },
-              { id: 'systems_analysis', label: 'Systems Analysis' },
-              { id: 'oop', label: 'OOP' },
-              { id: 'calculus1', label: 'Calculus I' },
-              { id: 'linear_algebra', label: 'Linear Algebra' },
-              { id: 'html_fundamentals', label: 'HTML Fundamentals' },
-              { id: 'information_systems_economics', label: 'Information Systems Economics' },
-              { id: 'cyber_security', label: 'Cyber Security' }
+              { id: 'requirements-design', label: 'אפיון ותכן' },
+              { id: 'oop', label: 'תכנות מונחה עצמים' },
+              { id: 'calculus1', label: 'חדו"א 1' },
+              { id: 'linear-algebra', label: 'אלגברה לינארית' },
+              { id: 'html', label: 'HTML' },
+              { id: 'mis-economics', label: 'כלכלת מערכות מידע' },
+              { id: 'information-security', label: 'אבטחת מידע' }
             ].map(c => (
               <label key={c.id} className="inline-flex items-center gap-2 text-sm">
                 <input

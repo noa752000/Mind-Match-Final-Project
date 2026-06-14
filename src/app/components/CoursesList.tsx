@@ -28,10 +28,10 @@ const COURSE_META: Record<string, { title: string; color: string }> = {
   'linear-algebra':     { title: 'אלגברה לינארית',         color: 'from-purple-500 to-purple-600' },
   'oop':                { title: 'תכנות מונחה עצמים',       color: 'from-green-500 to-green-600' },
   'html':               { title: 'HTML',                   color: 'from-orange-500 to-orange-600' },
-  'sql':                { title: 'SQL',                    color: 'from-cyan-500 to-cyan-600' },
-  'requirements-design':{ title: 'אפיון ותכן',             color: 'from-indigo-500 to-indigo-600' },
+  'sql':                { title: 'SQL',                    color: 'from-pink-500 to-pink-600' },
+  'requirements-design':{ title: 'אפיון ותכן',             color: 'from-fuchsia-500 to-fuchsia-600' },
   'information-security':{ title: 'אבטחת מידע',            color: 'from-red-500 to-red-600' },
-  'mis-economics':      { title: 'כלכלת מערכות מידע',       color: 'from-amber-500 to-amber-600' },
+  'mis-economics':      { title: 'כלכלת מערכות מידע',       color: 'from-yellow-500 to-yellow-600' },
 };
 
 export function CoursesList({ onOpenPractice, onNavigateToCourses }: CoursesListProps) {

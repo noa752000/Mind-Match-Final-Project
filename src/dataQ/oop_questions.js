@@ -113,7 +113,7 @@ export const oopQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בתרשים <span dir='ltr'>UML</span> מופיעה מחלקה עם שלושה אזורים: שם המחלקה, שדות ומתודות. מה מייצג האזור האמצעי?",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_classes_objects_7.png",
     options: [
       "רשימת האובייקטים שנוצרו מהמחלקה",
       "רשימת התכונות <span dir='ltr'>(attributes)</span> של המחלקה",
@@ -130,7 +130,7 @@ export const oopQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בקטע קוד מוצג יצירת אובייקט באמצעות <span dir='ltr'>new Student()</span>. מה הפעולה הזו מבצעת?",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_classes_objects_8.png",
     options: [
       "מכריזה על מחלקה חדשה בשם <span dir='ltr'>Student</span>",
       "יוצרת מופע חדש של המחלקה <span dir='ltr'>Student</span>",
@@ -147,7 +147,7 @@ export const oopQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "אם בתרשים נראים שני אובייקטים מאותה מחלקה עם ערכי שדות שונים, עדיין שניהם יכולים להיות מאותו טיפוס.",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_classes_objects_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -259,7 +259,7 @@ export const oopQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בתרשים <span dir='ltr'>UML</span> חץ עם משולש חלול ממחלקת <span dir='ltr'>Dog</span> אל <span dir='ltr'>Animal</span> מייצג:",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_inheritance_7.png",
     options: [
       "אסוציאציה",
       "הרכבה",
@@ -276,7 +276,7 @@ export const oopQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "באיור מוצג עץ מחלקות שבו <span dir='ltr'>Manager</span> ו-<span dir='ltr'>Developer</span> יורשות מ-<span dir='ltr'>Employee</span>. מהו <span dir='ltr'>Employee</span>?",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_inheritance_8.png",
     options: [
       "מחלקת בן",
       "מחלקת אב",
@@ -293,7 +293,7 @@ export const oopQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "אם מחלקת בן דורסת מתודה של האב, עדיין ייתכן שתהיה לה גישה לגרסה של האב דרך <span dir='ltr'>super</span>.",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_inheritance_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -405,7 +405,7 @@ export const oopQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בתרשים מופיעות כמה מחלקות שמממשות את אותו ממשק <span dir='ltr'>Shape</span>. מה ניתן לעשות בעזרת זה?",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_polymorphism_7.png",
     options: [
       "להחזיק את כולן במבנה אחד ולקרא ל-<span dir='ltr'>draw()</span> בלי לדעת את הסוג המדויק",
       "למנוע יצירת אובייקטים מהמחלקות",
@@ -422,7 +422,7 @@ export const oopQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בקטע קוד מוצגת לולאה שעוברת על רשימת <span dir='ltr'>Animal</span> וקוראת לכל איבר <span dir='ltr'>makeSound()</span>. מה בא לידי ביטוי?",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_polymorphism_8.png",
     options: [
       "כמסה",
       "פולימורפיזם בזמן ריצה",
@@ -439,7 +439,7 @@ export const oopQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "ייתכן שמופע של מחלקת בן יישמר במשתנה מטיפוס האב, אך עדיין יופעלו מתודות שדרס הבן.",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_polymorphism_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -551,7 +551,7 @@ export const oopQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "בתרשים נראה אובייקט מרכזי שאליו נרשמים כמה מאזינים, וכאשר מצבו משתנה כולם מתעדכנים. איזה דפוס מוצג?",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_design_patterns_7.png",
     options: [
       "<span dir='ltr'>Singleton</span>",
       "<span dir='ltr'>Factory</span>",
@@ -568,7 +568,7 @@ export const oopQuestions = [
     format: "mcq",
     learningType: "visual",
     question: "באיור נראה מחלקה עם בנאי פרטי ומתודה סטטית שמחזירה את אותו מופע בכל פעם. איזה דפוס זה?",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_design_patterns_8.png",
     options: [
       "<span dir='ltr'>Factory</span>",
       "<span dir='ltr'>Singleton</span>",
@@ -585,7 +585,7 @@ export const oopQuestions = [
     format: "true_false",
     learningType: "visual",
     question: "בתרשים <span dir='ltr'>Factory</span> הלקוח בדרך כלל מבקש אובייקט דרך שכבת יצירה, ולא יוצר אותו ישירות עם <span dir='ltr'>new</span>.",
-    imageUrl: "",
+    imageUrl: "/question-images/oop_design_patterns_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   }

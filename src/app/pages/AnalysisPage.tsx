@@ -8,6 +8,7 @@ import { StrengthsWeaknesses } from '../components/StrengthsWeaknesses';
 import { PreferredStudyMethods } from '../components/PreferredStudyMethods';
 import { PerformanceAnalytics } from '../components/PerformanceAnalytics';
 import { AIPersonalizationSummary } from '../components/AIPersonalizationSummary';
+import { WeeklySummaryCard } from '../components/WeeklySummaryCard';
 import { Card } from '../components/ui/card';
 import { TrendingUp, Clock, Target, Award } from 'lucide-react';
 
@@ -155,6 +156,8 @@ export function AnalysisPage() {
               );
             })}
           </div>
+
+          <WeeklySummaryCard />
 
           <AIPersonalizationSummary />
 

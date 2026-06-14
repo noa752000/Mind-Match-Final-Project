@@ -4,7 +4,6 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../../firebase';
 import { CheckCircle, Clock, BookOpen, Award } from 'lucide-react';
 import { Card } from './ui/card';
-import { Progress } from './ui/progress';
 
 interface UserStats {
   averageGrade: number;
@@ -82,13 +81,6 @@ export function ProgressOverview() {
   }, []);
 
   const hasData = stats.completedQuestions > 0;
-
-  const weeklyGoal = stats.activeCourses * 2;
-  const weeklyProgress =
-    weeklyGoal > 0 ? (stats.studyHours / weeklyGoal) * 100 : 0;
-
-  const remainingWeeklyHours =
-    weeklyGoal > stats.studyHours ? weeklyGoal - stats.studyHours : 0;
 
   const statsConfig = [
     {
@@ -179,22 +171,6 @@ export function ProgressOverview() {
           );
         })}
       </div>
-
-      <Card className="p-6 mt-6 border-gray-100">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-gray-900">יעד לימוד שבועי</h3>
-
-          <div className="text-sm text-gray-600">
-            {stats.studyHours.toFixed(1)} / {weeklyGoal} שעות
-          </div>
-        </div>
-
-        <Progress value={weeklyProgress} className="h-3 bg-gray-100" />
-
-        <p className="text-xs text-gray-500 mt-2 text-right">
-          נשארו {remainingWeeklyHours.toFixed(1)} שעות להשגת היעד השבועי
-        </p>
-      </Card>
     </section>
   );
 }

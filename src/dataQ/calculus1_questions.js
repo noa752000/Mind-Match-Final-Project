@@ -94,7 +94,7 @@ export const calculus1Questions = [
     format: "mcq",
     learningType: "visual",
     question: "לפי הגרף, מה ניתן להסיק אם כאשר x מתקרב ל-3 משמאל ומימין, ערכי הפונקציה מתקרבים ל-5, אבל בנקודה עצמה f(3)=1?",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_limits_7.png",
     options: [
       "הגבול בנקודה לא קיים",
       "הגבול קיים ושווה 5",
@@ -111,7 +111,7 @@ export const calculus1Questions = [
     format: "mcq",
     learningType: "visual",
     question: "בגרף נראה כי כאשר x מתקרב ל-2 משמאל, הפונקציה שואפת ל-4, וכאשר x מתקרב ל-2 מימין, הפונקציה שואפת ל-1. מה נכון?",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_limits_8.png",
     options: [
       "הגבול קיים ושווה 2.5",
       "הגבול קיים ושווה 4",
@@ -128,7 +128,7 @@ export const calculus1Questions = [
     format: "true_false",
     learningType: "visual",
     question: "אם בגרף רואים אסימפטוטה אנכית ב-x=1, אז בהכרח קיים גבול סופי כאשר x שואף ל-1.",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_limits_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "לא נכון"
   },
@@ -225,7 +225,7 @@ export const calculus1Questions = [
     format: "mcq",
     learningType: "visual",
     question: "לפי הגרף, באיזה סוג נקודה שיפוע המשיק שווה לאפס?",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_derivatives_7.png",
     options: [
       "רק בנקודת חיתוך עם ציר ה-x",
       "רק בנקודת פיתול",
@@ -242,7 +242,7 @@ export const calculus1Questions = [
     format: "mcq",
     learningType: "visual",
     question: "בגרף נראה כי הפונקציה יורדת בקטע מסוים. מה סימן הנגזרת באותו קטע?",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_derivatives_8.png",
     options: ["חיובי", "שלילי", "אפס", "לא ניתן לדעת"],
     correctAnswer: "שלילי"
   },
@@ -254,7 +254,7 @@ export const calculus1Questions = [
     format: "true_false",
     learningType: "visual",
     question: "אם בגרף רואים משיק אופקי בנקודה פנימית, אז הנגזרת באותה נקודה שווה לאפס.",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_derivatives_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -361,7 +361,7 @@ export const calculus1Questions = [
     format: "mcq",
     learningType: "visual",
     question: "לפי הסקיצה, לפונקציה יש אסימפטוטה אנכית וקיצון מקומי אחד. איזה מידע נוסף חשוב כדי להשלים חקירה סבירה?",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_function_investigation_7.png",
     options: [
       "רק צבע הגרף",
       "חיתוכי צירים ותחומי עליה/ירידה",
@@ -378,7 +378,7 @@ export const calculus1Questions = [
     format: "mcq",
     learningType: "visual",
     question: "בגרף רואים שהפונקציה מתקרבת לקו אופקי כאשר x שואף ל-∞ וגם כאשר x שואף ל--∞. מה ניתן להסיק?",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_function_investigation_8.png",
     options: [
       "יש אסימפטוטה אופקית",
       "יש אסימפטוטה אנכית בלבד",
@@ -395,7 +395,7 @@ export const calculus1Questions = [
     format: "true_false",
     learningType: "visual",
     question: "אם מהגרף נראה שהפונקציה חוצה את ציר ה-x, אז קיימת לפחות נקודה אחת שבה ערך הפונקציה שווה לאפס.",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_function_investigation_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   },
@@ -487,7 +487,7 @@ export const calculus1Questions = [
     format: "mcq",
     learningType: "visual",
     question: "בגרף מוצג התחום הכלוא בין y=f(x), ציר ה-x והישרים x=a, x=b. מה מחשב האינטגרל המסוים בין a ל-b?",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_integrals_7.png",
     options: [
       "שיפוע המשיק הממוצע",
       "השטח החתום בין הגרף לציר ה-x",
@@ -504,7 +504,7 @@ export const calculus1Questions = [
     format: "mcq",
     learningType: "visual",
     question: "בשרטוט רואים שחלק מהשטח בין הגרף לציר ה-x נמצא מעל הציר וחלק מתחתיו. מה צריך לזכור לגבי אינטגרל מסוים?",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_integrals_8.png",
     options: [
       "כל השטחים נסכמים כחיוביים",
       "שטח מעל הציר נחשב שלילי ומתחת לציר חיובי",
@@ -521,7 +521,7 @@ export const calculus1Questions = [
     format: "true_false",
     learningType: "visual",
     question: "אם הגרף כולו מעל ציר ה-x בתחום [a,b], אז האינטגרל המסוים באותו תחום יהיה לא שלילי.",
-    imageUrl: "",
+    imageUrl: "/question-images/calc1_integrals_9.png",
     options: ["נכון", "לא נכון"],
     correctAnswer: "נכון"
   }

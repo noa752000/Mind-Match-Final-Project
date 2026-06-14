@@ -69,7 +69,7 @@ const courses: Course[] = [
     rating: 4.7,
     duration: '10 שבועות',
     description: 'שאילתות SQL, עיצוב מסדי נתונים, אופטימיזציה ועבודה עם מסדי נתונים יחסיים',
-    color: 'from-cyan-500 to-cyan-600',
+    color: 'from-pink-500 to-pink-600',
   },
   {
     id: 'requirements-design',
@@ -80,7 +80,7 @@ const courses: Course[] = [
     rating: 4.4,
     duration: '12 שבועות',
     description: 'ניתוח דרישות, עיצוב מערכות, UML, תהליכי פיתוח ומתודולוגיות',
-    color: 'from-indigo-500 to-indigo-600',
+    color: 'from-fuchsia-500 to-fuchsia-600',
   },
   {
     id: 'information-security',
@@ -102,7 +102,7 @@ const courses: Course[] = [
     rating: 4.3,
     duration: '10 שבועות',
     description: 'ניתוח כלכלי של מערכות מידע, ROI, ניהול פרויקטים וקבלת החלטות',
-    color: 'from-amber-500 to-amber-600',
+    color: 'from-yellow-500 to-yellow-600',
   },
 ];
 
