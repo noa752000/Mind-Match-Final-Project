@@ -52,7 +52,7 @@ const SYSTEM_PROMPT = (courseName: string) =>
   `5. When showing code or formulas, use markdown code blocks.`;
 
 async function callAI(messages: Message[], courseName: string): Promise<string> {
-  const response = await fetch('/api/groq/openai/v1/chat/completions', {
+  const response = await fetch('/api/groq', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

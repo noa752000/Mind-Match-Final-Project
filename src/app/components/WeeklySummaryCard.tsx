@@ -98,7 +98,7 @@ export function WeeklySummaryCard() {
 ${courseStats || 'אין נתוני תרגול עדיין'}
       `.trim();
 
-      const response = await fetch('/api/groq/openai/v1/chat/completions', {
+      const response = await fetch('/api/groq', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -148,7 +148,7 @@ async function fetchAIInsight(
     return `• ${name}: ${acc}% דיוק, ${p.totalAnswers} שאלות, ${p.practicedMinutes} דקות`;
   }).join('\n');
 
-  const response = await fetch('/api/groq/openai/v1/chat/completions', {
+  const response = await fetch('/api/groq', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
