@@ -1,4 +1,4 @@
-import { ChevronRight, ChevronLeft, Calendar as CalendarIcon, Settings } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Calendar as CalendarIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { useState } from 'react';
 import { useCalendarSync } from '../contexts/CalendarSyncContext';
@@ -64,27 +64,21 @@ export function CalendarHeader({ viewType, onViewChange }: CalendarHeaderProps) 
   return (
     <header className="bg-white border-b border-gray-200 px-8 py-6">
       <div className="max-w-[1440px] mx-auto">
-        {/* Title and Actions */}
         <div className="flex items-center justify-between mb-6">
           <div className="text-right">
             <h1 className="text-3xl font-bold text-gray-900">לוח זמנים חכם</h1>
             <p className="text-gray-600 mt-1">ניהול מותאם אישית</p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              className={`gap-2 ${syncStatus === 'success' ? 'bg-green-50 border-green-500 text-green-700' : syncStatus === 'error' ? 'bg-red-50 border-red-500 text-red-700' : ''}`}
-              onClick={handleSync}
-              disabled={isSyncing}
-            >
-              <CalendarIcon className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
-              {isSyncing ? 'מסנכרן...' : syncStatus === 'success' ? '✓ סונכרן' : syncStatus === 'error' ? '✗ שגיאה' : 'סנכרן עם Google Calendar'}
-            </Button>
-            <Button variant="outline" size="icon">
-              <Settings className="w-4 h-4" />
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            className={`gap-2 ${syncStatus === 'success' ? 'bg-green-50 border-green-500 text-green-700' : syncStatus === 'error' ? 'bg-red-50 border-red-500 text-red-700' : ''}`}
+            onClick={handleSync}
+            disabled={isSyncing}
+          >
+            <CalendarIcon className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+            {isSyncing ? 'מסנכרן...' : syncStatus === 'success' ? '✓ סונכרן' : syncStatus === 'error' ? '✗ שגיאה' : 'סנכרן עם Google Calendar'}
+          </Button>
         </div>
 
         {/* Navigation + View Switcher */}

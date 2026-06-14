@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '../../firebase';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
 import { useAuth } from './AuthContext';
 
 export type EventType = 'lecture' | 'tutorial' | 'self-study' | 'deadline';
@@ -57,11 +58,52 @@ function getWeekStart(date: Date): Date {
 }
 
 export function CalendarSyncProvider({ children }: { children: React.ReactNode }) {
-  const { googleAccessToken } = useAuth();
+  const { user, googleAccessToken } = useAuth();
   const [isSyncing, setIsSyncing] = useState(false);
   const [googleEvents, setGoogleEvents] = useState<GoogleCalendarEvent[]>([]);
   const [localAppEvents, setLocalAppEvents] = useState<LocalAppEvent[]>([]);
+  const [confirmedSessions, setConfirmedSessions] = useState<LocalAppEvent[]>([]);
   const [weekStart, setWeekStart] = useState<Date>(() => getWeekStart(new Date()));
+
+  // Subscribe to confirmed study sessions shared with other users
+  useEffect(() => {
+    if (!user?.userId) {
+      setConfirmedSessions([]);
+      return;
+    }
+
+    const q = query(collection(db, 'studySessions'), where('participantIds', 'array-contains', user.userId));
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const sessions: LocalAppEvent[] = [];
+      snap.docs.forEach(d => {
+        const data = d.data();
+        const acceptedBy: string[] = data.acceptedBy || [];
+        const isCreator = data.createdBy === user.userId;
+        const visible = isCreator ? acceptedBy.length > 0 : acceptedBy.includes(user.userId);
+        if (!visible) return;
+
+        const otherName = isCreator
+          ? (data.participants?.[0]?.fullName || '')
+          : data.createdByName;
+        const title = data.isGroup
+          ? `שיעור קבוצתי — ${data.courseName}`
+          : `שיעור עם ${otherName} — ${data.courseName}`;
+
+        sessions.push({
+          id: d.id,
+          dayOfWeek: data.dayOfWeek,
+          type: 'lecture',
+          title,
+          time: data.time,
+          duration: data.duration,
+          top: data.top,
+        });
+      });
+      setConfirmedSessions(sessions);
+    });
+
+    return () => unsubscribe();
+  }, [user?.userId]);
 
   // Auto-sync when access token becomes available
   useEffect(() => {
@@ -203,7 +245,7 @@ export function CalendarSyncProvider({ children }: { children: React.ReactNode }
       goToNextDay,
       goToPrevMonth,
       goToNextMonth,
-      localAppEvents,
+      localAppEvents: [...localAppEvents, ...confirmedSessions],
       addLocalAppEvent,
       createGoogleCalendarEvent,
     }}>

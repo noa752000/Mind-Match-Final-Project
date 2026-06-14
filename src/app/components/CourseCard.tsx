@@ -1,4 +1,4 @@
-import { Clock, Calendar, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Card } from './ui/card';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
@@ -8,8 +8,6 @@ interface CourseCardProps {
   title: string;
   semester: string;
   progress: number;
-  nextLesson: string;
-  dueDate: string;
   color: string;
   status: 'active' | 'completed' | 'upcoming';
   onContinue?: () => void;
@@ -20,8 +18,6 @@ export function CourseCard({
   title,
   semester,
   progress,
-  nextLesson,
-  dueDate,
   color,
   status,
   onContinue,
@@ -66,23 +62,12 @@ export function CourseCard({
         <p className="text-sm text-gray-600">{semester}</p>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 flex-grow">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-gray-900">התקדמות</span>
           <span className="text-sm text-gray-600">{progress}%</span>
         </div>
         <Progress value={progress} className="h-2 bg-gray-100" />
-      </div>
-
-      <div className="space-y-2 mb-4 flex-grow">
-        <div className="flex items-center gap-2 justify-end text-sm text-gray-600">
-          <span>{nextLesson}</span>
-          <Clock className="w-4 h-4" />
-        </div>
-        <div className="flex items-center gap-2 justify-end text-sm text-gray-600">
-          <span>{dueDate}</span>
-          <Calendar className="w-4 h-4" />
-        </div>
       </div>
 
       <Button

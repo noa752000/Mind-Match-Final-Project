@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Save, CheckCircle } from 'lucide-react';
+import { Save, CheckCircle, Shield } from 'lucide-react';
 import { ProfileHeader } from '../components/ProfileHeader';
 import { PersonalInfo } from '../components/PersonalInfo';
 import { Button } from '../components/ui/button';
+import { Card } from '../components/ui/card';
+import { ChangePasswordModal } from '../components/ChangePasswordModal';
 import { useAuth } from '../contexts/AuthContext';
 import { auth } from '../../firebase';
 import { updateProfile } from 'firebase/auth';
@@ -24,6 +26,7 @@ export function ProfilePage() {
   const [academicYear, setAcademicYear] = useState('');
   const [studentId, setStudentId] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   // Populate from Firestore data when user loads
   useEffect(() => {
@@ -68,7 +71,7 @@ export function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50 mr-64 pt-16" dir="rtl">
       <main className="pt-8 px-8 pb-8">
-        <div className="max-w-[1176px] mx-auto space-y-8">
+        <div className="max-w-[1440px] mx-auto space-y-8">
           {/* Page Title */}
           <div className="flex items-center justify-between">
             <div className="text-right">
@@ -111,8 +114,23 @@ export function ProfilePage() {
             onToggleCourse={toggleCourse}
           />
 
+          <Card className="p-8 border-gray-100">
+            <h4 className="font-semibold text-gray-900 mb-4 text-right flex items-center justify-start gap-2">
+              <Shield className="w-5 h-5 text-blue-600" />
+              <span>אבטחה</span>
+            </h4>
+            <div className="p-4 bg-gray-50 rounded-xl text-right">
+              <p className="font-medium text-gray-900 mb-2">סיסמה</p>
+              <Button variant="outline" size="sm" onClick={() => setShowPasswordModal(true)}>שנה סיסמה</Button>
+            </div>
+          </Card>
+
         </div>
       </main>
+
+      {showPasswordModal && (
+        <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />
+      )}
     </div>
   );
 }

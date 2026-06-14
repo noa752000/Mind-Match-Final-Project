@@ -49,20 +49,20 @@ function StudentCard({ profile, myCourses, isSelected, onToggleSelect, onSchedul
   const totalCourses = (profile.selectedCourses || []).length;
 
   return (
-    <Card className={`p-5 transition-all border-2 h-full flex flex-col ${isSelected ? 'border-teal-400 bg-teal-50/30' : 'border-gray-100 hover:shadow-md'}`}>
+    <Card className={`p-6 transition-all border-2 h-full flex flex-col ${isSelected ? 'border-teal-400 bg-teal-50/30' : 'border-gray-100 hover:shadow-md'}`}>
       <div className="flex items-start gap-4 flex-1" dir="rtl">
         {/* Avatar */}
         {profile.photoURL ? (
-          <img src={profile.photoURL} alt={profile.fullName} className="w-14 h-14 rounded-2xl object-cover flex-shrink-0" />
+          <img src={profile.photoURL} alt={profile.fullName} className="w-16 h-16 rounded-2xl object-cover flex-shrink-0" />
         ) : (
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-lg">{getInitials(profile.fullName)}</span>
           </div>
         )}
 
         {/* Info */}
         <div className="flex-1 min-w-0 text-right">
-          <h3 className="font-bold text-gray-900 text-base">{profile.fullName}</h3>
+          <h3 className="font-bold text-gray-900 text-lg">{profile.fullName}</h3>
           {profile.institution ? (
             <p className="text-sm text-gray-500 flex items-center gap-1 justify-end mt-0.5">
               <span>{profile.institution}</span>
@@ -172,7 +172,7 @@ export function CommunityPage() {
   return (
     <div className="min-h-screen bg-gray-50 mr-64 pt-16" dir="rtl">
       <main className="pt-8 px-8 pb-8">
-        <div className="max-w-[1176px] mx-auto">
+        <div className="max-w-[1440px] mx-auto">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="text-right">
@@ -211,7 +211,7 @@ export function CommunityPage() {
               </button>
             </div>
 
-            <div className="relative flex-1 max-w-sm">
+            <div className="relative flex-1">
               <input
                 type="text"
                 value={search}
@@ -226,9 +226,9 @@ export function CommunityPage() {
 
           {/* Grid */}
           {loading ? (
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 gap-8">
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="h-48 bg-gray-100 rounded-xl animate-pulse" />
+                <div key={i} className="h-56 bg-gray-100 rounded-xl animate-pulse" />
               ))}
             </div>
           ) : displayed.length === 0 ? (
@@ -249,7 +249,7 @@ export function CommunityPage() {
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 gap-8">
               {displayed.map(u => (
                 <StudentCard
                   key={u.userId}

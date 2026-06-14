@@ -1,9 +1,10 @@
-import { ArrowRight, BookOpen, Clock, Users, Star, Award, CheckCircle, TrendingUp, Calculator, BarChart, Activity, Sparkles, MessageCircle, Brain, Database, Shield, Code, FileText, DollarSign, Grid3x3, Plus, Trash2 } from 'lucide-react';
+import { ArrowRight, BookOpen, Clock, Users, Award, CheckCircle, TrendingUp, Calculator, BarChart, Activity, Sparkles, MessageCircle, Brain, Database, Shield, Code, FileText, DollarSign, Grid3x3, Plus, Trash2 } from 'lucide-react';
 import { Card } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { Progress } from '../components/ui/progress';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { collection, getCountFromServer, query, where } from 'firebase/firestore';
+import { db } from '../../firebase';
 import { coursesData } from '../data/coursesData';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -235,6 +236,22 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
 
   const isInMyCourses = user?.selectedCourses?.includes(courseId) ?? false;
   const [toggling, setToggling] = useState(false);
+  const [enrolledCount, setEnrolledCount] = useState(0);
+
+  useEffect(() => {
+    const fetchEnrolledCount = async () => {
+      try {
+        const countSnap = await getCountFromServer(
+          query(collection(db, 'users'), where('selectedCourses', 'array-contains', courseId))
+        );
+        setEnrolledCount(countSnap.data().count);
+      } catch (error) {
+        console.error('Failed to fetch enrolled count:', error);
+      }
+    };
+
+    fetchEnrolledCount();
+  }, [courseId]);
 
   const handleToggleCourse = async () => {
     setToggling(true);
@@ -253,12 +270,6 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
   };
 
   const qTypes = questionTypeDescriptions[courseId] || defaultQuestionTypes;
-
-  const handleStartPractice = () => {
-    if (onOpenPractice) {
-      onOpenPractice(courseId);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 mr-64 pt-16" dir="rtl">
@@ -311,14 +322,9 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
               {course.longDescription}
             </p>
             <div className="flex items-center gap-6 text-gray-600 text-right">
-              <Badge variant="secondary" className="mr-2">{course.level}</Badge>
-              <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
-                <span>{course.rating}</span>
-              </div>
               <div className="flex items-center gap-2">
                 <Users className="w-5 h-5" />
-                <span>{course.students.toLocaleString()} סטודנטים</span>
+                <span>{enrolledCount.toLocaleString()} סטודנטים</span>
               </div>
               <div className="flex items-center gap-2">
                 <BookOpen className="w-5 h-5" />
@@ -329,7 +335,7 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
 
           {/* סוגי שאלות */}
           <Card className="p-8">
-            <div className="flex items-center justify-end gap-3 mb-6">
+            <div className="flex items-center justify-start gap-3 mb-6">
               <h2 className="text-2xl font-bold text-gray-900">מבנה השאלות בקורס</h2>
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
                 <BookOpen className="w-5 h-5 text-white" />
@@ -400,35 +406,15 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
                 </Card>
               ))}
 
-              {/* שאלות מבחנים משנים קודמות */}
+              {/* מבחנים לדוגמה */}
               <Card className="p-8 hover:shadow-lg transition-shadow col-span-2">
                 <div className="text-right">
-                  <div className="flex items-center justify-end gap-4 mb-4">
-                    <h3 className="text-2xl font-bold text-gray-900">שאלות מבחנים משנים קודמות</h3>
+                  <div className="flex items-center justify-start gap-4 mb-4">
+                    <h3 className="text-2xl font-bold text-gray-900">מבחנים לדוגמה</h3>
                     <div className="w-16 h-16 rounded-xl bg-red-100 flex items-center justify-center">
                       <Award className="w-8 h-8 text-red-600" />
                     </div>
                   </div>
-                  <p className="text-gray-600 mb-4 text-lg">
-                    35 שאלות ממבחנים קודמים
-                  </p>
-                  <div className="grid grid-cols-3 gap-3 mb-6">
-                    <button onClick={handleStartPractice} className="p-3 text-right rounded-lg border-2 border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all group">
-                      <span className="font-medium text-gray-700 block mb-1">אמריקאיות</span>
-                      <Badge variant="secondary" className="bg-red-100 text-red-700 group-hover:bg-red-200">20 שאלות</Badge>
-                    </button>
-                    <button onClick={handleStartPractice} className="p-3 text-right rounded-lg border-2 border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all group">
-                      <span className="font-medium text-gray-700 block mb-1">נכון/לא נכון</span>
-                      <Badge variant="secondary" className="bg-red-100 text-red-700 group-hover:bg-red-200">10 שאלות</Badge>
-                    </button>
-                    <button onClick={handleStartPractice} className="p-3 text-right rounded-lg border-2 border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all group">
-                      <span className="font-medium text-gray-700 block mb-1">פתוחות</span>
-                      <Badge variant="secondary" className="bg-red-100 text-red-700 group-hover:bg-red-200">5 שאלות</Badge>
-                    </button>
-                  </div>
-                  <Button variant="outline" className="w-full h-12 text-base font-semibold">
-                    כל סוגי השאלות
-                  </Button>
                 </div>
               </Card>
             </div>

@@ -1,31 +1,44 @@
 import { useEffect, useState } from 'react';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../../firebase';
 
 import { LearningStyleInsights } from '../components/LearningStyleInsights';
 import { StrengthsWeaknesses } from '../components/StrengthsWeaknesses';
-import { PreferredStudyMethods } from '../components/PreferredStudyMethods';
+import { CoursePracticeBreakdown } from '../components/CoursePracticeBreakdown';
 import { PerformanceAnalytics } from '../components/PerformanceAnalytics';
-import { AIPersonalizationSummary } from '../components/AIPersonalizationSummary';
 import { WeeklySummaryCard } from '../components/WeeklySummaryCard';
 import { Card } from '../components/ui/card';
 import { TrendingUp, Clock, Target, Award } from 'lucide-react';
+import type { CourseProgressData, PracticeResultData } from '../lib/analyticsTypes';
 
 interface UserStats {
   averageGrade: number;
   completedQuestions: number;
   activeCourses: number;
   studyHours: number;
+  preferredLearningType: 'knowledge' | 'analysis' | 'visual' | null;
+  studentLevel: 'beginner' | 'intermediate' | 'advanced';
+  weeklyStudyMinutes: number;
+  totalStudyMinutes: number;
 }
 
+const DEFAULT_STATS: UserStats = {
+  averageGrade: 0,
+  completedQuestions: 0,
+  activeCourses: 0,
+  studyHours: 0,
+  preferredLearningType: null,
+  studentLevel: 'beginner',
+  weeklyStudyMinutes: 0,
+  totalStudyMinutes: 0,
+};
+
 export function AnalysisPage() {
-  const [stats, setStats] = useState<UserStats>({
-    averageGrade: 0,
-    completedQuestions: 0,
-    activeCourses: 0,
-    studyHours: 0,
-  });
+  const [stats, setStats] = useState<UserStats>(DEFAULT_STATS);
+  const [courseProgress, setCourseProgress] = useState<CourseProgressData[]>([]);
+  const [practiceResults, setPracticeResults] = useState<PracticeResultData[]>([]);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(true);
 
   useEffect(() => {
     let unsubscribeUser: (() => void) | undefined;
@@ -36,12 +49,10 @@ export function AnalysisPage() {
       }
 
       if (!user) {
-        setStats({
-          averageGrade: 0,
-          completedQuestions: 0,
-          activeCourses: 0,
-          studyHours: 0,
-        });
+        setStats(DEFAULT_STATS);
+        setCourseProgress([]);
+        setPracticeResults([]);
+        setLoadingAnalytics(false);
         return;
       }
 
@@ -49,12 +60,7 @@ export function AnalysisPage() {
 
       unsubscribeUser = onSnapshot(userRef, (userDoc) => {
         if (!userDoc.exists()) {
-          setStats({
-            averageGrade: 0,
-            completedQuestions: 0,
-            activeCourses: 0,
-            studyHours: 0,
-          });
+          setStats(DEFAULT_STATS);
           return;
         }
 
@@ -65,8 +71,14 @@ export function AnalysisPage() {
           completedQuestions: Number(data.completedQuestions || 0),
           activeCourses: Array.isArray(data.selectedCourses) ? data.selectedCourses.length : 0,
           studyHours: Number(((data.totalStudyMinutes || 0) / 60).toFixed(1)),
+          preferredLearningType: data.preferredLearningType ?? null,
+          studentLevel: data.studentLevel || 'beginner',
+          weeklyStudyMinutes: Number(data.weeklyStudyMinutes || 0),
+          totalStudyMinutes: Number(data.totalStudyMinutes || 0),
         });
       });
+
+      loadAnalytics(user.uid);
     });
 
     return () => {
@@ -76,6 +88,25 @@ export function AnalysisPage() {
       unsubscribeAuth();
     };
   }, []);
+
+  const loadAnalytics = async (userId: string) => {
+    setLoadingAnalytics(true);
+    try {
+      const [progressSnap, resultsSnap] = await Promise.all([
+        getDocs(query(collection(db, 'course_progress'), where('userId', '==', userId))),
+        getDocs(query(collection(db, 'practice_results'), where('userId', '==', userId))),
+      ]);
+
+      setCourseProgress(progressSnap.docs.map(d => d.data() as CourseProgressData));
+      setPracticeResults(resultsSnap.docs.map(d => d.data() as PracticeResultData));
+    } catch (error) {
+      console.error('Error loading analytics data:', error);
+      setCourseProgress([]);
+      setPracticeResults([]);
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  };
 
   const hasData = stats.completedQuestions > 0;
 
@@ -159,21 +190,33 @@ export function AnalysisPage() {
 
           <WeeklySummaryCard />
 
-          <AIPersonalizationSummary />
-
           <div className="grid grid-cols-12 gap-8">
             <div className="col-span-5">
-              <LearningStyleInsights />
+              <LearningStyleInsights
+                courseProgress={courseProgress}
+                preferredLearningType={stats.preferredLearningType}
+                studentLevel={stats.studentLevel}
+                weeklyStudyMinutes={stats.weeklyStudyMinutes}
+                totalStudyMinutes={stats.totalStudyMinutes}
+                loading={loadingAnalytics}
+              />
             </div>
 
             <div className="col-span-7">
-              <PreferredStudyMethods />
+              <CoursePracticeBreakdown courseProgress={courseProgress} loading={loadingAnalytics} />
             </div>
           </div>
 
-          <StrengthsWeaknesses />
+          <StrengthsWeaknesses
+            courseProgress={courseProgress}
+            loading={loadingAnalytics}
+          />
 
-          <PerformanceAnalytics />
+          <PerformanceAnalytics
+            courseProgress={courseProgress}
+            practiceResults={practiceResults}
+            loading={loadingAnalytics}
+          />
         </div>
       </main>
     </div>

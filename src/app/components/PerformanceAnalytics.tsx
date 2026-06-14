@@ -12,24 +12,74 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { courseName, timestampToDate, CourseProgressData, PracticeResultData } from '../lib/analyticsTypes';
 
-const performanceData = [
-  { id: 'sept', month: 'ספט׳', grade: 78, hours: 12 },
-  { id: 'oct', month: 'אוק׳', grade: 82, hours: 15 },
-  { id: 'nov', month: 'נוב׳', grade: 85, hours: 18 },
-  { id: 'dec', month: 'דצמ׳', grade: 83, hours: 14 },
-  { id: 'jan', month: 'ינו׳', grade: 87, hours: 20 },
-  { id: 'feb', month: 'פבר׳', grade: 89, hours: 22 },
-];
+interface PerformanceAnalyticsProps {
+  courseProgress: CourseProgressData[];
+  practiceResults: PracticeResultData[];
+  loading?: boolean;
+}
 
-const subjectScores = [
-  { id: 'db', name: 'מסדי נתונים', score: 92 },
-  { id: 'ds', name: 'מבני נתונים', score: 88 },
-  { id: 'sec', name: 'אבטחת מידע', score: 71 },
-  { id: 'design', name: 'אפיון ותכן', score: 68 },
-];
+function buildWeeklyTrend(results: PracticeResultData[]) {
+  const weeks: { week: string; grade: number | null; hours: number }[] = [];
 
-export function PerformanceAnalytics() {
+  const dates = results
+    .map(r => timestampToDate(r.answeredAt))
+    .filter((d): d is Date => d !== null);
+
+  if (dates.length === 0) return weeks;
+
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const currentWeekStart = new Date(now);
+  currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay());
+
+  const earliest = new Date(Math.min(...dates.map(d => d.getTime())));
+  earliest.setHours(0, 0, 0, 0);
+  const weekStart = new Date(earliest);
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+
+  for (; weekStart <= currentWeekStart; weekStart.setDate(weekStart.getDate() + 7)) {
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 7);
+
+    const inWeek = results.filter(r => {
+      const d = timestampToDate(r.answeredAt);
+      return d !== null && d >= weekStart && d < weekEnd;
+    });
+
+    const total = inWeek.length;
+    const correct = inWeek.filter(r => r.isCorrect).length;
+    const seconds = inWeek.reduce((s, r) => s + (r.timeSpentSeconds || 0), 0);
+
+    weeks.push({
+      week: `${weekStart.getDate()}/${weekStart.getMonth() + 1}`,
+      grade: total > 0 ? Math.round((correct / total) * 100) : null,
+      hours: Math.round((seconds / 3600) * 10) / 10,
+    });
+  }
+
+  return weeks;
+}
+
+export function PerformanceAnalytics({ courseProgress, practiceResults, loading }: PerformanceAnalyticsProps) {
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Card className="p-8 border-gray-100 h-96 animate-pulse bg-gray-50" />
+        <Card className="p-8 border-gray-100 h-96 animate-pulse bg-gray-50" />
+      </div>
+    );
+  }
+
+  const weeklyTrend = buildWeeklyTrend(practiceResults);
+  const hasTrendData = practiceResults.length > 0;
+
+  const subjectScores = courseProgress
+    .filter(p => p.totalAnswers > 0)
+    .map(p => ({ id: p.courseId, name: courseName(p.courseId), score: p.accuracy }))
+    .sort((a, b) => b.score - a.score);
+
   return (
     <div className="space-y-6">
       {/* Performance Trend */}
@@ -41,38 +91,45 @@ export function PerformanceAnalytics() {
           <h3 className="text-2xl font-bold text-gray-900">מגמת ביצועים</h3>
         </div>
 
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={performanceData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey="month" stroke="#6b7280" style={{ fontSize: '12px' }} />
-            <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: '#fff', 
-                border: '1px solid #e5e7eb',
-                borderRadius: '8px',
-                direction: 'rtl'
-              }} 
-            />
-            <Legend wrapperStyle={{ direction: 'rtl' }} />
-            <Line 
-              type="monotone" 
-              dataKey="grade" 
-              stroke="#3b82f6" 
-              strokeWidth={3}
-              name="ציון ממוצע"
-              dot={{ fill: '#3b82f6', r: 5 }}
-            />
-            <Line 
-              type="monotone" 
-              dataKey="hours" 
-              stroke="#8b5cf6" 
-              strokeWidth={3}
-              name="שעות לימוד"
-              dot={{ fill: '#8b5cf6', r: 5 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        {hasTrendData ? (
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={weeklyTrend} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="week" stroke="#6b7280" style={{ fontSize: '12px' }} />
+              <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#fff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  direction: 'rtl'
+                }}
+              />
+              <Legend wrapperStyle={{ direction: 'rtl' }} />
+              <Line
+                type="monotone"
+                dataKey="grade"
+                stroke="#3b82f6"
+                strokeWidth={3}
+                name="דיוק שבועי (%)"
+                dot={{ fill: '#3b82f6', r: 5 }}
+                connectNulls
+              />
+              <Line
+                type="monotone"
+                dataKey="hours"
+                stroke="#8b5cf6"
+                strokeWidth={3}
+                name="שעות תרגול"
+                dot={{ fill: '#8b5cf6', r: 5 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="py-16 text-center text-gray-500">
+            עדיין אין מספיק נתוני תרגול להצגת מגמה. התחילי לתרגל כדי לראות את ההתקדמות שלך כאן.
+          </div>
+        )}
       </Card>
 
       <Card className="p-8 border-gray-100">
@@ -83,26 +140,32 @@ export function PerformanceAnalytics() {
           <h3 className="text-xl font-bold text-gray-900">ציונים לפי נושא</h3>
         </div>
 
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={subjectScores} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis
-              dataKey="name"
-              stroke="#6b7280"
-              style={{ fontSize: '12px' }}
-            />
-            <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#fff',
-                border: '1px solid #e5e7eb',
-                borderRadius: '8px',
-                direction: 'rtl',
-              }}
-            />
-            <Bar dataKey="score" fill="#3b82f6" radius={[8, 8, 0, 0]} name="ציון" />
-          </BarChart>
-        </ResponsiveContainer>
+        {subjectScores.length > 0 ? (
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={subjectScores} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis
+                dataKey="name"
+                stroke="#6b7280"
+                style={{ fontSize: '12px' }}
+              />
+              <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#fff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  direction: 'rtl',
+                }}
+              />
+              <Bar dataKey="score" fill="#3b82f6" radius={[8, 8, 0, 0]} name="ציון" />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="py-16 text-center text-gray-500">
+            עדיין לא נצברו נתוני דיוק עבור הקורסים שלך. תרגלי שאלות כדי לראות פירוט לפי נושא.
+          </div>
+        )}
       </Card>
     </div>
   );

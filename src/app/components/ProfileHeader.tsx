@@ -66,66 +66,53 @@ export function ProfileHeader() {
 
   return (
     <Card className="p-8 border-gray-100">
-      <div className="flex items-start gap-8">
-        {/* Avatar + name */}
-        <div className="flex flex-col items-start gap-4">
-          <div className="relative flex-shrink-0">
-            {/* Avatar */}
-            {displayPhoto ? (
-              <img
-                src={displayPhoto}
-                alt={user?.fullName}
-                className="w-24 h-24 rounded-2xl object-cover"
-              />
-            ) : (
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
-                <span className="text-3xl text-white font-bold">{initials}</span>
-              </div>
-            )}
-
-            {/* Upload progress ring */}
-            {uploading && (
-              <div className="absolute inset-0 rounded-2xl bg-black/50 flex flex-col items-center justify-center">
-                <Loader2 className="w-6 h-6 text-white animate-spin mb-1" />
-                <span className="text-white text-xs font-bold">{progress}%</span>
-              </div>
-            )}
-
-            {/* Camera button */}
-            <button
-              onClick={() => !uploading && fileInputRef.current?.click()}
-              disabled={uploading}
-              className="absolute bottom-1 left-1 w-8 h-8 rounded-full bg-white shadow-lg border-2 border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50"
-              title="שנה תמונת פרופיל"
-            >
-              <Camera className="w-3.5 h-3.5 text-gray-700" />
-            </button>
-
-            {/* Verified badge */}
-            <div className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-green-500 border-4 border-white flex items-center justify-center shadow-lg">
-              <span className="text-white text-xs font-bold">✓</span>
+      <div className="flex items-center gap-8">
+        {/* Avatar */}
+        <div className="relative flex-shrink-0">
+          {displayPhoto ? (
+            <img
+              src={displayPhoto}
+              alt={user?.fullName}
+              className="w-32 h-32 rounded-2xl object-cover"
+            />
+          ) : (
+            <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+              <span className="text-4xl text-white font-bold">{initials}</span>
             </div>
-          </div>
+          )}
 
-          <div className="text-right">
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">
-              {user?.fullName || 'משתמש'}
-            </h1>
-            <div className="flex items-center gap-3 justify-start">
-              <Badge className="bg-green-100 text-green-700 text-sm">חשבון מאומת</Badge>
-              <Badge className="bg-teal-100 text-teal-700 text-sm">סטודנט פעיל</Badge>
+          {/* Upload progress ring */}
+          {uploading && (
+            <div className="absolute inset-0 rounded-2xl bg-black/50 flex flex-col items-center justify-center">
+              <Loader2 className="w-6 h-6 text-white animate-spin mb-1" />
+              <span className="text-white text-xs font-bold">{progress}%</span>
             </div>
+          )}
+
+          {/* Camera button */}
+          <button
+            onClick={() => !uploading && fileInputRef.current?.click()}
+            disabled={uploading}
+            className="absolute bottom-1 left-1 w-9 h-9 rounded-full bg-white shadow-lg border-2 border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50"
+            title="שנה תמונת פרופיל"
+          >
+            <Camera className="w-4 h-4 text-gray-700" />
+          </button>
+
+          {/* Verified badge */}
+          <div className="absolute -top-1 -right-1 w-8 h-8 rounded-full bg-green-500 border-4 border-white flex items-center justify-center shadow-lg">
+            <span className="text-white text-sm font-bold">✓</span>
           </div>
         </div>
 
-        {/* Email and small badges remain; stats removed to keep Profile focused on personal info */}
-        <div className="flex-1 text-right">
-          <p className="text-lg text-gray-500 mb-1 leading-relaxed">
-            {user?.email}
-          </p>
-          <div className="flex items-center gap-3 justify-start mt-2">
-            <Badge className="bg-green-100 text-green-700 text-sm">חשבון מאומת</Badge>
-            <Badge className="bg-teal-100 text-teal-700 text-sm">סטודנט פעיל</Badge>
+        {/* Name + badges */}
+        <div className="text-right flex-1">
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+            {user?.fullName || 'משתמש'}
+          </h1>
+          <div className="flex items-center gap-3 justify-start">
+            <Badge className="bg-green-100 text-green-700 text-base px-3 py-1">חשבון מאומת</Badge>
+            <Badge className="bg-teal-100 text-teal-700 text-base px-3 py-1">סטודנט פעיל</Badge>
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
-import { Home, BookOpen, Bot, Calendar, BarChart3, Settings, LogOut, User, GraduationCap, Users } from 'lucide-react';
+import { Home, BookOpen, Bot, Calendar, BarChart3, LogOut, User, GraduationCap, Users } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface SidebarProps {
-  currentPage?: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail' | 'settings' | 'community';
-  onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail' | 'settings' | 'community') => void;
+  currentPage?: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail' | 'community';
+  onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail' | 'community') => void;
   onLogout?: () => void;
   userName?: string;
 }
@@ -21,7 +21,6 @@ export function Sidebar({ currentPage = 'dashboard', onNavigate, onLogout, userN
   ];
 
   const bottomMenuItems = [
-    { icon: Settings, label: 'הגדרות', action: () => onNavigate?.('settings') },
     { icon: LogOut, label: 'התנתק', action: onLogout },
   ];
 

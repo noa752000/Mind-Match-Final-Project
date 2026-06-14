@@ -1,7 +1,10 @@
 import { useState, useMemo } from 'react';
 import { X, Calendar, Users, BookOpen, Clock, CheckCircle, Plus } from 'lucide-react';
+import { addDoc, collection, Timestamp } from 'firebase/firestore';
+import { db } from '../../firebase';
 import { Button } from './ui/button';
 import { useCalendarSync } from '../contexts/CalendarSyncContext';
+import { useAuth } from '../contexts/AuthContext';
 
 interface Participant {
   userId: string;
@@ -33,19 +36,15 @@ const TIME_SLOTS = Array.from({ length: 31 }, (_, i) => {
 
 const DAY_LABELS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי'];
 
-function buildDateTimeISO(date: Date, time: string) {
-  const y = date.getFullYear(), mo = String(date.getMonth() + 1).padStart(2, '0'), d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${mo}-${d}T${time}:00`;
-}
-
 export function StudySessionModal({ participants, onClose }: StudySessionModalProps) {
-  const { weekStart, addLocalAppEvent, createGoogleCalendarEvent } = useCalendarSync();
+  const { weekStart } = useCalendarSync();
+  const { user } = useAuth();
   const isGroup = participants.length > 1;
 
   const days = useMemo(() => [0, 1, 2, 3, 4].map(i => {
     const d = new Date(weekStart);
     d.setDate(weekStart.getDate() + i);
-    return { label: DAY_LABELS[i], date: `${d.getDate()}/${d.getMonth() + 1}`, fullDate: d, dow: d.getDay() };
+    return { label: DAY_LABELS[i], date: `${d.getDate()}/${d.getMonth() + 1}`, dow: d.getDay() };
   }), [weekStart]);
 
   const [dayIdx, setDayIdx] = useState(0);
@@ -53,44 +52,52 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
   const [startTime, setStartTime] = useState('10:00');
   const [endTime, setEndTime] = useState('12:00');
   const [done, setDone] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!courseId) { setError('בחרי קורס'); return; }
     if (endTime <= startTime) { setError('שעת הסיום חייבת להיות אחרי שעת ההתחלה'); return; }
+    if (!user) return;
 
     const day = days[dayIdx];
     const courseName = COURSES.find(c => c.id === courseId)?.name || courseId;
-    const title = isGroup
-      ? `שיעור קבוצתי — ${courseName}`
-      : `שיעור עם ${participants[0].fullName} — ${courseName}`;
 
     const [sh, sm] = startTime.split(':').map(Number);
     const [eh, em] = endTime.split(':').map(Number);
     const duration = Math.max((eh * 60 + em - sh * 60 - sm) / 60, 0.5);
     const top = sh * 60 + sm;
 
-    addLocalAppEvent({
-      id: `session-${Date.now()}`,
-      dayOfWeek: day.dow,
-      type: 'lecture',
-      title,
-      time: `${startTime}–${endTime}`,
-      duration,
-      top,
-    });
+    setSubmitting(true);
+    try {
+      await addDoc(collection(db, 'studySessions'), {
+        createdBy: user.userId,
+        createdByName: user.fullName || user.username,
+        participants: participants.map(p => ({ userId: p.userId, fullName: p.fullName })),
+        participantIds: [user.userId, ...participants.map(p => p.userId)],
+        pendingFor: participants.map(p => p.userId),
+        acceptedBy: [],
+        declinedBy: [],
+        courseId,
+        courseName,
+        isGroup,
+        dayOfWeek: day.dow,
+        startTime,
+        endTime,
+        time: `${startTime}–${endTime}`,
+        duration,
+        top,
+        createdAt: Timestamp.now(),
+      });
 
-    createGoogleCalendarEvent({
-      title,
-      startDateTime: buildDateTimeISO(day.fullDate, startTime),
-      endDateTime: buildDateTimeISO(day.fullDate, endTime),
-      description: isGroup
-        ? `שיעור קבוצתי עם: ${participants.map(p => p.fullName).join(', ')}`
-        : `שיעור עם ${participants[0].fullName}`,
-    });
-
-    setDone(true);
-    setTimeout(onClose, 2000);
+      setDone(true);
+      setTimeout(onClose, 2500);
+    } catch (e) {
+      console.error('Failed to create study session invite:', e);
+      setError('אירעה שגיאה בשליחת ההזמנה. נסי שוב.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -123,8 +130,12 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
           {done ? (
             <div className="py-8 flex flex-col items-center gap-3">
               <CheckCircle className="w-16 h-16 text-green-500" />
-              <p className="font-bold text-gray-900">השיעור נוסף ליומן!</p>
-              <p className="text-sm text-gray-500 text-center">האירוע הוסף ללוח השנה שלך</p>
+              <p className="font-bold text-gray-900">ההזמנה נשלחה!</p>
+              <p className="text-sm text-gray-500 text-center">
+                {isGroup
+                  ? 'חברי הקבוצה יקבלו התראה, והשיעור יתווסף ליומן לכל מי שיאשר'
+                  : `${participants[0]?.fullName} יקבל/תקבל התראה, והשיעור יתווסף ליומן של שניכם לאחר האישור`}
+              </p>
             </div>
           ) : (
             <>
@@ -174,10 +185,10 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
 
               {error && <p className="text-red-600 text-sm text-right bg-red-50 rounded-lg px-3 py-2">{error}</p>}
 
-              <Button onClick={handleCreate}
+              <Button onClick={handleCreate} disabled={submitting}
                 className={`w-full text-white ${isGroup ? 'bg-gradient-to-l from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700' : 'bg-teal-600 hover:bg-teal-700'}`}>
                 <Plus className="w-4 h-4 ml-1.5" />
-                {isGroup ? 'קבע שיעור קבוצתי' : 'קבע שיעור'}
+                {submitting ? 'שולח...' : isGroup ? 'שלח הזמנה לקבוצה' : 'שלח הזמנה'}
               </Button>
             </>
           )}

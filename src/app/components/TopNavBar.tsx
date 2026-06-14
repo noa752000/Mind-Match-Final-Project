@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Bell } from 'lucide-react';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { db } from '../../firebase';
 import logoImage from '../../assets/new.png';
 import { NotificationsPanel } from './NotificationsPanel';
 import { useAuth } from '../contexts/AuthContext';
@@ -15,12 +17,24 @@ export function TopNavBar({ onNavigate, userName }: TopNavBarProps) {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
+  const [pendingInvites, setPendingInvites] = useState(0);
 
   useEffect(() => {
     if (user?.userId) {
       const key = `notifications_read_${user.userId}`;
       setHasUnread(localStorage.getItem(key) !== 'true');
     }
+  }, [user?.userId]);
+
+  useEffect(() => {
+    if (!user?.userId) {
+      setPendingInvites(0);
+      return;
+    }
+
+    const q = query(collection(db, 'studySessions'), where('pendingFor', 'array-contains', user.userId));
+    const unsubscribe = onSnapshot(q, (snap) => setPendingInvites(snap.size));
+    return () => unsubscribe();
   }, [user?.userId]);
 
   const handleBellClick = () => {
@@ -36,9 +50,9 @@ export function TopNavBar({ onNavigate, userName }: TopNavBarProps) {
     <div className="fixed top-0 left-0 right-0 h-20 bg-white border-b border-gray-200 z-50">
       <div className="h-full px-8 flex items-center justify-between">
         {/* לוגו */}
-        <div className="flex items-center">
+        <button onClick={() => onNavigate('home')} className="flex items-center">
           <img src={logoImage} alt="MindMatch Logo" className="h-18 w-auto" />
-        </div>
+        </button>
 
         {/* משתמש והתראות */}
         <div className="flex items-center gap-3">
@@ -48,7 +62,7 @@ export function TopNavBar({ onNavigate, userName }: TopNavBarProps) {
               className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <Bell className="w-5 h-5 text-gray-600" />
-              {hasUnread && (
+              {(hasUnread || pendingInvites > 0) && (
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
               )}
             </button>

@@ -1,15 +1,36 @@
 import { useEffect, useRef, useState } from 'react';
-import { Bell, X, BookOpen, Calendar, AlertCircle, Sparkles } from 'lucide-react';
+import { Bell, X, Calendar, Clock, Sparkles, Check, Users } from 'lucide-react';
+import { collection, doc, getDocs, onSnapshot, query, updateDoc, where, arrayRemove, arrayUnion, DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { db } from '../../firebase';
 import { useAuth } from '../contexts/AuthContext';
+
+const DAY_NAMES = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+
+interface SessionInvite {
+  id: string;
+  createdByName: string;
+  courseName: string;
+  isGroup: boolean;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+}
 
 export interface Notification {
   id: string;
-  type: 'recommendation' | 'exam' | 'deadline' | 'study';
+  type: 'recommendation' | 'study' | 'lesson';
   title: string;
   description: string;
   time: string;
   read: boolean;
   courseId?: string;
+}
+
+interface CourseProgress {
+  courseId: string;
+  correctAnswers: number;
+  totalAnswers: number;
+  lastPracticedAt: { toDate?: () => Date } | null;
 }
 
 const COURSE_NAMES: Record<string, string> = {
@@ -23,69 +44,159 @@ const COURSE_NAMES: Record<string, string> = {
   'mis-economics': 'כלכלת מערכות מידע',
 };
 
-function buildNotifications(selectedCourses: string[]): Notification[] {
-  const base: Notification[] = [
-    {
-      id: 'rec-sql',
-      type: 'recommendation',
-      title: 'המלצת AI: תגבור SQL',
-      description: 'זוהתה חולשה בנושא JOINs — מומלץ לתרגל לפני הבחינה הקרובה.',
-      time: 'לפני שעה',
-      read: false,
-      courseId: 'sql',
-    },
-    {
-      id: 'exam-mis',
-      type: 'exam',
-      title: 'בחינה — כלכלת מערכות מידע',
-      description: 'בחינה ביום ראשון הקרוב, 10:00. הכינו את הנושאים: ROI, NPV, ניהול פרויקטים.',
-      time: 'לפני 3 שעות',
-      read: false,
-      courseId: 'mis-economics',
-    },
-    {
-      id: 'deadline-security',
-      type: 'deadline',
-      title: 'מטלה דחופה — אבטחת מידע',
-      description: 'מועד הגשה: יום ג׳ ב-23:59. נותרו פחות מ-48 שעות.',
-      time: 'לפני 5 שעות',
-      read: false,
-      courseId: 'information-security',
-    },
-    {
-      id: 'rec-morning',
-      type: 'study',
-      title: 'טיפ למידה',
-      description: 'הנתונים מראים שהציונים שלך גבוהים יותר בשעות הבוקר (10:00–14:00).',
-      time: 'אתמול',
-      read: true,
-    },
-    {
-      id: 'rec-calculus',
-      type: 'recommendation',
-      title: 'המלצת AI: אינטגרלים',
-      description: 'לא תרגלת חדו"א השבוע — מומלץ להקדיש שעה לאינטגרלים.',
-      time: 'אתמול',
-      read: true,
-      courseId: 'calculus1',
-    },
-  ];
+function daysAgoLabel(date: Date): string {
+  const days = Math.floor((Date.now() - date.getTime()) / (24 * 60 * 60 * 1000));
+  if (days <= 0) return 'היום';
+  if (days === 1) return 'אתמול';
+  return `לפני ${days} ימים`;
+}
 
-  // Sort: user's courses first, then others
-  return base.sort((a, b) => {
-    const aRelevant = !a.courseId || selectedCourses.includes(a.courseId);
-    const bRelevant = !b.courseId || selectedCourses.includes(b.courseId);
-    if (aRelevant && !bRelevant) return -1;
-    if (!aRelevant && bRelevant) return 1;
-    return 0;
+function buildNotifications(
+  selectedCourses: string[],
+  progressMap: Record<string, CourseProgress>
+): Notification[] {
+  const items: Notification[] = [];
+  const used = new Set<string>();
+
+  const coursesWithProgress = selectedCourses
+    .filter(id => progressMap[id] && progressMap[id].totalAnswers > 0)
+    .sort((a, b) => {
+      const accA = progressMap[a].correctAnswers / progressMap[a].totalAnswers;
+      const accB = progressMap[b].correctAnswers / progressMap[b].totalAnswers;
+      return accA - accB;
+    });
+
+  const unpracticed = selectedCourses.filter(
+    id => !progressMap[id] || progressMap[id].totalAnswers === 0
+  );
+
+  // 1. Weakest course → AI recommendation to practice more
+  if (coursesWithProgress.length > 0) {
+    const id = coursesWithProgress[0];
+    const acc = Math.round((progressMap[id].correctAnswers / progressMap[id].totalAnswers) * 100);
+    if (acc < 80) {
+      items.push({
+        id: `rec-${id}`,
+        type: 'recommendation',
+        title: `המלצת AI: תגבור ב-${COURSE_NAMES[id] || id}`,
+        description: `דיוק של ${acc}% — מומלץ לתרגל את הנושא בקרוב.`,
+        time: 'היום',
+        read: false,
+        courseId: id,
+      });
+      used.add(id);
+    }
+  }
+
+  // 2. Course not practiced in 7+ days → reminder
+  const now = Date.now();
+  const stale = coursesWithProgress.find(id => {
+    if (used.has(id)) return false;
+    const lu = progressMap[id]?.lastPracticedAt;
+    if (!lu) return false;
+    const date = lu.toDate ? lu.toDate() : new Date(lu as unknown as string);
+    return now - date.getTime() > 7 * 24 * 60 * 60 * 1000;
   });
+  if (stale) {
+    const lu = progressMap[stale].lastPracticedAt;
+    const date = lu?.toDate ? lu.toDate() : new Date();
+    items.push({
+      id: `study-${stale}`,
+      type: 'study',
+      title: `תזכורת לתרגול — ${COURSE_NAMES[stale] || stale}`,
+      description: 'לא תרגלת קורס זה יותר משבוע — כדאי לחזור אליו.',
+      time: daysAgoLabel(date),
+      read: false,
+      courseId: stale,
+    });
+    used.add(stale);
+  }
+
+  // 3. Unpracticed course → suggest starting
+  for (const id of unpracticed) {
+    if (items.length >= 4) break;
+    items.push({
+      id: `start-${id}`,
+      type: 'recommendation',
+      title: `התחילי להתרגל ב-${COURSE_NAMES[id] || id}`,
+      description: 'טרם תרגלת קורס זה — מומלץ להתחיל.',
+      time: 'היום',
+      read: false,
+      courseId: id,
+    });
+  }
+
+  // 4. Best course → positive reinforcement
+  if (items.length < 4 && coursesWithProgress.length > 1) {
+    const best = [...coursesWithProgress].reverse().find(id => !used.has(id));
+    if (best) {
+      const acc = Math.round((progressMap[best].correctAnswers / progressMap[best].totalAnswers) * 100);
+      if (acc >= 85) {
+        items.push({
+          id: `good-${best}`,
+          type: 'study',
+          title: `כל הכבוד! ${acc}% דיוק ב-${COURSE_NAMES[best] || best}`,
+          description: 'את/ה מצטיין/ת בקורס זה — המשיכי כך.',
+          time: 'היום',
+          read: true,
+          courseId: best,
+        });
+      }
+    }
+  }
+
+  return items;
+}
+
+function buildLessonReminders(
+  docs: QueryDocumentSnapshot<DocumentData>[],
+  userId: string
+): Notification[] {
+  const items: Notification[] = [];
+  const now = new Date();
+  const todayDow = now.getDay();
+  const tomorrowDow = (todayDow + 1) % 7;
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  docs.forEach(d => {
+    const data = d.data();
+    const acceptedBy: string[] = data.acceptedBy || [];
+    const isCreator = data.createdBy === userId;
+    const visible = isCreator ? acceptedBy.length > 0 : acceptedBy.includes(userId);
+    if (!visible) return;
+
+    let dayLabel: string | null = null;
+    if (data.dayOfWeek === todayDow) {
+      const [sh, sm] = (data.startTime || '0:0').split(':').map(Number);
+      if (sh * 60 + sm >= nowMinutes) dayLabel = 'היום';
+    } else if (data.dayOfWeek === tomorrowDow) {
+      dayLabel = 'מחר';
+    }
+    if (!dayLabel) return;
+
+    const otherName = isCreator ? data.participants?.[0]?.fullName : data.createdByName;
+    const title = data.isGroup
+      ? `תזכורת: שיעור קבוצתי — ${data.courseName}`
+      : `תזכורת: שיעור עם ${otherName} — ${data.courseName}`;
+
+    items.push({
+      id: `lesson-${d.id}`,
+      type: 'lesson',
+      title,
+      description: `${dayLabel} בשעה ${data.startTime}–${data.endTime}`,
+      time: dayLabel,
+      read: false,
+      courseId: data.courseId,
+    });
+  });
+
+  return items;
 }
 
 const typeConfig = {
   recommendation: { icon: Sparkles, color: 'text-indigo-500', bg: 'bg-indigo-50' },
-  exam:           { icon: BookOpen, color: 'text-blue-500',   bg: 'bg-blue-50'   },
-  deadline:       { icon: AlertCircle, color: 'text-red-500', bg: 'bg-red-50'    },
   study:          { icon: Calendar, color: 'text-teal-500',   bg: 'bg-teal-50'   },
+  lesson:         { icon: Clock,    color: 'text-purple-500', bg: 'bg-purple-50' },
 };
 
 interface NotificationsPanelProps {
@@ -95,11 +206,78 @@ interface NotificationsPanelProps {
 export function NotificationsPanel({ onClose }: NotificationsPanelProps) {
   const { user } = useAuth();
   const panelRef = useRef<HTMLDivElement>(null);
-  const [items, setItems] = useState(() => buildNotifications(user?.selectedCourses ?? []));
-  const unread = items.filter(n => !n.read).length;
+  const [items, setItems] = useState<Notification[]>([]);
+  const [loadingItems, setLoadingItems] = useState(true);
+  const [invites, setInvites] = useState<SessionInvite[]>([]);
 
   const deleteNotification = (id: string) =>
     setItems(prev => prev.filter(n => n.id !== id));
+
+  useEffect(() => {
+    if (!user?.userId) {
+      setItems([]);
+      setLoadingItems(false);
+      return;
+    }
+
+    const load = async () => {
+      setLoadingItems(true);
+      const selectedCourses = user.selectedCourses || [];
+
+      const [progressSnap, sessionsSnap] = await Promise.all([
+        getDocs(query(collection(db, 'course_progress'), where('userId', '==', user.userId))),
+        getDocs(query(collection(db, 'studySessions'), where('participantIds', 'array-contains', user.userId))),
+      ]);
+
+      const progressMap: Record<string, CourseProgress> = {};
+      progressSnap.docs.forEach(d => {
+        const data = d.data() as CourseProgress;
+        progressMap[data.courseId] = data;
+      });
+
+      const lessonItems = buildLessonReminders(sessionsSnap.docs, user.userId);
+      setItems([...lessonItems, ...buildNotifications(selectedCourses, progressMap)]);
+      setLoadingItems(false);
+    };
+
+    load();
+  }, [user?.userId]);
+
+  useEffect(() => {
+    if (!user?.userId) {
+      setInvites([]);
+      return;
+    }
+
+    const q = query(collection(db, 'studySessions'), where('pendingFor', 'array-contains', user.userId));
+    const unsubscribe = onSnapshot(q, (snap) => {
+      setInvites(snap.docs.map(d => {
+        const data = d.data();
+        return {
+          id: d.id,
+          createdByName: data.createdByName,
+          courseName: data.courseName,
+          isGroup: data.isGroup,
+          dayOfWeek: data.dayOfWeek,
+          startTime: data.startTime,
+          endTime: data.endTime,
+        };
+      }));
+    });
+
+    return () => unsubscribe();
+  }, [user?.userId]);
+
+  const respondToInvite = async (inviteId: string, accept: boolean) => {
+    if (!user?.userId) return;
+    const sessionRef = doc(db, 'studySessions', inviteId);
+    await updateDoc(sessionRef, {
+      pendingFor: arrayRemove(user.userId),
+      ...(accept
+        ? { acceptedBy: arrayUnion(user.userId) }
+        : { declinedBy: arrayUnion(user.userId) }),
+    });
+  };
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -130,12 +308,52 @@ export function NotificationsPanel({ onClose }: NotificationsPanelProps) {
 
       {/* Notifications list */}
       <div className="max-h-[420px] overflow-y-auto divide-y divide-gray-50">
-        {items.length === 0 ? (
+        {loadingItems ? (
+          <div className="space-y-2 p-3">
+            {[0, 1, 2].map(i => (
+              <div key={i} className="h-16 bg-gray-100 rounded-xl animate-pulse" />
+            ))}
+          </div>
+        ) : invites.length === 0 && items.length === 0 ? (
           <div className="py-12 text-center text-gray-400 text-sm">
             אין התראות חדשות
           </div>
         ) : (
-          items.map(n => {
+          <>
+            {invites.map(inv => (
+              <div key={inv.id} className="flex items-start gap-3 px-5 py-4 bg-teal-50/40">
+                <div className="w-9 h-9 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  {inv.isGroup ? <Users className="w-4 h-4 text-teal-600" /> : <Calendar className="w-4 h-4 text-teal-600" />}
+                </div>
+                <div className="flex-1 min-w-0 text-right">
+                  <p className="text-sm font-semibold text-gray-900">
+                    {inv.isGroup
+                      ? `${inv.createdByName} הזמינה אותך לשיעור קבוצתי`
+                      : `${inv.createdByName} הזמינה אותך לשיעור משותף`}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                    {inv.courseName} • יום {DAY_NAMES[inv.dayOfWeek]}, {inv.startTime}–{inv.endTime}
+                  </p>
+                  <div className="flex items-center gap-2 mt-2 justify-end">
+                    <button
+                      onClick={() => respondToInvite(inv.id, false)}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                      דחה
+                    </button>
+                    <button
+                      onClick={() => respondToInvite(inv.id, true)}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-teal-600 hover:bg-teal-700 transition-colors"
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      אשר
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {items.map(n => {
             const { icon: Icon, color, bg } = typeConfig[n.type];
             return (
               <div
@@ -162,7 +380,8 @@ export function NotificationsPanel({ onClose }: NotificationsPanelProps) {
                 </button>
               </div>
             );
-          })
+          })}
+          </>
         )}
       </div>
     </div>

@@ -26,7 +26,7 @@ export function HomePage({ onNavigate, isGuest, onLoginClick }: HomePageProps) {
         />
       )}
       <main>
-        <Hero onNavigate={handleNavigate} />
+        <Hero onNavigate={handleNavigate} isGuest={isGuest} onLoginClick={onLoginClick} />
         <AIExplanation />
         <Features />
         <Testimonials />

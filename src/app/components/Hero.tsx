@@ -10,28 +10,22 @@ const TOTAL_COURSES = 8;
 interface HeroProps {
   onRegisterClick?: () => void;
   onNavigate?: (page: 'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'course-detail') => void;
+  isGuest?: boolean;
+  onLoginClick?: () => void;
 }
 
-export function Hero({ onRegisterClick, onNavigate }: HeroProps) {
+export function Hero({ onRegisterClick, onNavigate, isGuest, onLoginClick }: HeroProps) {
   // Display the logged-in user's name instead of a hardcoded name
   const { user } = useAuth();
   const displayName = user?.fullName || user?.username || 'סטודנט';
 
   const [studentsCount, setStudentsCount] = useState<number | null>(null);
-  const [studyHours, setStudyHours] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const snap = await getDocs(collection(db, 'users'));
         setStudentsCount(snap.size);
-
-        const minutes = snap.docs
-          .map(d => d.data().totalStudyMinutes)
-          .filter((m): m is number => typeof m === 'number')
-          .reduce((sum, m) => sum + m, 0);
-
-        setStudyHours(Math.round(minutes / 60));
       } catch (error) {
         console.error('Failed to fetch homepage stats:', error);
       }
@@ -68,7 +62,7 @@ export function Hero({ onRegisterClick, onNavigate }: HeroProps) {
               <Button
                 size="lg"
                 className="text-lg px-8 bg-teal-600 hover:bg-teal-700"
-                onClick={() => onNavigate?.('dashboard')}
+                onClick={() => (isGuest ? onLoginClick?.() : onNavigate?.('dashboard'))}
               >
                 התחל ללמוד עכשיו
                 <ArrowLeft className="w-5 h-5 mr-2" />
@@ -82,12 +76,6 @@ export function Hero({ onRegisterClick, onNavigate }: HeroProps) {
                   {studentsCount !== null ? studentsCount.toLocaleString() : '...'}
                 </div>
                 <div className="text-sm text-gray-600">סטודנטים פעילים</div>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold text-gray-900">
-                  {studyHours !== null ? `${studyHours.toLocaleString()}+` : '...'}
-                </div>
-                <div className="text-sm text-gray-600">שעות למידה</div>
               </div>
               <div className="text-right">
                 <div className="text-3xl font-bold text-gray-900">{TOTAL_COURSES}</div>

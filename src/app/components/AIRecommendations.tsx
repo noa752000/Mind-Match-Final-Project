@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Clock, Target, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../contexts/AuthContext';
@@ -33,7 +33,7 @@ interface CourseProgress {
   correctAnswers: number;
   totalAnswers: number;
   practicedMinutes: number;
-  lastUpdated: { toDate?: () => Date } | null;
+  lastPracticedAt: { toDate?: () => Date } | null;
 }
 
 interface AIRecommendationsProps {
@@ -80,7 +80,7 @@ function buildRecommendations(
     const now = Date.now();
     const stale = coursesWithProgress.find(id => {
       if (used.has(id)) return false;
-      const lu = progressMap[id]?.lastUpdated;
+      const lu = progressMap[id]?.lastPracticedAt;
       if (!lu) return true;
       const date = lu.toDate ? lu.toDate() : new Date(lu as unknown as string);
       return now - date.getTime() > 7 * 24 * 60 * 60 * 1000;
@@ -259,18 +259,6 @@ export function AIRecommendations({ onOpenPractice }: AIRecommendationsProps) {
                 <Badge className="mb-4 bg-blue-100 text-blue-700">{rec.type}</Badge>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2 text-right">{rec.title}</h3>
                 <p className="text-sm text-gray-600 mb-4 text-right leading-relaxed">{rec.reason}</p>
-                <div className="flex items-center gap-4 mb-4 justify-start">
-                  <div className="flex items-center gap-2">
-                    <Target className="w-4 h-4 text-gray-400" />
-                    <span className={`text-sm font-medium ${rec.impact === 'גבוה' ? 'text-green-600' : 'text-orange-600'}`}>
-                      {rec.impact}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm text-gray-600">{rec.time}</span>
-                  </div>
-                </div>
                 <Button
                   variant="outline"
                   className="w-full hover:bg-blue-50"

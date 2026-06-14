@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase';
 import { BookOpen, Clock, Users, Star, TrendingUp } from 'lucide-react';
 import { Card } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -8,7 +11,6 @@ interface Course {
   title: string;
   category: string;
   level: string;
-  students: number;
   rating: number;
   duration: string;
   description: string;
@@ -21,7 +23,6 @@ const courses: Course[] = [
     title: 'חדו"א 1',
     category: 'מתמטיקה',
     level: 'בסיסי',
-    students: 1250,
     rating: 4.7,
     duration: '14 שבועות',
     description: 'מבוא לחשבון דיפרנציאלי ואינטגרלי - גבולות, נגזרות, אינטגרלים ושימושים',
@@ -32,7 +33,6 @@ const courses: Course[] = [
     title: 'אלגברה לינארית',
     category: 'מתמטיקה',
     level: 'בסיסי',
-    students: 980,
     rating: 4.5,
     duration: '14 שבועות',
     description: 'מרחבים וקטוריים, מטריצות, טרנספורמציות לינאריות וערכים עצמיים',
@@ -43,7 +43,6 @@ const courses: Course[] = [
     title: 'תכנות מונחה עצמים',
     category: 'תכנות',
     level: 'בינוני',
-    students: 1450,
     rating: 4.8,
     duration: '12 שבועות',
     description: 'עקרונות OOP, מחלקות, הורשה, פולימורפיזם ודפוסי עיצוב',
@@ -54,7 +53,6 @@ const courses: Course[] = [
     title: 'HTML',
     category: 'פיתוח Web',
     level: 'בסיסי',
-    students: 2100,
     rating: 4.6,
     duration: '6 שבועות',
     description: 'בניית דפי אינטרנט עם HTML5, סמנטיקה, נגישות ותקני Web',
@@ -65,7 +63,6 @@ const courses: Course[] = [
     title: 'SQL',
     category: 'מסדי נתונים',
     level: 'בינוני',
-    students: 1680,
     rating: 4.7,
     duration: '10 שבועות',
     description: 'שאילתות SQL, עיצוב מסדי נתונים, אופטימיזציה ועבודה עם מסדי נתונים יחסיים',
@@ -76,7 +73,6 @@ const courses: Course[] = [
     title: 'אפיון ותכן',
     category: 'הנדסת תוכנה',
     level: 'מתקדם',
-    students: 820,
     rating: 4.4,
     duration: '12 שבועות',
     description: 'ניתוח דרישות, עיצוב מערכות, UML, תהליכי פיתוח ומתודולוגיות',
@@ -87,7 +83,6 @@ const courses: Course[] = [
     title: 'אבטחת מידע',
     category: 'אבטחה',
     level: 'מתקדם',
-    students: 1120,
     rating: 4.9,
     duration: '14 שבועות',
     description: 'הצפנה, אבטחת רשתות, פרוטוקולי אבטחה ושיטות הגנה על מידע ומערכות',
@@ -98,7 +93,6 @@ const courses: Course[] = [
     title: 'כלכלת מערכות מידע',
     category: 'ניהול',
     level: 'מתקדם',
-    students: 650,
     rating: 4.3,
     duration: '10 שבועות',
     description: 'ניתוח כלכלי של מערכות מידע, ROI, ניהול פרויקטים וקבלת החלטות',
@@ -111,6 +105,28 @@ interface CoursesPageProps {
 }
 
 export function CoursesPage({ onCourseSelect }: CoursesPageProps) {
+  const [enrolledCounts, setEnrolledCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const fetchEnrollment = async () => {
+      try {
+        const snap = await getDocs(collection(db, 'users'));
+        const counts: Record<string, number> = {};
+        snap.docs.forEach(d => {
+          const selectedCourses = (d.data().selectedCourses || []) as string[];
+          selectedCourses.forEach(courseId => {
+            counts[courseId] = (counts[courseId] || 0) + 1;
+          });
+        });
+        setEnrolledCounts(counts);
+      } catch (error) {
+        console.error('Failed to fetch course enrollment counts:', error);
+      }
+    };
+
+    fetchEnrollment();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 mr-64 pt-16" dir="rtl">
       {/* Header */}
@@ -123,32 +139,6 @@ export function CoursesPage({ onCourseSelect }: CoursesPageProps) {
             <p className="text-xl text-gray-600">
               גלה את הקורסים המוצעים במערכות מידע
             </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Bar */}
-      <div className="bg-gradient-to-l from-teal-500 to-teal-600 text-white">
-        <div className="max-w-[1440px] mx-auto px-16 py-8">
-          <div className="grid grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-3xl font-bold mb-1">{courses.length}</div>
-              <div className="text-teal-100 text-sm">קורסים זמינוים</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold mb-1">
-                {courses.reduce((acc, c) => acc + c.students, 0).toLocaleString()}
-              </div>
-              <div className="text-teal-100 text-sm">סטודנטים פעילים</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold mb-1">4.6</div>
-              <div className="text-teal-100 text-sm">ממוצע דירוג</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold mb-1">98%</div>
-              <div className="text-teal-100 text-sm">שביעות רצון</div>
-            </div>
           </div>
         </div>
       </div>
@@ -202,7 +192,7 @@ export function CoursesPage({ onCourseSelect }: CoursesPageProps) {
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-500">רשומים</span>
                       <div className="flex items-center gap-2 text-gray-600">
-                        <span>{course.students.toLocaleString()} סטודנטים</span>
+                        <span>{(enrolledCounts[course.id] ?? 0).toLocaleString()} סטודנטים</span>
                         <Users className="w-4 h-4" />
                       </div>
                     </div>

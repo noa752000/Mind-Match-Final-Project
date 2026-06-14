@@ -87,28 +87,24 @@ export function ProgressOverview() {
       icon: Award,
       label: 'ממוצע כללי',
       value: hasData ? stats.averageGrade.toString() : '—',
-      subtext: hasData ? 'ציון ממוצע' : 'אין נתונים עדיין',
       color: 'from-orange-500 to-orange-600',
     },
     {
       icon: CheckCircle,
       label: 'שאלות שנפתרו',
       value: hasData ? stats.completedQuestions.toString() : '—',
-      subtext: hasData ? 'סה״כ שאלות' : 'אין נתונים עדיין',
       color: 'from-green-500 to-green-600',
     },
     {
       icon: BookOpen,
       label: 'קורסים פעילים',
       value: stats.activeCourses.toString(),
-      subtext: 'קורסים נבחרים',
       color: 'from-blue-500 to-blue-600',
     },
     {
       icon: Clock,
       label: 'שעות למידה',
       value: hasData ? stats.studyHours.toFixed(1) : '—',
-      subtext: hasData ? 'שעות מצטברות' : 'אין נתונים עדיין',
       color: 'from-purple-500 to-purple-600',
     },
   ];
@@ -124,8 +120,7 @@ export function ProgressOverview() {
                   <div className="w-10 h-10 bg-gray-200 rounded-xl"></div>
                   <div className="flex-1">
                     <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-6 bg-gray-200 rounded mb-1"></div>
-                    <div className="h-3 bg-gray-200 rounded"></div>
+                    <div className="h-6 bg-gray-200 rounded"></div>
                   </div>
                 </div>
               </Card>
@@ -159,10 +154,6 @@ export function ProgressOverview() {
 
                     <p className="text-2xl font-bold text-gray-900 leading-tight mt-2 mb-1">
                       {stat.value}
-                    </p>
-
-                    <p className="text-xs text-gray-500 leading-tight truncate">
-                      {stat.subtext}
                     </p>
                   </div>
                 </div>

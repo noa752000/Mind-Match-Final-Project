@@ -44,10 +44,21 @@ function durationHours(start: string, end: string): number {
   return (eh * 60 + em - sh * 60 - sm) / 60;
 }
 
+const DEFAULT_START_TIME = '10:00';
+
+function addHoursToTime(time: string, hours: number): string {
+  const [h, m] = time.split(':').map(Number);
+  const total = Math.min(h * 60 + m + hours * 60, 23 * 60);
+  const nh = Math.floor(total / 60);
+  const nm = total % 60;
+  return `${nh.toString().padStart(2, '0')}:${nm.toString().padStart(2, '0')}`;
+}
+
 export interface RecommendationToSchedule {
   title: string;
   defaultType: EventType;
   defaultCourseId?: string;
+  durationHours?: number;
 }
 
 interface ScheduleRecommendationModalProps {
@@ -73,8 +84,10 @@ export function ScheduleRecommendationModal({ recommendation, onClose }: Schedul
 
   const [selectedDayOffset, setSelectedDayOffset] = useState(0);
   const [courseId, setCourseId] = useState(recommendation.defaultCourseId || '');
-  const [startTime, setStartTime] = useState('10:00');
-  const [endTime, setEndTime] = useState('11:00');
+  const [startTime, setStartTime] = useState(DEFAULT_START_TIME);
+  const [endTime, setEndTime] = useState(
+    addHoursToTime(DEFAULT_START_TIME, recommendation.durationHours ?? 1)
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 

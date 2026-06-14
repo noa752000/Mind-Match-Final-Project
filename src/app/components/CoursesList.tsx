@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getCountFromServer, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { CourseCard } from './CourseCard';
 import { Button } from './ui/button';
@@ -12,8 +12,6 @@ interface Course {
   title: string;
   semester: string;
   progress: number;
-  nextLesson: string;
-  dueDate: string;
   color: string;
   status: 'active' | 'completed';
 }
@@ -32,6 +30,29 @@ const COURSE_META: Record<string, { title: string; color: string }> = {
   'requirements-design':{ title: 'אפיון ותכן',             color: 'from-fuchsia-500 to-fuchsia-600' },
   'information-security':{ title: 'אבטחת מידע',            color: 'from-red-500 to-red-600' },
   'mis-economics':      { title: 'כלכלת מערכות מידע',       color: 'from-yellow-500 to-yellow-600' },
+};
+
+// Maps course catalog IDs to the courseId values used in the "questions"
+// Firestore collection / src/dataQ/* files, where they differ.
+const QUESTION_DATA_COURSE_ID: Record<string, string> = {
+  'html': 'html_fundamentals',
+  'linear-algebra': 'linear_algebra',
+  'requirements-design': 'systems_analysis',
+  'information-security': 'cyber_security',
+  'mis-economics': 'information_systems_economics',
+};
+
+// Fallback question bank size (src/dataQ/*), used only if the "questions"
+// collection has no documents for a course yet.
+const FALLBACK_TOTAL_QUESTIONS: Record<string, number> = {
+  'calculus1':            36,
+  'linear-algebra':       36,
+  'oop':                  36,
+  'html':                 36,
+  'sql':                  24,
+  'requirements-design':  36,
+  'information-security': 36,
+  'mis-economics':        36,
 };
 
 export function CoursesList({ onOpenPractice, onNavigateToCourses }: CoursesListProps) {
@@ -58,22 +79,40 @@ export function CoursesList({ onOpenPractice, onNavigateToCourses }: CoursesList
           where('userId', '==', userId)
         );
         const progressSnap = await getDocs(progressQuery);
-        const progressMap: Record<string, number> = {};
+        const correctAnswersMap: Record<string, number> = {};
         progressSnap.docs.forEach(d => {
           const data = d.data();
-          progressMap[data.courseId] = data.progress ?? 0;
+          correctAnswersMap[data.courseId] = data.correctAnswers ?? 0;
         });
+
+        // Total questions per course, from the live "questions" collection
+        // (falls back to the local question bank size if not seeded).
+        const totalQuestionsEntries = await Promise.all(
+          selectedCourses.map(async courseId => {
+            const questionDataCourseId = QUESTION_DATA_COURSE_ID[courseId] || courseId;
+            try {
+              const countSnap = await getCountFromServer(
+                query(collection(db, 'questions'), where('courseId', '==', questionDataCourseId))
+              );
+              const count = countSnap.data().count;
+              return [courseId, count > 0 ? count : (FALLBACK_TOTAL_QUESTIONS[courseId] ?? 36)] as const;
+            } catch {
+              return [courseId, FALLBACK_TOTAL_QUESTIONS[courseId] ?? 36] as const;
+            }
+          })
+        );
+        const totalQuestionsMap = Object.fromEntries(totalQuestionsEntries);
 
         const built: Course[] = selectedCourses.map(courseId => {
           const meta = COURSE_META[courseId];
-          const progress = progressMap[courseId] ?? 0;
+          const correctAnswers = correctAnswersMap[courseId] ?? 0;
+          const totalQuestions = totalQuestionsMap[courseId] ?? 36;
+          const progress = Math.min(100, Math.round((correctAnswers / totalQuestions) * 100));
           return {
             courseId,
             title: meta?.title ?? courseId,
             semester: '',
             progress,
-            nextLesson: 'המשך תרגול',
-            dueDate: '',
             color: meta?.color ?? 'from-teal-500 to-teal-600',
             status: progress === 100 ? 'completed' : 'active',
           };
