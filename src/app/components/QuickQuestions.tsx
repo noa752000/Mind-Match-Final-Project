@@ -18,7 +18,7 @@ const questionsByCourse: Record<string, string[]> = {
     'מה זה כלל לופיטל?',
     'איך מוצאים נקודות קיצון?',
   ],
-  'information-security': [
+  'cyber_security': [
     'מה ההבדל בין הצפנה סימטרית לאסימטרית?',
     'איך עובד RSA?',
     'מה זה Man-in-the-Middle Attack?',
@@ -50,7 +50,7 @@ const questionsByCourse: Record<string, string[]> = {
     'איך מוצאים ערכים עצמיים?',
     'מה זה בסיס של מרחב וקטורי?',
   ],
-  'requirements-design': [
+  'systems_analysis': [
     'מה זה Use Case Diagram?',
     'איך מתכננים Class Diagram?',
     'מה ההבדל בין Functional ל-Non-Functional דרישות?',

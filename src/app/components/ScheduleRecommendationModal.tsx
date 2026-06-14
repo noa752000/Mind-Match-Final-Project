@@ -9,8 +9,8 @@ const COURSES = [
   { id: 'oop', name: 'תכנות מונחה עצמים' },
   { id: 'html', name: 'HTML' },
   { id: 'sql', name: 'SQL' },
-  { id: 'requirements-design', name: 'אפיון ותכן' },
-  { id: 'information-security', name: 'אבטחת מידע' },
+  { id: 'systems_analysis', name: 'אפיון ותכן' },
+  { id: 'cyber_security', name: 'אבטחת מידע' },
   { id: 'mis-economics', name: 'כלכלת מערכות מידע' },
 ];
 

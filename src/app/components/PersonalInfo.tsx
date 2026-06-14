@@ -150,13 +150,13 @@ export function PersonalInfo({
           <div className="grid grid-cols-2 gap-3">
             {[
               { id: 'sql', label: 'SQL' },
-              { id: 'requirements-design', label: 'אפיון ותכן' },
+              { id: 'systems_analysis', label: 'אפיון ותכן' },
               { id: 'oop', label: 'תכנות מונחה עצמים' },
               { id: 'calculus1', label: 'חדו"א 1' },
               { id: 'linear-algebra', label: 'אלגברה לינארית' },
               { id: 'html', label: 'HTML' },
               { id: 'mis-economics', label: 'כלכלת מערכות מידע' },
-              { id: 'information-security', label: 'אבטחת מידע' }
+              { id: 'cyber_security', label: 'אבטחת מידע' }
             ].map(c => (
               <label key={c.id} className="inline-flex items-center gap-2 text-sm">
                 <input

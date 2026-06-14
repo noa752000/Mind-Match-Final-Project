@@ -83,7 +83,7 @@ const conversationsByCourse: Record<string, Array<{
       active: false,
     },
   ],
-  'information-security': [
+  'cyber_security': [
     {
       id: 1,
       title: 'הצפנה סימטרית ואסימטרית',
@@ -231,7 +231,7 @@ const conversationsByCourse: Record<string, Array<{
       active: false,
     },
   ],
-  'requirements-design': [
+  'systems_analysis': [
     {
       id: 1,
       title: 'Use Case Diagrams',

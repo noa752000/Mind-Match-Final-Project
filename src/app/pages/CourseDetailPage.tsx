@@ -57,7 +57,7 @@ const courseTopics: Record<string, Array<{
     { title: 'נורמליזציה', description: 'תהליך ארגון הנתונים למניעת כפילויות ושמירה על שלמות הנתונים. נלמד את הצורות הנורמליות 1NF, 2NF ו-3NF עם דוגמאות מעשיות.', icon: BarChart, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 16 },
     { title: 'אופטימיזציה', description: 'שיפור ביצועי שאילתות SQL באמצעות אינדקסים, ניתוח תוכניות ביצוע ואסטרטגיות שאילתה יעילות.', icon: TrendingUp, iconColor: 'text-orange-600', bgColor: 'bg-orange-100', totalQuestions: 20 },
   ],
-  'information-security': [
+  'cyber_security': [
     { title: 'הצפנה סימטרית', description: 'שיטת הצפנה בה אותו מפתח משמש להצפנה ולפענוח. נתרגל אלגוריתמים כמו AES ו-DES, יתרונות וחסרונות ומקרי שימוש.', icon: Shield, iconColor: 'text-blue-600', bgColor: 'bg-blue-100', totalQuestions: 17 },
     { title: 'הצפנה אסימטרית', description: 'שיטת הצפנה עם זוג מפתחות — ציבורי ופרטי. נתרגל RSA, יישומים בחתימות דיגיטליות ואימות זהות.', icon: Shield, iconColor: 'text-green-600', bgColor: 'bg-green-100', totalQuestions: 21 },
     { title: 'Hash Functions', description: 'פונקציות חד-כיווניות שממירות נתונים לתמצית בגודל קבוע. נתרגל MD5, SHA-256 ויישומים באימות סיסמאות ושלמות קבצים.', icon: Code, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 15 },
@@ -81,7 +81,7 @@ const courseTopics: Record<string, Array<{
     { title: 'טרנספורמציות', description: 'העברת וקטורים ממרחב אחד לאחר. נתרגל טרנספורמציות לינאריות, גרעין ותמונה ומטריצת ייצוג.', icon: Activity, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 18 },
     { title: 'ערכים עצמיים', description: 'סקלרים מיוחדים המקיימים Av=λv. נתרגל מציאת ערכים וקטורים עצמיים, פולינום אופייני ואלכסון מטריצה.', icon: Calculator, iconColor: 'text-orange-600', bgColor: 'bg-orange-100', totalQuestions: 19 },
   ],
-  'requirements-design': [
+  'systems_analysis': [
     { title: 'ניתוח דרישות', description: 'תהליך זיהוי, ניתוח ותיעוד דרישות מערכת מהלקוח. נתרגל Use Cases, דרישות פונקציונליות ולא-פונקציונליות.', icon: FileText, iconColor: 'text-blue-600', bgColor: 'bg-blue-100', totalQuestions: 16 },
     { title: 'UML Diagrams', description: 'שפת מידול גרפית לתיאור מערכות תוכנה. נתרגל Class Diagrams, Sequence Diagrams, Activity Diagrams ו-Use Case Diagrams.', icon: BarChart, iconColor: 'text-green-600', bgColor: 'bg-green-100', totalQuestions: 22 },
     { title: 'ארכיטקטורה', description: 'תכנון המבנה הכללי של מערכת תוכנה. נתרגל דפוסי ארכיטקטורה כמו MVC, Layer Architecture ו-Microservices.', icon: Grid3x3, iconColor: 'text-purple-600', bgColor: 'bg-purple-100', totalQuestions: 18 },
@@ -111,7 +111,7 @@ const recentQuestions: Record<string, Array<{
     { title: 'נורמליזציה לצורה שלישית', topic: 'נורמליזציה', daysAgo: 'לפני 3 ימים' },
     { title: 'אופטימיזציה באמצעות אינדקסים', topic: 'אופטימיזציה', daysAgo: 'לפני 5 ימים' },
   ],
-  'information-security': [
+  'cyber_security': [
     { title: 'השוואה בין AES ל-DES', topic: 'הצפנה סימטרית', daysAgo: 'לפני 2 ימים' },
     { title: 'יישום RSA', topic: 'הצפנה אסימטרית', daysAgo: 'לפני 4 ימים' },
     { title: 'פונקציות Hash', topic: 'Hash Functions', daysAgo: 'לפני שבוע' },
@@ -131,7 +131,7 @@ const recentQuestions: Record<string, Array<{
     { title: 'מציאת דטרמיננטה', topic: 'מטריצות', daysAgo: 'לפני 4 ימים' },
     { title: 'חישוב ערכים עצמיים', topic: 'ערכים עצמיים', daysAgo: 'לפני שבוע' },
   ],
-  'requirements-design': [
+  'systems_analysis': [
     { title: 'יצירת Use Case Diagram', topic: 'UML Diagrams', daysAgo: 'לפני יום' },
     { title: 'ניתוח דרישות לא-פונקציונליות', topic: 'ניתוח דרישות', daysAgo: 'לפני 3 ימים' },
     { title: 'השוואה בין Agile ל-Waterfall', topic: 'מתודולוגיות', daysAgo: 'לפני 6 ימים' },
@@ -200,12 +200,12 @@ const questionTypeDescriptions: Record<string, { knowledge: string; analysis: st
     analysis: 'ניתוח שאילתות SQL מורכבות, פתרון בעיות נורמליזציה וזיהוי צווארי בקבוק בביצועי שאילתות.',
     visuals: 'קריאת שאילתות SQL וניחוש התוצאה, ניתוח תרשימי ERD וקריאת תוצאות JOIN בין טבלאות.',
   },
-  'requirements-design': {
+  'systems_analysis': {
     knowledge: 'מושגי UML, סוגי דרישות מערכת (פונקציונליות ולא-פונקציונליות) ומתודולוגיות פיתוח כמו Agile ו-Waterfall.',
     analysis: 'ניתוח תרחישי מערכת, זיהוי דרישות מתוך תיאור לקוח ובחירת ארכיטקטורה ומתודולוגיה מתאימה.',
     visuals: 'קריאת דיאגרמות UML — Use Case, Class, Sequence ו-Activity Diagrams וזיהוי יחסים בין רכיבי המערכת.',
   },
-  'information-security': {
+  'cyber_security': {
     knowledge: 'מושגי הצפנה סימטרית ואסימטרית, פרוטוקולי אבטחה (TLS, IPSec), Hash Functions ועקרונות ה-CIA Triad.',
     analysis: 'ניתוח תרחישי אבטחה, זיהוי פגיעויות (OWASP Top 10, SQL Injection, XSS) ובחירת מנגנון הגנה מתאים.',
     visuals: 'קריאת תרשימי רשת ופרוטוקולים, ניתוח קוד הצפנה ופירוש תרשימי תקשורת מאובטחת.',

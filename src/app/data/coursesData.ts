@@ -64,8 +64,8 @@ export const coursesData: Record<string, CourseData> = {
       { week: 4, title: 'אופטימיזציה', topics: ['אינדקסים', 'תכנון ביצוע', 'ביצועים'] },
     ]
   },
-  'information-security': {
-    id: 'information-security',
+  'cyber_security': {
+    id: 'cyber_security',
     title: 'אבטחת מידע',
     category: 'אבטחה',
     level: 'מתקדם',

@@ -35,8 +35,8 @@ const ALL_COURSES = [
   { id: 'oop',                  title: 'תכנות מונחה עצמים',       color: 'from-green-500 to-green-600',   emoji: '{}' },
   { id: 'html',                 title: 'HTML',                   color: 'from-orange-500 to-orange-600', emoji: '<>' },
   { id: 'sql',                  title: 'SQL',                    color: 'from-cyan-500 to-cyan-600',     emoji: '⊞' },
-  { id: 'requirements-design',  title: 'אפיון ותכן',             color: 'from-indigo-500 to-indigo-600', emoji: '⬡' },
-  { id: 'information-security', title: 'אבטחת מידע',            color: 'from-red-500 to-red-600',       emoji: '🔒' },
+  { id: 'systems_analysis',     title: 'אפיון ותכן',             color: 'from-indigo-500 to-indigo-600', emoji: '⬡' },
+  { id: 'cyber_security',       title: 'אבטחת מידע',            color: 'from-red-500 to-red-600',       emoji: '🔒' },
   { id: 'mis-economics',        title: 'כלכלת מערכות מידע',       color: 'from-amber-500 to-amber-600',   emoji: '₪' },
 ];
 

@@ -4,8 +4,8 @@ export const COURSE_NAMES: Record<string, string> = {
   oop: 'תכנות מונחה עצמים',
   html: 'HTML',
   sql: 'SQL',
-  'requirements-design': 'אפיון ותכן',
-  'information-security': 'אבטחת מידע',
+  'systems_analysis': 'אפיון ותכן',
+  'cyber_security': 'אבטחת מידע',
   'mis-economics': 'כלכלת מערכות מידע',
 };
 

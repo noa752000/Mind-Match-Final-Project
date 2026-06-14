@@ -69,7 +69,7 @@ const courses: Course[] = [
     color: 'from-pink-500 to-pink-600',
   },
   {
-    id: 'requirements-design',
+    id: 'systems_analysis',
     title: 'אפיון ותכן',
     category: 'הנדסת תוכנה',
     level: 'מתקדם',
@@ -79,7 +79,7 @@ const courses: Course[] = [
     color: 'from-fuchsia-500 to-fuchsia-600',
   },
   {
-    id: 'information-security',
+    id: 'cyber_security',
     title: 'אבטחת מידע',
     category: 'אבטחה',
     level: 'מתקדם',

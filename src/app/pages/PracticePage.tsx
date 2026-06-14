@@ -26,8 +26,6 @@ interface PracticePageProps {
 const QUESTION_DATA_COURSE_ID: Record<string, string> = {
   'html': 'html_fundamentals',
   'linear-algebra': 'linear_algebra',
-  'requirements-design': 'systems_analysis',
-  'information-security': 'cyber_security',
   'mis-economics': 'information_systems_economics',
 };
 
@@ -47,6 +45,9 @@ interface Question {
 export function PracticePage({ courseId, onBack }: PracticePageProps) {
   const { user } = useAuth();
   const appUserId = user?.userId || "user_1";
+  // The courseId value as stored on the question documents themselves
+  // (e.g. "html_fundamentals" for the "html" catalog course).
+  const questionDataCourseId = QUESTION_DATA_COURSE_ID[courseId] || courseId;
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -61,8 +62,6 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
       try {
         setLoading(true);
         console.log('Loading questions from Firestore...');
-
-        const questionDataCourseId = QUESTION_DATA_COURSE_ID[courseId] || courseId;
 
         let loadedQuestions: Question[] = [];
         let firestoreLoaded = false;
@@ -382,7 +381,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">תרגול</h1>
-              <p className="text-xl text-gray-600">קורס: {courseId}</p>
+              <p className="text-xl text-gray-600">קורס: {questionDataCourseId}</p>
             </div>
           </div>
         </div>
@@ -391,7 +390,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
           <Card className="p-8 text-center">
             <XCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
             <h1 className="text-3xl font-bold mb-4 text-gray-900">אין שאלות לקורס הזה עדיין</h1>
-            <p className="text-gray-600 mb-6">קורס: {courseId}</p>
+            <p className="text-gray-600 mb-6">קורס: {questionDataCourseId}</p>
             <Button
               onClick={onBack}
               className="bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
@@ -412,7 +411,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">תרגול</h1>
-              <p className="text-xl text-gray-600">קורס: {courseId}</p>
+              <p className="text-xl text-gray-600">קורס: {questionDataCourseId}</p>
             </div>
           </div>
         </div>
@@ -421,7 +420,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
           <Card className="p-8 text-center">
             <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
             <h1 className="text-3xl font-bold mb-4 text-gray-900">סיימת את התרגול 🎉</h1>
-            <p className="text-gray-600 mb-6">קורס: {courseId}</p>
+            <p className="text-gray-600 mb-6">קורס: {questionDataCourseId}</p>
             <Button
               onClick={onBack}
               className="bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
@@ -454,7 +453,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
 
             <div className="text-right">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">תרגול</h1>
-              <p className="text-xl text-gray-600">קורס: {courseId}</p>
+              <p className="text-xl text-gray-600">קורס: {questionDataCourseId}</p>
             </div>
           </div>
         </div>
@@ -494,7 +493,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
                   שאלה {currentQuestionIndex + 1}
                 </Badge>
                 <div className="flex items-center gap-4 text-sm text-white/90 justify-start mb-4">
-                  <div>קורס: {courseId}</div>
+                  <div>קורס: {questionDataCourseId}</div>
                   {question.subTopic && (
                     <>
                       <div className="w-1 h-1 rounded-full bg-white/50"></div>

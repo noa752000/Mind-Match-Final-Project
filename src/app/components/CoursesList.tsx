@@ -27,8 +27,8 @@ const COURSE_META: Record<string, { title: string; color: string }> = {
   'oop':                { title: 'תכנות מונחה עצמים',       color: 'from-green-500 to-green-600' },
   'html':               { title: 'HTML',                   color: 'from-orange-500 to-orange-600' },
   'sql':                { title: 'SQL',                    color: 'from-pink-500 to-pink-600' },
-  'requirements-design':{ title: 'אפיון ותכן',             color: 'from-fuchsia-500 to-fuchsia-600' },
-  'information-security':{ title: 'אבטחת מידע',            color: 'from-red-500 to-red-600' },
+  'systems_analysis':{ title: 'אפיון ותכן',             color: 'from-fuchsia-500 to-fuchsia-600' },
+  'cyber_security':{ title: 'אבטחת מידע',            color: 'from-red-500 to-red-600' },
   'mis-economics':      { title: 'כלכלת מערכות מידע',       color: 'from-yellow-500 to-yellow-600' },
 };
 
@@ -37,8 +37,6 @@ const COURSE_META: Record<string, { title: string; color: string }> = {
 const QUESTION_DATA_COURSE_ID: Record<string, string> = {
   'html': 'html_fundamentals',
   'linear-algebra': 'linear_algebra',
-  'requirements-design': 'systems_analysis',
-  'information-security': 'cyber_security',
   'mis-economics': 'information_systems_economics',
 };
 
@@ -50,8 +48,8 @@ const FALLBACK_TOTAL_QUESTIONS: Record<string, number> = {
   'oop':                  36,
   'html':                 36,
   'sql':                  24,
-  'requirements-design':  36,
-  'information-security': 36,
+  'systems_analysis':  36,
+  'cyber_security': 36,
   'mis-economics':        36,
 };
 
