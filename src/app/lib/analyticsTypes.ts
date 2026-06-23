@@ -26,6 +26,7 @@ export interface CourseProgressData {
   totalAnswers: number;
   correctAnswers: number;
   wrongAnswers: number;
+  totalQuestionsInCourse?: number;
   accuracy: number;
   knowledgeTotal: number;
   knowledgeCorrect: number;

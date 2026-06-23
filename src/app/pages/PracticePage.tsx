@@ -236,7 +236,9 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
       });
 
       const wrongAnswers = totalAnswers - correctAnswers;
-      const accuracy = totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
+      // Score = correct / total questions in course (not just attempted questions)
+      const totalQuestionsInCourse = questions.length;
+      const accuracy = totalQuestionsInCourse > 0 ? Math.round((correctAnswers / totalQuestionsInCourse) * 100) : 0;
       const practicedMinutes = Math.round(totalSeconds / 60);
 
       await setDoc(doc(db, 'course_progress', `${appUserId}_${courseId}`), {
@@ -245,6 +247,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
         totalAnswers,
         correctAnswers,
         wrongAnswers,
+        totalQuestionsInCourse,
         accuracy,
         knowledgeTotal,
         knowledgeCorrect,

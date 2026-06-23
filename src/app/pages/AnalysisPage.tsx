@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { collection, doc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../../firebase';
+import { useAuth } from '../contexts/AuthContext';
 
 import { LearningStyleInsights } from '../components/LearningStyleInsights';
 import { StrengthsWeaknesses } from '../components/StrengthsWeaknesses';
@@ -23,6 +24,17 @@ interface UserStats {
   totalStudyMinutes: number;
 }
 
+const QUESTION_DATA_COURSE_ID: Record<string, string> = {
+  'html': 'html_fundamentals',
+  'linear-algebra': 'linear_algebra',
+  'mis-economics': 'information_systems_economics',
+};
+
+const FALLBACK_TOTAL_QUESTIONS: Record<string, number> = {
+  'calculus1': 36, 'linear-algebra': 36, 'oop': 36, 'html': 36,
+  'sql': 24, 'systems_analysis': 36, 'cyber_security': 36, 'mis-economics': 36,
+};
+
 const DEFAULT_STATS: UserStats = {
   averageGrade: 0,
   completedQuestions: 0,
@@ -35,37 +47,28 @@ const DEFAULT_STATS: UserStats = {
 };
 
 export function AnalysisPage() {
+  const { user: authUser } = useAuth();
   const [stats, setStats] = useState<UserStats>(DEFAULT_STATS);
   const [courseProgress, setCourseProgress] = useState<CourseProgressData[]>([]);
   const [practiceResults, setPracticeResults] = useState<PracticeResultData[]>([]);
   const [loadingAnalytics, setLoadingAnalytics] = useState(true);
 
+  // Live stats from user doc (uses Firebase UID as doc key)
   useEffect(() => {
     let unsubscribeUser: (() => void) | undefined;
 
-    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      if (unsubscribeUser) {
-        unsubscribeUser();
-      }
+    const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
+      if (unsubscribeUser) unsubscribeUser();
 
-      if (!user) {
+      if (!firebaseUser) {
         setStats(DEFAULT_STATS);
-        setCourseProgress([]);
-        setPracticeResults([]);
-        setLoadingAnalytics(false);
         return;
       }
 
-      const userRef = doc(db, 'users', user.uid);
-
+      const userRef = doc(db, 'users', firebaseUser.uid);
       unsubscribeUser = onSnapshot(userRef, (userDoc) => {
-        if (!userDoc.exists()) {
-          setStats(DEFAULT_STATS);
-          return;
-        }
-
+        if (!userDoc.exists()) { setStats(DEFAULT_STATS); return; }
         const data = userDoc.data();
-
         setStats({
           averageGrade: Number(data.averageGrade || 0),
           completedQuestions: Number(data.completedQuestions || 0),
@@ -77,17 +80,25 @@ export function AnalysisPage() {
           totalStudyMinutes: Number(data.totalStudyMinutes || 0),
         });
       });
-
-      loadAnalytics(user.uid);
     });
 
     return () => {
-      if (unsubscribeUser) {
-        unsubscribeUser();
-      }
+      if (unsubscribeUser) unsubscribeUser();
       unsubscribeAuth();
     };
   }, []);
+
+  // Analytics data — uses the same userId as PracticePage and CoursesList
+  useEffect(() => {
+    const appUserId = authUser?.userId;
+    if (!appUserId) {
+      setCourseProgress([]);
+      setPracticeResults([]);
+      setLoadingAnalytics(false);
+      return;
+    }
+    loadAnalytics(appUserId);
+  }, [authUser?.userId]);
 
   const loadAnalytics = async (userId: string) => {
     setLoadingAnalytics(true);
@@ -97,7 +108,39 @@ export function AnalysisPage() {
         getDocs(query(collection(db, 'practice_results'), where('userId', '==', userId))),
       ]);
 
-      setCourseProgress(progressSnap.docs.map(d => d.data() as CourseProgressData));
+      const rawProgress = progressSnap.docs.map(d => d.data() as CourseProgressData);
+      console.log('[AnalysisPage] userId:', userId);
+      console.log('[AnalysisPage] rawProgress:', rawProgress.map(p => ({ courseId: p.courseId, correctAnswers: p.correctAnswers, totalAnswers: p.totalAnswers, accuracy: p.accuracy })));
+
+      // Fetch total question count per course from Firestore so that
+      // accuracy = correctAnswers / totalQuestionsInCourse (not just attempted).
+      const courseIds = [...new Set(rawProgress.map(p => p.courseId))];
+      const totalQuestionsMap: Record<string, number> = {};
+      await Promise.all(courseIds.map(async courseId => {
+        const questionDataCourseId = QUESTION_DATA_COURSE_ID[courseId] || courseId;
+        try {
+          const snap = await getDocs(
+            query(collection(db, 'questions'), where('courseId', '==', questionDataCourseId))
+          );
+          const count = snap.size;
+          console.log(`[AnalysisPage] courseId=${courseId} questionDataCourseId=${questionDataCourseId} firestoreCount=${count}`);
+          totalQuestionsMap[courseId] = count > 0 ? count : (FALLBACK_TOTAL_QUESTIONS[courseId] ?? 36);
+        } catch (e) {
+          console.warn(`[AnalysisPage] getDocs failed for ${courseId}:`, e);
+          totalQuestionsMap[courseId] = FALLBACK_TOTAL_QUESTIONS[courseId] ?? 36;
+        }
+      }));
+
+      console.log('[AnalysisPage] totalQuestionsMap:', totalQuestionsMap);
+
+      const correctedProgress = rawProgress.map(p => {
+        const total = totalQuestionsMap[p.courseId] ?? p.totalQuestionsInCourse ?? p.totalAnswers;
+        const accuracy = total > 0 ? Math.round((p.correctAnswers / total) * 100) : 0;
+        console.log(`[AnalysisPage] ${p.courseId}: correctAnswers=${p.correctAnswers} total=${total} accuracy=${accuracy}`);
+        return { ...p, accuracy };
+      });
+
+      setCourseProgress(correctedProgress);
       setPracticeResults(resultsSnap.docs.map(d => d.data() as PracticeResultData));
     } catch (error) {
       console.error('Error loading analytics data:', error);
