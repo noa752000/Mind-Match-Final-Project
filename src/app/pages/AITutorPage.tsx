@@ -202,7 +202,7 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
   };
 
   return (
-    <div className="flex h-screen mr-64 pt-24 bg-gray-50" dir="rtl">
+    <div className="flex h-screen mr-64 pt-32 bg-gray-50" dir="rtl">
       {/* Course list sidebar */}
       <aside className="w-72 bg-white border-l border-gray-200 flex flex-col flex-shrink-0">
         <div className="p-5 border-b border-gray-100">
@@ -402,4 +402,5 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
     </div>
   );
 }
+
 

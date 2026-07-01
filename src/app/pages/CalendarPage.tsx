@@ -12,7 +12,7 @@ export function CalendarPage() {
 
   return (
     <CalendarSyncProvider>
-      <div className="min-h-screen bg-gray-50 pt-24" dir="rtl">
+      <div className="min-h-screen bg-gray-50 pt-32" dir="rtl">
         <div className="flex">
           <div className="flex-1 mr-64 ml-64">
             <CalendarHeader viewType={viewType} onViewChange={setViewType} />
@@ -33,4 +33,5 @@ export function CalendarPage() {
     </CalendarSyncProvider>
   );
 }
+
 

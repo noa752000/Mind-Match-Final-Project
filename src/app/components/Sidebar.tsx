@@ -25,7 +25,7 @@ export function Sidebar({ currentPage = 'dashboard', onNavigate, onLogout, userN
   ];
 
   return (
-    <aside className="fixed right-0 top-24 h-[calc(100vh-6rem)] w-64 bg-white border-l border-gray-200 flex flex-col z-40">
+    <aside className="fixed right-0 top-32 h-[calc(100vh-8rem)] w-64 bg-white border-l border-gray-200 flex flex-col z-40">
       {/* Main Navigation */}
       <nav className="flex-1 p-4 overflow-y-auto">
         <ul className="space-y-2">

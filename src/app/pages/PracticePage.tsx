@@ -366,7 +366,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
         <div className="max-w-[1440px] mx-auto px-16 py-12">
           <Card className="p-8 text-center">
             <BookOpen className="w-16 h-16 mx-auto mb-4 text-teal-500" />
@@ -379,7 +379,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
 
   if (questions.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
@@ -409,7 +409,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
 
   if (!question) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
@@ -440,7 +440,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
   const isCorrect = selectedAnswer === question.correctAnswer;
 
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
+    <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-[1440px] mx-auto px-16 py-12">
@@ -585,3 +585,4 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
     </div>
   );
 }
+
