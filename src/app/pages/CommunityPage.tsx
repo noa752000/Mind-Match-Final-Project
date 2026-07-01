@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../contexts/AuthContext';
@@ -18,14 +18,14 @@ interface UserProfile {
 }
 
 const COURSE_NAMES: Record<string, string> = {
-  'calculus1': 'חדו"א 1',
-  'linear-algebra': 'אלגברה לינארית',
-  'oop': 'תכנות מונחה עצמים',
+  'calculus1': '׳—׳“׳•"׳ 1',
+  'linear-algebra': '׳׳׳’׳‘׳¨׳” ׳׳™׳ ׳׳¨׳™׳×',
+  'oop': '׳×׳›׳ ׳•׳× ׳׳•׳ ׳—׳” ׳¢׳¦׳׳™׳',
   'html': 'HTML',
   'sql': 'SQL',
-  'systems_analysis': 'אפיון ותכן',
-  'cyber_security': 'אבטחת מידע',
-  'mis-economics': 'כלכלת מערכות מידע',
+  'systems_analysis': '׳׳₪׳™׳•׳ ׳•׳×׳›׳',
+  'cyber_security': '׳׳‘׳˜׳—׳× ׳׳™׳“׳¢',
+  'mis-economics': '׳›׳׳›׳׳× ׳׳¢׳¨׳›׳•׳× ׳׳™׳“׳¢',
 };
 
 function getInitials(name: string) {
@@ -69,21 +69,21 @@ function StudentCard({ profile, myCourses, isSelected, onToggleSelect, onSchedul
               <GraduationCap className="w-3.5 h-3.5" />
             </p>
           ) : (
-            <p className="text-sm text-gray-300 mt-0.5 text-right">מוסד לא צוין</p>
+            <p className="text-sm text-gray-300 mt-0.5 text-right">׳׳•׳¡׳“ ׳׳ ׳¦׳•׳™׳</p>
           )}
           <div className="flex items-center gap-3 mt-2 justify-end">
             <span className="text-xs text-gray-500 flex items-center gap-1">
-              {totalCourses} קורסים
+              {totalCourses} ׳§׳•׳¨׳¡׳™׳
               <BookOpen className="w-3.5 h-3.5" />
             </span>
             {shared.length > 0 && (
               <Badge className="bg-teal-100 text-teal-700 text-xs">
-                {shared.length} משותפים
+                {shared.length} ׳׳©׳•׳×׳₪׳™׳
               </Badge>
             )}
           </div>
 
-          {/* Shared courses tags — fixed height area */}
+          {/* Shared courses tags ג€” fixed height area */}
           <div className="flex flex-wrap gap-1 mt-2 justify-end min-h-[24px]">
             {shared.slice(0, 3).map(c => (
               <span key={c} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
@@ -94,7 +94,7 @@ function StudentCard({ profile, myCourses, isSelected, onToggleSelect, onSchedul
         </div>
       </div>
 
-      {/* Actions — always at bottom */}
+      {/* Actions ג€” always at bottom */}
       <div className="flex gap-2 mt-4">
         <Button
           size="sm"
@@ -102,17 +102,17 @@ function StudentCard({ profile, myCourses, isSelected, onToggleSelect, onSchedul
           onClick={onSchedule}
         >
           <Calendar className="w-3.5 h-3.5" />
-          קבע שיעור יחד
+          ׳§׳‘׳¢ ׳©׳™׳¢׳•׳¨ ׳™׳—׳“
         </Button>
         <Button
           size="sm"
           variant="outline"
           className={`text-xs gap-1 flex-shrink-0 ${isSelected ? 'border-teal-500 text-teal-700 bg-teal-50' : 'text-gray-600'}`}
           onClick={onToggleSelect}
-          title="סמן להוספה לשיעור קבוצתי"
+          title="׳¡׳׳ ׳׳”׳•׳¡׳₪׳” ׳׳©׳™׳¢׳•׳¨ ׳§׳‘׳•׳¦׳×׳™"
         >
           <UserCheck className="w-3.5 h-3.5" />
-          {isSelected ? '✓ נוסף לקבוצה' : 'הוסף לקבוצה'}
+          {isSelected ? 'ג“ ׳ ׳•׳¡׳£ ׳׳§׳‘׳•׳¦׳”' : '׳”׳•׳¡׳£ ׳׳§׳‘׳•׳¦׳”'}
         </Button>
       </div>
     </Card>
@@ -170,17 +170,17 @@ export function CommunityPage() {
   const selectedProfiles = users.filter(u => selected.includes(u.userId));
 
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-16" dir="rtl">
+    <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
       <main className="pt-8 px-8 pb-8">
         <div className="max-w-[1440px] mx-auto">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="text-right">
               <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3 justify-end">
-                קהילת הלומדים
+                ׳§׳”׳™׳׳× ׳”׳׳•׳׳“׳™׳
                 <Users className="w-8 h-8 text-teal-600" />
               </h1>
-              <p className="text-gray-600 mt-1">מצאי שותפים ללמידה מקורסים ומוסדות משותפים</p>
+              <p className="text-gray-600 mt-1">׳׳¦׳׳™ ׳©׳•׳×׳₪׳™׳ ׳׳׳׳™׳“׳” ׳׳§׳•׳¨׳¡׳™׳ ׳•׳׳•׳¡׳“׳•׳× ׳׳©׳•׳×׳₪׳™׳</p>
             </div>
 
             {selected.length > 0 && (
@@ -189,7 +189,7 @@ export function CommunityPage() {
                 onClick={() => setShowGroupModal(true)}
               >
                 <Users className="w-4 h-4" />
-                שיעור קבוצתי עם {selected.length} נבחרים
+                ׳©׳™׳¢׳•׳¨ ׳§׳‘׳•׳¦׳×׳™ ׳¢׳ {selected.length} ׳ ׳‘׳—׳¨׳™׳
               </Button>
             )}
           </div>
@@ -201,13 +201,13 @@ export function CommunityPage() {
                 onClick={() => setTab('familiar')}
                 className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${tab === 'familiar' ? 'bg-white text-teal-700 shadow-sm' : 'text-gray-500'}`}
               >
-                מכירים ({familiar.length})
+                ׳׳›׳™׳¨׳™׳ ({familiar.length})
               </button>
               <button
                 onClick={() => setTab('all')}
                 className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${tab === 'all' ? 'bg-white text-teal-700 shadow-sm' : 'text-gray-500'}`}
               >
-                כולם ({users.length})
+                ׳›׳•׳׳ ({users.length})
               </button>
             </div>
 
@@ -216,7 +216,7 @@ export function CommunityPage() {
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="חיפוש לפי שם או מוסד..."
+                placeholder="׳—׳™׳₪׳•׳© ׳׳₪׳™ ׳©׳ ׳׳• ׳׳•׳¡׳“..."
                 dir="rtl"
                 className="w-full px-4 py-2 pr-9 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent"
               />
@@ -237,15 +237,15 @@ export function CommunityPage() {
               <div>
                 <p className="text-gray-500 font-medium">
                   {tab === 'familiar'
-                    ? 'אין עדיין לומדים ממוסדך או עם קורסים משותפים'
-                    : 'אין לומדים אחרים במערכת עדיין'}
+                    ? '׳׳™׳ ׳¢׳“׳™׳™׳ ׳׳•׳׳“׳™׳ ׳׳׳•׳¡׳“׳ ׳׳• ׳¢׳ ׳§׳•׳¨׳¡׳™׳ ׳׳©׳•׳×׳₪׳™׳'
+                    : '׳׳™׳ ׳׳•׳׳“׳™׳ ׳׳—׳¨׳™׳ ׳‘׳׳¢׳¨׳›׳× ׳¢׳“׳™׳™׳'}
                 </p>
                 {tab === 'familiar' && (
-                  <p className="text-gray-400 text-sm mt-1">הוסיפי מוסד לימודים בפרופיל או עברי לטאב "כולם"</p>
+                  <p className="text-gray-400 text-sm mt-1">׳”׳•׳¡׳™׳₪׳™ ׳׳•׳¡׳“ ׳׳™׳׳•׳“׳™׳ ׳‘׳₪׳¨׳•׳₪׳™׳ ׳׳• ׳¢׳‘׳¨׳™ ׳׳˜׳׳‘ "׳›׳•׳׳"</p>
                 )}
               </div>
               {tab === 'familiar' && (
-                <Button variant="outline" onClick={() => setTab('all')}>צפי בכל הלומדים</Button>
+                <Button variant="outline" onClick={() => setTab('all')}>׳¦׳₪׳™ ׳‘׳›׳ ׳”׳׳•׳׳“׳™׳</Button>
               )}
             </div>
           ) : (
@@ -283,3 +283,4 @@ export function CommunityPage() {
     </div>
   );
 }
+

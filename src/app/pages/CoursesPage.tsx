@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { BookOpen, Clock, Users, Star, TrendingUp } from 'lucide-react';
@@ -20,82 +20,82 @@ interface Course {
 const courses: Course[] = [
   {
     id: 'calculus1',
-    title: 'חדו"א 1',
-    category: 'מתמטיקה',
-    level: 'בסיסי',
+    title: '׳—׳“׳•"׳ 1',
+    category: '׳׳×׳׳˜׳™׳§׳”',
+    level: '׳‘׳¡׳™׳¡׳™',
     rating: 4.7,
-    duration: '14 שבועות',
-    description: 'מבוא לחשבון דיפרנציאלי ואינטגרלי - גבולות, נגזרות, אינטגרלים ושימושים',
+    duration: '14 ׳©׳‘׳•׳¢׳•׳×',
+    description: '׳׳‘׳•׳ ׳׳—׳©׳‘׳•׳ ׳“׳™׳₪׳¨׳ ׳¦׳™׳׳׳™ ׳•׳׳™׳ ׳˜׳’׳¨׳׳™ - ׳’׳‘׳•׳׳•׳×, ׳ ׳’׳–׳¨׳•׳×, ׳׳™׳ ׳˜׳’׳¨׳׳™׳ ׳•׳©׳™׳׳•׳©׳™׳',
     color: 'from-blue-500 to-blue-600',
   },
   {
     id: 'linear-algebra',
-    title: 'אלגברה לינארית',
-    category: 'מתמטיקה',
-    level: 'בסיסי',
+    title: '׳׳׳’׳‘׳¨׳” ׳׳™׳ ׳׳¨׳™׳×',
+    category: '׳׳×׳׳˜׳™׳§׳”',
+    level: '׳‘׳¡׳™׳¡׳™',
     rating: 4.5,
-    duration: '14 שבועות',
-    description: 'מרחבים וקטוריים, מטריצות, טרנספורמציות לינאריות וערכים עצמיים',
+    duration: '14 ׳©׳‘׳•׳¢׳•׳×',
+    description: '׳׳¨׳—׳‘׳™׳ ׳•׳§׳˜׳•׳¨׳™׳™׳, ׳׳˜׳¨׳™׳¦׳•׳×, ׳˜׳¨׳ ׳¡׳₪׳•׳¨׳׳¦׳™׳•׳× ׳׳™׳ ׳׳¨׳™׳•׳× ׳•׳¢׳¨׳›׳™׳ ׳¢׳¦׳׳™׳™׳',
     color: 'from-purple-500 to-purple-600',
   },
   {
     id: 'oop',
-    title: 'תכנות מונחה עצמים',
-    category: 'תכנות',
-    level: 'בינוני',
+    title: '׳×׳›׳ ׳•׳× ׳׳•׳ ׳—׳” ׳¢׳¦׳׳™׳',
+    category: '׳×׳›׳ ׳•׳×',
+    level: '׳‘׳™׳ ׳•׳ ׳™',
     rating: 4.8,
-    duration: '12 שבועות',
-    description: 'עקרונות OOP, מחלקות, הורשה, פולימורפיזם ודפוסי עיצוב',
+    duration: '12 ׳©׳‘׳•׳¢׳•׳×',
+    description: '׳¢׳§׳¨׳•׳ ׳•׳× OOP, ׳׳—׳׳§׳•׳×, ׳”׳•׳¨׳©׳”, ׳₪׳•׳׳™׳׳•׳¨׳₪׳™׳–׳ ׳•׳“׳₪׳•׳¡׳™ ׳¢׳™׳¦׳•׳‘',
     color: 'from-green-500 to-green-600',
   },
   {
     id: 'html',
     title: 'HTML',
-    category: 'פיתוח Web',
-    level: 'בסיסי',
+    category: '׳₪׳™׳×׳•׳— Web',
+    level: '׳‘׳¡׳™׳¡׳™',
     rating: 4.6,
-    duration: '6 שבועות',
-    description: 'בניית דפי אינטרנט עם HTML5, סמנטיקה, נגישות ותקני Web',
+    duration: '6 ׳©׳‘׳•׳¢׳•׳×',
+    description: '׳‘׳ ׳™׳™׳× ׳“׳₪׳™ ׳׳™׳ ׳˜׳¨׳ ׳˜ ׳¢׳ HTML5, ׳¡׳׳ ׳˜׳™׳§׳”, ׳ ׳’׳™׳©׳•׳× ׳•׳×׳§׳ ׳™ Web',
     color: 'from-orange-500 to-orange-600',
   },
   {
     id: 'sql',
     title: 'SQL',
-    category: 'מסדי נתונים',
-    level: 'בינוני',
+    category: '׳׳¡׳“׳™ ׳ ׳×׳•׳ ׳™׳',
+    level: '׳‘׳™׳ ׳•׳ ׳™',
     rating: 4.7,
-    duration: '10 שבועות',
-    description: 'שאילתות SQL, עיצוב מסדי נתונים, אופטימיזציה ועבודה עם מסדי נתונים יחסיים',
+    duration: '10 ׳©׳‘׳•׳¢׳•׳×',
+    description: '׳©׳׳™׳׳×׳•׳× SQL, ׳¢׳™׳¦׳•׳‘ ׳׳¡׳“׳™ ׳ ׳×׳•׳ ׳™׳, ׳׳•׳₪׳˜׳™׳׳™׳–׳¦׳™׳” ׳•׳¢׳‘׳•׳“׳” ׳¢׳ ׳׳¡׳“׳™ ׳ ׳×׳•׳ ׳™׳ ׳™׳—׳¡׳™׳™׳',
     color: 'from-pink-500 to-pink-600',
   },
   {
     id: 'systems_analysis',
-    title: 'אפיון ותכן',
-    category: 'הנדסת תוכנה',
-    level: 'מתקדם',
+    title: '׳׳₪׳™׳•׳ ׳•׳×׳›׳',
+    category: '׳”׳ ׳“׳¡׳× ׳×׳•׳›׳ ׳”',
+    level: '׳׳×׳§׳“׳',
     rating: 4.4,
-    duration: '12 שבועות',
-    description: 'ניתוח דרישות, עיצוב מערכות, UML, תהליכי פיתוח ומתודולוגיות',
+    duration: '12 ׳©׳‘׳•׳¢׳•׳×',
+    description: '׳ ׳™׳×׳•׳— ׳“׳¨׳™׳©׳•׳×, ׳¢׳™׳¦׳•׳‘ ׳׳¢׳¨׳›׳•׳×, UML, ׳×׳”׳׳™׳›׳™ ׳₪׳™׳×׳•׳— ׳•׳׳×׳•׳“׳•׳׳•׳’׳™׳•׳×',
     color: 'from-fuchsia-500 to-fuchsia-600',
   },
   {
     id: 'cyber_security',
-    title: 'אבטחת מידע',
-    category: 'אבטחה',
-    level: 'מתקדם',
+    title: '׳׳‘׳˜׳—׳× ׳׳™׳“׳¢',
+    category: '׳׳‘׳˜׳—׳”',
+    level: '׳׳×׳§׳“׳',
     rating: 4.9,
-    duration: '14 שבועות',
-    description: 'הצפנה, אבטחת רשתות, פרוטוקולי אבטחה ושיטות הגנה על מידע ומערכות',
+    duration: '14 ׳©׳‘׳•׳¢׳•׳×',
+    description: '׳”׳¦׳₪׳ ׳”, ׳׳‘׳˜׳—׳× ׳¨׳©׳×׳•׳×, ׳₪׳¨׳•׳˜׳•׳§׳•׳׳™ ׳׳‘׳˜׳—׳” ׳•׳©׳™׳˜׳•׳× ׳”׳’׳ ׳” ׳¢׳ ׳׳™׳“׳¢ ׳•׳׳¢׳¨׳›׳•׳×',
     color: 'from-red-500 to-red-600',
   },
   {
     id: 'mis-economics',
-    title: 'כלכלת מערכות מידע',
-    category: 'ניהול',
-    level: 'מתקדם',
+    title: '׳›׳׳›׳׳× ׳׳¢׳¨׳›׳•׳× ׳׳™׳“׳¢',
+    category: '׳ ׳™׳”׳•׳',
+    level: '׳׳×׳§׳“׳',
     rating: 4.3,
-    duration: '10 שבועות',
-    description: 'ניתוח כלכלי של מערכות מידע, ROI, ניהול פרויקטים וקבלת החלטות',
+    duration: '10 ׳©׳‘׳•׳¢׳•׳×',
+    description: '׳ ׳™׳×׳•׳— ׳›׳׳›׳׳™ ׳©׳ ׳׳¢׳¨׳›׳•׳× ׳׳™׳“׳¢, ROI, ׳ ׳™׳”׳•׳ ׳₪׳¨׳•׳™׳§׳˜׳™׳ ׳•׳§׳‘׳׳× ׳”׳—׳׳˜׳•׳×',
     color: 'from-yellow-500 to-yellow-600',
   },
 ];
@@ -128,16 +128,16 @@ export function CoursesPage({ onCourseSelect }: CoursesPageProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-16" dir="rtl">
+    <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-[1440px] mx-auto px-16 py-12">
           <div className="text-right">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              קטלוג הקורסים
+              ׳§׳˜׳׳•׳’ ׳”׳§׳•׳¨׳¡׳™׳
             </h1>
             <p className="text-xl text-gray-600">
-              גלה את הקורסים המוצעים במערכות מידע
+              ׳’׳׳” ׳׳× ׳”׳§׳•׳¨׳¡׳™׳ ׳”׳׳•׳¦׳¢׳™׳ ׳‘׳׳¢׳¨׳›׳•׳× ׳׳™׳“׳¢
             </p>
           </div>
         </div>
@@ -183,16 +183,16 @@ export function CoursesPage({ onCourseSelect }: CoursesPageProps) {
                   {/* Course Stats */}
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">נושאים</span>
+                      <span className="text-gray-500">׳ ׳•׳©׳׳™׳</span>
                       <div className="flex items-center gap-2 text-gray-600">
-                        <span>4 נושאים עיקריים</span>
+                        <span>4 ׳ ׳•׳©׳׳™׳ ׳¢׳™׳§׳¨׳™׳™׳</span>
                         <BookOpen className="w-4 h-4" />
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">רשומים</span>
+                      <span className="text-gray-500">׳¨׳©׳•׳׳™׳</span>
                       <div className="flex items-center gap-2 text-gray-600">
-                        <span>{(enrolledCounts[course.id] ?? 0).toLocaleString()} סטודנטים</span>
+                        <span>{(enrolledCounts[course.id] ?? 0).toLocaleString()} ׳¡׳˜׳•׳“׳ ׳˜׳™׳</span>
                         <Users className="w-4 h-4" />
                       </div>
                     </div>
@@ -204,7 +204,7 @@ export function CoursesPage({ onCourseSelect }: CoursesPageProps) {
                     onClick={() => onCourseSelect?.(course.id)}
                   >
                     <TrendingUp className="w-4 h-4 ml-2" />
-                    צפה בקורס
+                    ׳¦׳₪׳” ׳‘׳§׳•׳¨׳¡
                   </Button>
                 </div>
               </Card>

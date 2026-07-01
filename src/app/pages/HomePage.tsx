@@ -1,4 +1,4 @@
-import { Hero } from '../components/Hero';
+﻿import { Hero } from '../components/Hero';
 import { AIExplanation } from '../components/AIExplanation';
 import { Features } from '../components/Features';
 import { Testimonials } from '../components/Testimonials';
@@ -17,7 +17,7 @@ export function HomePage({ onNavigate, isGuest, onLoginClick }: HomePageProps) {
   };
 
   return (
-    <div className={`${isGuest ? 'pt-16' : 'mr-64 pt-16'} min-h-screen bg-white`} dir="rtl">
+    <div className={`${isGuest ? 'pt-24' : 'mr-64 pt-24'} min-h-screen bg-white`} dir="rtl">
       {isGuest && (
         <Navigation
           onNavigate={() => {}}

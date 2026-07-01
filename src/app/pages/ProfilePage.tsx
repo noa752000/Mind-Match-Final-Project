@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Save, CheckCircle, Shield } from 'lucide-react';
 import { ProfileHeader } from '../components/ProfileHeader';
 import { PersonalInfo } from '../components/PersonalInfo';
@@ -9,10 +9,10 @@ import { useAuth } from '../contexts/AuthContext';
 import { auth } from '../../firebase';
 import { updateProfile } from 'firebase/auth';
 
-const YEAR_LETTER_TO_NUMBER: Record<string, number> = { 'א': 1, 'ב': 2, 'ג': 3, 'ד': 4 };
+const YEAR_LETTER_TO_NUMBER: Record<string, number> = { '׳': 1, '׳‘': 2, '׳’': 3, '׳“': 4 };
 
 function yearFromAcademicYear(academicYear: string): number | undefined {
-  const letter = academicYear.match(/שנה\s*([אבגד])/)?.[1];
+  const letter = academicYear.match(/׳©׳ ׳”\s*([׳׳‘׳’׳“])/)?.[1];
   return letter ? YEAR_LETTER_TO_NUMBER[letter] : undefined;
 }
 
@@ -69,20 +69,20 @@ export function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-16" dir="rtl">
+    <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
       <main className="pt-8 px-8 pb-8">
         <div className="max-w-[1440px] mx-auto space-y-8">
           {/* Page Title */}
           <div className="flex items-center justify-between">
             <div className="text-right">
-              <h1 className="text-3xl font-bold text-gray-900">הפרופיל שלי</h1>
-              <p className="text-gray-600 mt-1">נהל את המידע האישי והגדרות החשבון שלך</p>
+              <h1 className="text-3xl font-bold text-gray-900">׳”׳₪׳¨׳•׳₪׳™׳ ׳©׳׳™</h1>
+              <p className="text-gray-600 mt-1">׳ ׳”׳ ׳׳× ׳”׳׳™׳“׳¢ ׳”׳׳™׳©׳™ ׳•׳”׳’׳“׳¨׳•׳× ׳”׳—׳©׳‘׳•׳ ׳©׳׳</p>
             </div>
             <div className="flex items-center gap-3">
               {saveStatus === 'saved' && (
                 <span className="flex items-center gap-1.5 text-green-600 text-sm font-medium">
                   <CheckCircle className="w-4 h-4" />
-                  נשמר בהצלחה
+                  ׳ ׳©׳׳¨ ׳‘׳”׳¦׳׳—׳”
                 </span>
               )}
 <Button
@@ -91,7 +91,7 @@ export function ProfilePage() {
                 disabled={saveStatus === 'saving'}
               >
                 <Save className="w-4 h-4" />
-                {saveStatus === 'saving' ? 'שומר...' : 'שמור שינויים'}
+                {saveStatus === 'saving' ? '׳©׳•׳׳¨...' : '׳©׳׳•׳¨ ׳©׳™׳ ׳•׳™׳™׳'}
               </Button>
             </div>
           </div>
@@ -117,11 +117,11 @@ export function ProfilePage() {
           <Card className="p-8 border-gray-100">
             <h4 className="font-semibold text-gray-900 mb-4 text-right flex items-center justify-start gap-2">
               <Shield className="w-5 h-5 text-blue-600" />
-              <span>אבטחה</span>
+              <span>׳׳‘׳˜׳—׳”</span>
             </h4>
             <div className="p-4 bg-gray-50 rounded-xl text-right">
-              <p className="font-medium text-gray-900 mb-2">סיסמה</p>
-              <Button variant="outline" size="sm" onClick={() => setShowPasswordModal(true)}>שנה סיסמה</Button>
+              <p className="font-medium text-gray-900 mb-2">׳¡׳™׳¡׳׳”</p>
+              <Button variant="outline" size="sm" onClick={() => setShowPasswordModal(true)}>׳©׳ ׳” ׳¡׳™׳¡׳׳”</Button>
             </div>
           </Card>
 
@@ -134,3 +134,4 @@ export function ProfilePage() {
     </div>
   );
 }
+
