@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Sparkles, TrendingUp, Users, Eye, EyeOff, UserPlus, LogIn, ArrowRight, CheckCircle2 } from 'lucide-react';
-import logoImage from '../../assets/new.png';
+import logoImage from '../../assets/logo.png';
 
 interface LoginPageProps {
   onLogin: () => Promise<boolean>;
@@ -179,7 +179,7 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
               הרשמה
             </button>
           </div>
-          <img src={logoImage} alt="Mind Match" className="h-16 lg:h-20 w-auto flex-shrink-0" />
+          <img src={logoImage} alt="Mind Match" className="h-12 lg:h-14 w-auto flex-shrink-0" />
         </div>
 
         <div className="text-right mb-7">

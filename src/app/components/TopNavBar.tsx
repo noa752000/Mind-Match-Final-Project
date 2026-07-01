@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Bell } from 'lucide-react';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../../firebase';
-import logoImage from '../../assets/new.png';
+import logoImage from '../../assets/logo.png';
 import { NotificationsPanel } from './NotificationsPanel';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -51,7 +51,7 @@ export function TopNavBar({ onNavigate, userName }: TopNavBarProps) {
       <div className="h-full px-8 flex items-center justify-between">
         {/* לוגו */}
         <button onClick={() => onNavigate('home')} className="flex items-center">
-          <img src={logoImage} alt="MindMatch Logo" className="h-18 w-auto" />
+          <img src={logoImage} alt="MindMatch Logo" className="h-12 w-auto" />
         </button>
 
         {/* משתמש והתראות */}
