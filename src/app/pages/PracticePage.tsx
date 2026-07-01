@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { collection, getDocs, query, where, doc, setDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { calculus1Questions } from '../../dataQ/calculus1_questions.js';
@@ -370,7 +370,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
         <div className="max-w-[1440px] mx-auto px-16 py-12">
           <Card className="p-8 text-center">
             <BookOpen className="w-16 h-16 mx-auto mb-4 text-teal-500" />
-            <h1 className="text-2xl font-bold text-gray-900">׳˜׳•׳¢׳ ׳©׳׳׳•׳×...</h1>
+            <h1 className="text-2xl font-bold text-gray-900">טוען שאלות...</h1>
           </Card>
         </div>
       </div>
@@ -383,8 +383,8 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">׳×׳¨׳’׳•׳</h1>
-              <p className="text-xl text-gray-600">׳§׳•׳¨׳¡: {questionDataCourseId}</p>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">תרגול</h1>
+              <p className="text-xl text-gray-600">קורס: {questionDataCourseId}</p>
             </div>
           </div>
         </div>
@@ -392,14 +392,14 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
         <div className="max-w-[1440px] mx-auto px-16 py-12">
           <Card className="p-8 text-center">
             <XCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
-            <h1 className="text-3xl font-bold mb-4 text-gray-900">׳׳™׳ ׳©׳׳׳•׳× ׳׳§׳•׳¨׳¡ ׳”׳–׳” ׳¢׳“׳™׳™׳</h1>
-            <p className="text-gray-600 mb-6">׳§׳•׳¨׳¡: {questionDataCourseId}</p>
+            <h1 className="text-3xl font-bold mb-4 text-gray-900">אין שאלות לקורס הזה עדיין</h1>
+            <p className="text-gray-600 mb-6">קורס: {questionDataCourseId}</p>
             <Button
               onClick={onBack}
               className="bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
             >
               <ArrowLeft className="w-4 h-4 ml-2" />
-              ׳—׳–׳¨׳” ׳׳§׳•׳¨׳¡׳™׳
+              חזרה לקורסים
             </Button>
           </Card>
         </div>
@@ -413,8 +413,8 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">׳×׳¨׳’׳•׳</h1>
-              <p className="text-xl text-gray-600">׳§׳•׳¨׳¡: {questionDataCourseId}</p>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">תרגול</h1>
+              <p className="text-xl text-gray-600">קורס: {questionDataCourseId}</p>
             </div>
           </div>
         </div>
@@ -422,14 +422,14 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
         <div className="max-w-[1440px] mx-auto px-16 py-12">
           <Card className="p-8 text-center">
             <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
-            <h1 className="text-3xl font-bold mb-4 text-gray-900">׳¡׳™׳™׳׳× ׳׳× ׳”׳×׳¨׳’׳•׳ נ‰</h1>
-            <p className="text-gray-600 mb-6">׳§׳•׳¨׳¡: {questionDataCourseId}</p>
+            <h1 className="text-3xl font-bold mb-4 text-gray-900">סיימת את התרגול 🎉</h1>
+            <p className="text-gray-600 mb-6">קורס: {questionDataCourseId}</p>
             <Button
               onClick={onBack}
               className="bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
             >
               <ArrowLeft className="w-4 h-4 ml-2" />
-              ׳—׳–׳¨׳” ׳׳§׳•׳¨׳¡׳™׳
+              חזרה לקורסים
             </Button>
           </Card>
         </div>
@@ -451,12 +451,12 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
               className="text-teal-600 hover:text-teal-700 hover:bg-teal-50"
             >
               <ArrowLeft className="w-4 h-4 ml-2" />
-              ׳—׳–׳¨׳” ׳׳§׳•׳¨׳¡׳™׳
+              חזרה לקורסים
             </Button>
 
             <div className="text-right">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">׳×׳¨׳’׳•׳</h1>
-              <p className="text-xl text-gray-600">׳§׳•׳¨׳¡: {questionDataCourseId}</p>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">תרגול</h1>
+              <p className="text-xl text-gray-600">קורס: {questionDataCourseId}</p>
             </div>
           </div>
         </div>
@@ -468,15 +468,15 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
           <div className="grid grid-cols-3 gap-8">
             <div className="text-center">
               <div className="text-3xl font-bold mb-1">{currentQuestionIndex + 1}</div>
-              <div className="text-teal-100 text-sm">׳©׳׳׳” ׳ ׳•׳›׳—׳™׳×</div>
+              <div className="text-teal-100 text-sm">שאלה נוכחית</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold mb-1">{questions.length}</div>
-              <div className="text-teal-100 text-sm">׳¡׳”"׳› ׳©׳׳׳•׳×</div>
+              <div className="text-teal-100 text-sm">סה"כ שאלות</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold mb-1">{Math.round(((currentQuestionIndex + 1) / questions.length) * 100)}%</div>
-              <div className="text-teal-100 text-sm">׳”׳×׳§׳“׳׳•׳×</div>
+              <div className="text-teal-100 text-sm">התקדמות</div>
             </div>
           </div>
         </div>
@@ -493,14 +493,14 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
               </div>
               <div className="relative z-10">
                 <Badge className="bg-white/20 text-white border-white/30 mb-3">
-                  ׳©׳׳׳” {currentQuestionIndex + 1}
+                  שאלה {currentQuestionIndex + 1}
                 </Badge>
                 <div className="flex items-center gap-4 text-sm text-white/90 justify-start mb-4">
-                  <div>׳§׳•׳¨׳¡: {questionDataCourseId}</div>
+                  <div>קורס: {questionDataCourseId}</div>
                   {question.subTopic && (
                     <>
                       <div className="w-1 h-1 rounded-full bg-white/50"></div>
-                      <div>׳×׳× ׳ ׳•׳©׳: {question.subTopic}</div>
+                      <div>תת נושא: {question.subTopic}</div>
                     </>
                   )}
                 </div>
@@ -519,7 +519,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
                 <div className="mb-6">
                   <img
                     src={question.imageUrl}
-                    alt="׳©׳׳׳” ׳•׳™׳–׳•׳׳׳™׳×"
+                    alt="שאלה ויזואלית"
                     className="max-w-full mx-auto rounded-xl border"
                   />
                 </div>
@@ -566,7 +566,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
                       <XCircle className="w-5 h-5" />
                     )}
                     <span className="font-medium">
-                      {isCorrect ? '׳×׳©׳•׳‘׳” ׳ ׳›׳•׳ ׳”!' : '׳×׳©׳•׳‘׳” ׳׳ ׳ ׳›׳•׳ ׳”'}
+                      {isCorrect ? 'תשובה נכונה!' : 'תשובה לא נכונה'}
                     </span>
                   </div>
 
@@ -574,7 +574,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
                     onClick={handleNextQuestion}
                     className="w-full bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white group-hover:shadow-lg transition-all"
                   >
-                    ׳׳©׳׳׳” ׳”׳‘׳׳”
+                    לשאלה הבאה
                   </Button>
                 </div>
               )}
@@ -585,4 +585,3 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
     </div>
   );
 }
-

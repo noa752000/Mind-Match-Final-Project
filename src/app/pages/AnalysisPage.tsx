@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { collection, doc, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../../firebase';
@@ -88,7 +88,7 @@ export function AnalysisPage() {
     };
   }, []);
 
-  // Analytics data ג€” uses the same userId as PracticePage and CoursesList
+  // Analytics data — uses the same userId as PracticePage and CoursesList
   useEffect(() => {
     const appUserId = authUser?.userId;
     if (!appUserId) {
@@ -156,30 +156,30 @@ export function AnalysisPage() {
   const quickStats = [
     {
       icon: Award,
-      label: '׳׳׳•׳¦׳¢ ׳›׳׳׳™',
-      value: hasData ? stats.averageGrade : '׳׳™׳ ׳׳¡׳₪׳™׳§ ׳ ׳×׳•׳ ׳™׳',
-      subtext: '׳¦׳™׳•׳ ׳׳׳•׳¦׳¢',
+      label: 'ממוצע כללי',
+      value: hasData ? stats.averageGrade : 'אין מספיק נתונים',
+      subtext: 'ציון ממוצע',
       color: 'from-orange-500 to-red-600',
     },
     {
       icon: Target,
-      label: '׳©׳׳׳•׳× ׳©׳ ׳₪׳×׳¨׳•',
-      value: hasData ? stats.completedQuestions : '׳׳™׳ ׳׳¡׳₪׳™׳§ ׳ ׳×׳•׳ ׳™׳',
-      subtext: '׳¡׳”׳´׳› ׳©׳׳׳•׳×',
+      label: 'שאלות שנפתרו',
+      value: hasData ? stats.completedQuestions : 'אין מספיק נתונים',
+      subtext: 'סה״כ שאלות',
       color: 'from-purple-500 to-indigo-600',
     },
     {
       icon: TrendingUp,
-      label: '׳§׳•׳¨׳¡׳™׳ ׳₪׳¢׳™׳׳™׳',
+      label: 'קורסים פעילים',
       value: stats.activeCourses,
-      subtext: '׳§׳•׳¨׳¡׳™׳ ׳ ׳‘׳—׳¨׳™׳',
+      subtext: 'קורסים נבחרים',
       color: 'from-green-500 to-emerald-600',
     },
     {
       icon: Clock,
-      label: '׳©׳¢׳•׳× ׳׳׳™׳“׳”',
-      value: hasData ? stats.studyHours : '׳׳™׳ ׳׳¡׳₪׳™׳§ ׳ ׳×׳•׳ ׳™׳',
-      subtext: '׳©׳¢׳•׳× ׳׳¦׳˜׳‘׳¨׳•׳×',
+      label: 'שעות למידה',
+      value: hasData ? stats.studyHours : 'אין מספיק נתונים',
+      subtext: 'שעות מצטברות',
       color: 'from-blue-500 to-cyan-600',
     },
   ];
@@ -190,10 +190,10 @@ export function AnalysisPage() {
         <div className="max-w-[1176px] mx-auto space-y-8">
           <div className="text-right">
             <h1 className="text-3xl font-bold text-gray-900">
-              ׳ ׳™׳×׳•׳— ׳•׳×׳•׳‘׳ ׳•׳×
+              ניתוח ותובנות
             </h1>
             <p className="text-gray-600 mt-1">
-              ׳׳¢׳§׳‘ ׳׳—׳¨ ׳”׳‘׳™׳¦׳•׳¢׳™׳, ׳”׳”׳×׳§׳“׳׳•׳× ׳•׳”׳׳׳¦׳•׳× AI ׳׳•׳×׳׳׳•׳× ׳׳™׳©׳™׳×
+              מעקב אחר הביצועים, ההתקדמות והמלצות AI מותאמות אישית
             </p>
           </div>
 
@@ -265,5 +265,3 @@ export function AnalysisPage() {
     </div>
   );
 }
-
-

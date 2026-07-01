@@ -1,4 +1,4 @@
-﻿import { ProgressOverview } from '../components/ProgressOverview';
+import { ProgressOverview } from '../components/ProgressOverview';
 import { CoursesList } from '../components/CoursesList';
 import { AIRecommendations } from '../components/AIRecommendations';
 
@@ -14,7 +14,7 @@ export function DashboardPage({ onOpenPractice, onNavigateToCourses }: Dashboard
         <div className="max-w-[1176px] mx-auto">
           {/* Page Header */}
           <div className="text-right mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">׳”׳§׳•׳¨׳¡׳™׳ ׳©׳׳™</h1>
+            <h1 className="text-3xl font-bold text-gray-900">הקורסים שלי</h1>
           </div>
 
           <ProgressOverview />
@@ -28,4 +28,3 @@ export function DashboardPage({ onOpenPractice, onNavigateToCourses }: Dashboard
     </div>
   );
 }
-

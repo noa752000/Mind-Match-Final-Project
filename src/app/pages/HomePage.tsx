@@ -1,4 +1,4 @@
-﻿import { Hero } from '../components/Hero';
+import { Hero } from '../components/Hero';
 import { AIExplanation } from '../components/AIExplanation';
 import { Features } from '../components/Features';
 import { Testimonials } from '../components/Testimonials';
@@ -35,4 +35,3 @@ export function HomePage({ onNavigate, isGuest, onLoginClick }: HomePageProps) {
     </div>
   );
 }
-

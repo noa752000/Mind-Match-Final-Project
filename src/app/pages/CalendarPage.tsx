@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { CalendarHeader, CalendarViewType } from '../components/CalendarHeader';
 import { WeeklyCalendar } from '../components/WeeklyCalendar';
 import { DailyCalendar } from '../components/DailyCalendar';
@@ -33,5 +33,3 @@ export function CalendarPage() {
     </CalendarSyncProvider>
   );
 }
-
-
