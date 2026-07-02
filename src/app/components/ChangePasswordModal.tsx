@@ -58,14 +58,14 @@ export function ChangePasswordModal({ onClose }: ChangePasswordModalProps) {
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-l from-gray-700 to-gray-900 px-6 py-5 text-white">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between" dir="rtl">
+            <div className="flex items-center gap-2">
+              <Lock className="w-5 h-5" />
+              <h2 className="text-lg font-bold">שינוי סיסמה</h2>
+            </div>
             <button onClick={onClose} className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
               <X className="w-5 h-5" />
             </button>
-            <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold">שינוי סיסמה</h2>
-              <Lock className="w-5 h-5" />
-            </div>
           </div>
         </div>
 
