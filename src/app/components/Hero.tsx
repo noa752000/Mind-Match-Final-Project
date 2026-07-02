@@ -62,7 +62,11 @@ export function Hero({ onRegisterClick, onNavigate, isGuest, onLoginClick }: Her
               <Button
                 size="lg"
                 className="text-lg px-8 bg-teal-600 hover:bg-teal-700"
-                onClick={() => (isGuest ? onLoginClick?.() : onNavigate?.('dashboard'))}
+                onClick={() => {
+                  if (isGuest) { onLoginClick?.(); return; }
+                  const hasEnrolled = user?.selectedCourses && user.selectedCourses.length > 0;
+                  onNavigate?.(hasEnrolled ? 'dashboard' : 'courses');
+                }}
               >
                 התחל ללמוד עכשיו
                 <ArrowLeft className="w-5 h-5 mr-2" />
