@@ -424,12 +424,12 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
               ))}
 
               {/* מבחנים לדוגמה */}
-              <Card className="p-8 hover:shadow-lg transition-shadow col-span-2">
+              <Card className="p-5 hover:shadow-lg transition-shadow col-span-2">
                 <div className="text-right">
-                  <div className="flex items-center justify-start gap-4 mb-4">
-                    <h3 className="text-2xl font-bold text-gray-900">מבחנים לדוגמה</h3>
-                    <div className="w-16 h-16 rounded-xl bg-red-100 flex items-center justify-center">
-                      <Award className="w-8 h-8 text-red-600" />
+                  <div className="flex items-center justify-start gap-3 mb-3">
+                    <h3 className="text-lg font-bold text-gray-900">מבחנים לדוגמה</h3>
+                    <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
+                      <Award className="w-5 h-5 text-red-600" />
                     </div>
                   </div>
                   {(() => {
