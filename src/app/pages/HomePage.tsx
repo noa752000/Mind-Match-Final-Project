@@ -17,7 +17,7 @@ export function HomePage({ onNavigate, isGuest, onLoginClick }: HomePageProps) {
   };
 
   return (
-    <div className={`${isGuest ? 'pt-20' : 'mr-64 pt-20'} min-h-screen bg-slate-100`} dir="rtl">
+    <div className={`${isGuest ? 'pt-20' : 'mr-64 pt-20'} min-h-screen bg-transparent`} dir="rtl">
       {isGuest && (
         <Navigation
           onNavigate={() => {}}

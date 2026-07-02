@@ -200,7 +200,7 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
   };
 
   return (
-    <div className="fixed inset-0 top-20 mr-64 flex flex-col bg-slate-100" dir="rtl">
+    <div className="fixed inset-0 top-20 mr-64 flex flex-col bg-transparent" dir="rtl">
       {!activeCourseId ? (
         /* ── Course selection screen ── */
         <div className="flex-1 flex flex-col items-center justify-center px-8 py-4 gap-5 overflow-hidden relative"
