@@ -502,16 +502,6 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
           {backLabel}
         </button>
         <div className="flex items-center gap-3">
-          {currentQuestionIndex > 0 && (
-            <button
-              onClick={handlePreviousQuestion}
-              className="flex items-center gap-1 text-xs text-white/70 hover:text-white font-medium transition-colors"
-            >
-              שאלה קודמת
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          )}
-          {currentQuestionIndex > 0 && <div className="w-px h-3 bg-white/25" />}
           <span className="text-sm font-semibold text-white/80">{currentQuestionIndex + 1} / {questions.length}</span>
           <div className="w-28 h-1.5 bg-white/20 rounded-full overflow-hidden">
             <div
@@ -616,29 +606,37 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
                   })}
                 </div>
 
-                {/* מצב צפייה בשאלה שכבר נענתה */}
-                {showFeedback && answerHistory[currentQuestionIndex] && (
-                  <div className="mt-2 flex items-center justify-center gap-1.5 text-xs text-gray-400">
-                    <span>צפייה בשאלה שכבר נענתה</span>
-                    <span>·</span>
-                    <span className="font-medium text-teal-600">{question.correctAnswer === answerHistory[currentQuestionIndex] ? 'ענית נכון' : `התשובה הנכונה: ${question.correctAnswer}`}</span>
-                  </div>
-                )}
+                {/* אזור ניווט תחתון */}
+                {(currentQuestionIndex > 0 || showFeedback) && (
+                  <div className="mt-3 pt-3 border-t border-gray-100">
 
-                {/* פידבק + כפתור הבא */}
-                {showFeedback && (
-                  <div className="mt-2 flex items-center gap-2 pt-3 border-t border-gray-100">
-                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold flex-shrink-0 ${isCorrect ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
-                      {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
-                      {isCorrect ? 'נכון!' : 'שגוי'}
-                    </div>
-                    <button
-                      onClick={handleNextQuestion}
-                      className="flex-1 h-9 bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm shadow-teal-200"
-                    >
-                      {currentQuestionIndex < questions.length - 1 ? 'לשאלה הבאה' : 'סיום תרגול'}
-                      <ArrowLeft className="w-4 h-4" />
-                    </button>
+                    {/* שורת פידבק + הבא (אחרי מענה) */}
+                    {showFeedback && (
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold flex-shrink-0 ${isCorrect ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                          {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
+                          {isCorrect ? 'נכון!' : 'שגוי'}
+                        </div>
+                        <button
+                          onClick={handleNextQuestion}
+                          className="flex-1 h-9 bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+                        >
+                          {currentQuestionIndex < questions.length - 1 ? 'לשאלה הבאה' : 'סיום תרגול'}
+                          <ArrowLeft className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+
+                    {/* כפתור חזרה לשאלה קודמת */}
+                    {currentQuestionIndex > 0 && (
+                      <button
+                        onClick={handlePreviousQuestion}
+                        className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-gray-200 text-gray-500 hover:text-teal-600 hover:border-teal-300 hover:bg-teal-50/50 transition-all text-sm font-medium"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                        צפה בתשובה של שאלה קודמת
+                      </button>
+                    )}
                   </div>
                 )}
 
