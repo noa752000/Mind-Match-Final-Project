@@ -21,8 +21,9 @@ export function TopNavBar({ onNavigate, userName }: TopNavBarProps) {
 
   useEffect(() => {
     if (user?.userId) {
-      const key = `notifications_read_${user.userId}`;
-      setHasUnread(localStorage.getItem(key) !== 'true');
+      const key = `notifications_read_date_${user.userId}`;
+      const today = new Date().toDateString();
+      setHasUnread(localStorage.getItem(key) !== today);
     }
   }, [user?.userId]);
 
@@ -42,7 +43,8 @@ export function TopNavBar({ onNavigate, userName }: TopNavBarProps) {
     setOpen(next);
     if (next && user?.userId) {
       setHasUnread(false);
-      localStorage.setItem(`notifications_read_${user.userId}`, 'true');
+      const today = new Date().toDateString();
+      localStorage.setItem(`notifications_read_date_${user.userId}`, today);
     }
   };
 
