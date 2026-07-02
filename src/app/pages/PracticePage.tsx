@@ -406,7 +406,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
+      <div className="min-h-screen bg-slate-100 mr-64 pt-20" dir="rtl">
         <div className="max-w-[1440px] mx-auto px-16 py-12">
           <Card className="p-8 text-center">
             <BookOpen className="w-16 h-16 mx-auto mb-4 text-teal-500" />
@@ -419,7 +419,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   if (questions.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
+      <div className="min-h-screen bg-slate-100 mr-64 pt-20" dir="rtl">
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
@@ -450,7 +450,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
   if (showSummary) {
     const hebrewName = coursesData[courseId]?.title ?? displayedCourseName;
     return (
-      <div className="fixed inset-0 top-20 mr-64 bg-gray-50 flex flex-col" dir="rtl">
+      <div className="fixed inset-0 top-20 mr-64 bg-slate-100 flex flex-col" dir="rtl">
         {/* Compact top bar */}
         <div className="flex items-center gap-3 px-8 py-3 bg-white border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-l from-teal-500 to-cyan-500 text-white">
