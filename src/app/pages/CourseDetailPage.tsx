@@ -432,6 +432,17 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
                       <Award className="w-8 h-8 text-red-600" />
                     </div>
                   </div>
+                  {courseId === 'html' && (
+                    <a
+                      href="/example-tests/html5_exam1.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 border border-red-200 rounded-xl text-red-700 text-sm font-medium transition-colors"
+                    >
+                      <Award className="w-4 h-4" />
+                      מבחן לדוגמה — HTML5
+                    </a>
+                  )}
                 </div>
               </Card>
             </div>
