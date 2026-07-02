@@ -1,30 +1,35 @@
+import React from 'react';
 import { BookOpen, MessageSquare, Users, Calendar } from 'lucide-react';
 import { Card } from './ui/card';
 
-const features = [
+const features: { icon: React.ElementType; title: string; description: string; color: string; shadow: string }[] = [
   {
     icon: BookOpen,
     title: 'למידה מותאמת אישית',
     description: 'תוכן שמתאים עצמו לסגנון הלמידה, הקצב והרמה שלך. כל סטודנט מקבל חוויה ייחודית.',
-    color: 'from-teal-500 to-teal-600',
+    color: 'from-emerald-400 to-teal-600',
+    shadow: 'shadow-emerald-200',
   },
   {
     icon: MessageSquare,
     title: 'מורה AI אישי',
     description: 'מורה וירטואלי זמין 24/7 לענות על שאלות, להסביר מושגים ולספק הדרכה אישית.',
-    color: 'from-cyan-500 to-cyan-600',
+    color: 'from-blue-400 to-indigo-600',
+    shadow: 'shadow-blue-200',
   },
   {
     icon: Users,
     title: 'קבוצות לימוד חכמות',
     description: 'המערכת מחברת אותך עם סטודנטים בעלי רמה דומה ליצירת קבוצות לימוד אפקטיביות.',
-    color: 'from-violet-500 to-violet-600',
+    color: 'from-fuchsia-400 to-purple-600',
+    shadow: 'shadow-fuchsia-200',
   },
   {
     icon: Calendar,
     title: 'תזמון חכם',
     description: 'מערכת תזמון שלומדת את הזמנים הטובים ביותר עבורך וממליצה על לוח לימודים אופטימלי.',
-    color: 'from-purple-500 to-purple-600',
+    color: 'from-orange-400 to-rose-500',
+    shadow: 'shadow-orange-200',
   },
 ];
 
@@ -47,7 +52,7 @@ export function Features() {
             return (
               <div key={index} className="col-span-12 md:col-span-6 lg:col-span-3">
                 <Card className="p-8 h-full hover:shadow-xl transition-all duration-300 border-gray-100 group">
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform`}>
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform shadow-lg ${feature.shadow}`}>
                     {Icon && <Icon className="w-8 h-8 text-white" />}
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">
