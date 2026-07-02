@@ -443,85 +443,89 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
   const progressPct = Math.round(((currentQuestionIndex + 1) / questions.length) * 100);
 
   return (
-    <div className="h-[calc(100vh-5rem)] bg-gray-50 mr-64 pt-20 flex flex-col" dir="rtl">
+    <div className="h-[calc(100vh-5rem)] bg-gray-100 mr-64 pt-20 flex flex-col" dir="rtl">
 
-      {/* שורת מידע קומפקטית */}
-      <div className="bg-white border-b border-gray-200 px-8 py-2 flex items-center justify-between flex-shrink-0">
+      {/* שורת מידע עליונה */}
+      <div className="bg-white border-b border-gray-200 px-6 py-2 flex items-center justify-between flex-shrink-0">
         <Button onClick={onBack} variant="ghost" size="sm" className="text-teal-600 hover:text-teal-700 hover:bg-teal-50">
           <ArrowLeft className="w-4 h-4 ml-1" />
           {backLabel}
         </Button>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500">{questionDataCourseId}</span>
-          <span className="text-sm font-medium text-gray-700">שאלה {currentQuestionIndex + 1} / {questions.length}</span>
+          <span className="text-sm text-gray-500 font-medium">{questionDataCourseId}</span>
           <div className="flex items-center gap-2">
-            <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-full bg-teal-500 rounded-full transition-all" style={{ width: `${progressPct}%` }} />
+            <span className="text-sm text-gray-600">שאלה {currentQuestionIndex + 1}/{questions.length}</span>
+            <div className="w-28 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-full bg-teal-500 rounded-full transition-all duration-300" style={{ width: `${progressPct}%` }} />
             </div>
-            <span className="text-sm font-bold text-teal-600">{progressPct}%</span>
+            <span className="text-sm font-bold text-teal-600 w-8">{progressPct}%</span>
           </div>
         </div>
       </div>
 
-      {/* תוכן השאלה - ממלא את שארית הגובה */}
-      <div className="flex-1 overflow-y-auto px-8 py-4">
-        <div className="max-w-3xl mx-auto">
-          <Card className="shadow-md border-gray-200">
-            <div className="p-6">
-              {/* מטא שאלה */}
-              <div className="flex items-center gap-2 mb-4 justify-end flex-wrap">
-                <Badge className="bg-teal-100 text-teal-700 border-teal-200">שאלה {currentQuestionIndex + 1}</Badge>
-                {question.subTopic && <span className="text-xs text-gray-400">{question.subTopic}</span>}
+      {/* תוכן - שתי עמודות שממלאות את הגובה */}
+      <div className="flex-1 flex gap-0 overflow-hidden p-6">
+
+        {/* עמודה שמאל - השאלה */}
+        <div className="flex-1 flex flex-col justify-center pl-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Badge className="bg-teal-100 text-teal-700 border-teal-200 text-sm px-3 py-1">
+              שאלה {currentQuestionIndex + 1}
+            </Badge>
+            {question.subTopic && (
+              <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{question.subTopic}</span>
+            )}
+          </div>
+
+          <h2 className="text-2xl font-bold text-gray-900 leading-relaxed text-right whitespace-pre-line mb-6">
+            <span dangerouslySetInnerHTML={{ __html: question.question }} />
+          </h2>
+
+          {question.imageUrl && (
+            <img src={question.imageUrl} alt="שאלה ויזואלית" className="max-h-52 rounded-2xl border object-contain self-end" />
+          )}
+        </div>
+
+        {/* קו מפריד */}
+        <div className="w-px bg-gray-200 mx-2 flex-shrink-0" />
+
+        {/* עמודה ימין - התשובות */}
+        <div className="flex-1 flex flex-col justify-center pr-6">
+          <p className="text-sm text-gray-500 text-right mb-3">בחר תשובה:</p>
+
+          <div className="space-y-3">
+            {question.options.map((option) => {
+              const isSelected = selectedAnswer === option;
+              const isRightAnswer = question.correctAnswer === option;
+              let cls = 'w-full text-right border-2 rounded-2xl px-5 py-4 transition-all duration-150 font-medium text-base';
+              if (showFeedback) {
+                if (isRightAnswer) cls += ' bg-green-50 border-green-400 text-green-800 shadow-sm';
+                else if (isSelected) cls += ' bg-red-50 border-red-400 text-red-800';
+                else cls += ' bg-white border-gray-100 text-gray-400';
+              } else {
+                cls += isSelected
+                  ? ' bg-teal-50 border-teal-500 text-teal-900 shadow-md'
+                  : ' bg-white border-gray-200 hover:border-teal-400 hover:bg-teal-50 hover:shadow-sm text-gray-800 cursor-pointer';
+              }
+              return (
+                <button key={option} onClick={() => handleAnswerClick(option)} disabled={showFeedback} className={cls}>
+                  <span dangerouslySetInnerHTML={{ __html: option }} />
+                </button>
+              );
+            })}
+          </div>
+
+          {showFeedback && (
+            <div className="mt-4 flex items-center gap-3">
+              <Button onClick={handleNextQuestion} className="flex-1 h-11 bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white text-base font-semibold rounded-xl">
+                לשאלה הבאה ←
+              </Button>
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold ${isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
+                {isCorrect ? 'נכון!' : 'לא נכון'}
               </div>
-
-              {/* טקסט השאלה */}
-              <h2 className="text-xl font-semibold text-gray-900 leading-7 text-right mb-4 whitespace-pre-line">
-                <span dangerouslySetInnerHTML={{ __html: question.question }} />
-              </h2>
-
-              {question.imageUrl && (
-                <div className="mb-4">
-                  <img src={question.imageUrl} alt="שאלה ויזואלית" className="max-h-48 mx-auto rounded-xl border object-contain" />
-                </div>
-              )}
-
-              {/* תשובות */}
-              <div className="space-y-2 mb-4">
-                {question.options.map((option) => {
-                  const isSelected = selectedAnswer === option;
-                  const isRightAnswer = question.correctAnswer === option;
-                  let cls = 'w-full text-right border rounded-xl px-4 py-3 transition text-sm';
-                  if (showFeedback) {
-                    if (isRightAnswer) cls += ' bg-green-100 border-green-500 text-green-800';
-                    else if (isSelected) cls += ' bg-red-100 border-red-500 text-red-800';
-                    else cls += ' bg-white border-gray-200 text-gray-500';
-                  } else {
-                    cls += isSelected
-                      ? ' bg-teal-50 border-teal-500 text-teal-900'
-                      : ' bg-white border-gray-200 hover:border-teal-400 hover:bg-teal-50 text-gray-900';
-                  }
-                  return (
-                    <button key={option} onClick={() => handleAnswerClick(option)} disabled={showFeedback} className={cls}>
-                      <span dangerouslySetInnerHTML={{ __html: option }} />
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* פידבק + כפתור הבא */}
-              {showFeedback && (
-                <div className="flex items-center gap-3 justify-between">
-                  <Button onClick={handleNextQuestion} className="bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white">
-                    לשאלה הבאה
-                  </Button>
-                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                    {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
-                    <span className="font-medium text-sm">{isCorrect ? 'תשובה נכונה!' : 'תשובה לא נכונה'}</span>
-                  </div>
-                </div>
-              )}
             </div>
-          </Card>
+          )}
         </div>
       </div>
     </div>
