@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { coursesData } from './data/coursesData';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Sidebar } from './components/Sidebar';
 import { TopNavBar } from './components/TopNavBar';
@@ -25,6 +26,7 @@ function AppContent() {
   const [selectedCourseId, setSelectedCourseId] = useState<string>('');
   const [tutorCourseId, setTutorCourseId] = useState<string>('');
   const [practiceCourseId, setPracticeCourseId] = useState<string>('');
+  const [practiceSource, setPracticeSource] = useState<'dashboard' | 'course-detail' | 'courses'>('courses');
   const [guestMode, setGuestMode] = useState(false);
 
   const handleCourseSelect = (courseId: string) => {
@@ -34,6 +36,11 @@ function AppContent() {
 
   const handleOpenPractice = (courseId: string) => {
     setPracticeCourseId(courseId);
+    setPracticeSource(
+      currentPage === 'dashboard' ? 'dashboard' :
+      currentPage === 'course-detail' ? 'course-detail' :
+      'courses'
+    );
     setCurrentPage('practice');
   };
 
@@ -135,7 +142,16 @@ function AppContent() {
       {currentPage === 'practice' && (
         <PracticePage
           courseId={practiceCourseId}
-          onBack={() => setCurrentPage('courses')}
+          onBack={() => {
+            if (practiceSource === 'dashboard') setCurrentPage('dashboard');
+            else if (practiceSource === 'course-detail') setCurrentPage('course-detail');
+            else setCurrentPage('courses');
+          }}
+          backLabel={
+            practiceSource === 'dashboard' ? 'חזרה לקורסים שלי' :
+            practiceSource === 'course-detail' ? `חזרה ל${coursesData[practiceCourseId]?.title ?? 'הקורס'}` :
+            'חזרה לקורסים'
+          }
         />
       )}
     </div>

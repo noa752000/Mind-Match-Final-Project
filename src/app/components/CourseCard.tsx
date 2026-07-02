@@ -74,7 +74,7 @@ export function CourseCard({
         className="w-full bg-teal-600 hover:bg-teal-700 mt-auto"
         onClick={onContinue}
       >
-        המשך לימוד
+        {progress > 0 ? 'המשך תרגול' : 'התחל תרגול'}
       </Button>
     </Card>
   );

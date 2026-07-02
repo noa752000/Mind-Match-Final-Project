@@ -272,7 +272,7 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
   const qTypes = questionTypeDescriptions[courseId] || defaultQuestionTypes;
 
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
+    <div className="min-h-screen bg-gray-50 mr-64 pt-28" dir="rtl">
       {/* Header */}
       <div className="bg-blue-50 border-b border-blue-200">
         <div className="max-w-[1440px] mx-auto px-16 py-8">
@@ -292,19 +292,36 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
               </div>
               <h1 className="text-4xl font-bold text-gray-900">{course.title}</h1>
             </div>
-            <button
-              onClick={handleToggleCourse}
-              disabled={toggling}
-              className={isInMyCourses
-                ? 'flex items-center gap-2 h-14 px-8 text-base font-semibold bg-green-100 text-green-700 hover:bg-red-50 hover:text-red-600 border-2 border-green-300 hover:border-red-300 transition-all rounded-xl disabled:opacity-50'
-                : 'flex items-center gap-3 h-14 px-10 text-xl font-bold bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-xl shadow-xl shadow-teal-300/50 hover:shadow-teal-400/60 transition-all hover:scale-105 ring-4 ring-teal-300/40 disabled:opacity-50'
-              }
-            >
-              {isInMyCourses
-                ? <><CheckCircle className="w-5 h-5" />בקורסים שלי</>
-                : <><Plus className="w-7 h-7" />הוסף לקורסים שלי</>
-              }
-            </button>
+            <div className="flex items-center gap-3">
+              {onOpenPractice && (
+                <button
+                  onClick={() => isInMyCourses && onOpenPractice(courseId)}
+                  disabled={!isInMyCourses}
+                  title={!isInMyCourses ? 'הוסף את הקורס לקורסים שלי כדי להתחיל תרגול' : undefined}
+                  className={`flex items-center gap-2 h-12 px-6 text-base font-semibold rounded-xl transition-all ${
+                    isInMyCourses
+                      ? 'text-teal-700 bg-white border-2 border-teal-300 hover:bg-teal-50 cursor-pointer'
+                      : 'text-gray-400 bg-gray-100 border-2 border-gray-200 cursor-not-allowed'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  התחל תרגול
+                </button>
+              )}
+              <button
+                onClick={handleToggleCourse}
+                disabled={toggling}
+                className={isInMyCourses
+                  ? 'flex items-center gap-2 h-12 px-6 text-base font-semibold bg-green-100 text-green-700 hover:bg-red-50 hover:text-red-600 border-2 border-green-300 hover:border-red-300 transition-all rounded-xl disabled:opacity-50'
+                  : 'flex items-center gap-2 h-12 px-6 text-base font-bold bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-xl shadow-lg transition-all hover:scale-105 disabled:opacity-50'
+                }
+              >
+                {isInMyCourses
+                  ? <><CheckCircle className="w-5 h-5" />בקורסים שלי</>
+                  : <><Plus className="w-5 h-5" />הוסף לקורסים שלי</>
+                }
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -312,6 +329,7 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
       {/* Content */}
       <div className="max-w-[1440px] mx-auto px-16 py-12">
         <div className="space-y-8">
+
           {/* הסבר כללי על הקורס */}
           <Card className="p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 text-right">

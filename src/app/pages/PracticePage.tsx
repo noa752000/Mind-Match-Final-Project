@@ -12,13 +12,15 @@ import { economicsQuestions } from '../../dataQ/economics_questions.js';
 import { Card } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { BookOpen, CheckCircle, XCircle, ArrowLeft } from 'lucide-react';
+import { BookOpen, CheckCircle, XCircle, ArrowLeft, Sparkles, ChevronRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { courseName } from '../lib/analyticsTypes';
+import { coursesData } from '../data/coursesData';
 
 interface PracticePageProps {
   courseId: string;
   onBack: () => void;
+  backLabel?: string;
 }
 
 // Maps course catalog IDs (used in CoursesPage / selectedCourses) to the
@@ -43,7 +45,7 @@ interface Question {
   imageUrl?: string;
 }
 
-export function PracticePage({ courseId, onBack }: PracticePageProps) {
+export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: PracticePageProps) {
   const { user } = useAuth();
   const appUserId = user?.userId || "user_1";
   // The courseId value as stored on the question documents themselves
@@ -58,6 +60,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
   const [sessionStartTime] = useState(Date.now());
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [answers, setAnswers] = useState<{ questionId: string; isCorrect: boolean; timeSpent: number }[]>([]);
+  const [answerHistory, setAnswerHistory] = useState<(string | null)[]>([]);
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -170,10 +173,26 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
 
   const question = questions[currentQuestionIndex];
 
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex === 0) return;
+    const prevIdx = currentQuestionIndex - 1;
+    const prevAnswer = answerHistory[prevIdx] ?? null;
+    setCurrentQuestionIndex(prevIdx);
+    setSelectedAnswer(prevAnswer);
+    setShowFeedback(prevAnswer !== null);
+  };
+
   const handleAnswerClick = async (option: string) => {
     if (showFeedback) return;
     setSelectedAnswer(option);
     setShowFeedback(true);
+
+    // שמירת התשובה בהיסטוריה
+    setAnswerHistory(prev => {
+      const updated = [...prev];
+      updated[currentQuestionIndex] = option;
+      return updated;
+    });
 
     const isCorrect = option === question.correctAnswer;
     const timeSpent = Date.now() - sessionStartTime; // This is approximate, could be improved with per-question timing
@@ -363,11 +382,13 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
   };
 
   const handleNextQuestion = async () => {
-    setSelectedAnswer(null);
-    setShowFeedback(false);
+    const nextIdx = currentQuestionIndex + 1;
 
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
+    if (nextIdx < questions.length) {
+      const nextAnswer = answerHistory[nextIdx] ?? null;
+      setCurrentQuestionIndex(nextIdx);
+      setSelectedAnswer(nextAnswer);
+      setShowFeedback(nextAnswer !== null);
       return;
     }
 
@@ -385,7 +406,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-28" dir="rtl">
         <div className="max-w-[1440px] mx-auto px-16 py-12">
           <Card className="p-8 text-center">
             <BookOpen className="w-16 h-16 mx-auto mb-4 text-teal-500" />
@@ -398,7 +419,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
 
   if (questions.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-28" dir="rtl">
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
@@ -418,7 +439,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
               className="bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
             >
               <ArrowLeft className="w-4 h-4 ml-2" />
-              חזרה לקורסים
+              {backLabel}
             </Button>
           </Card>
         </div>
@@ -428,7 +449,16 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
 
   if (showSummary) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-28" dir="rtl">
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-[1440px] mx-auto px-16 py-12">
+            <div className="text-right">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">תרגול</h1>
+              <p className="text-xl text-gray-600">קורס: {questionDataCourseId}</p>
+            </div>
+          </div>
+        </div>
+
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
           <Card className="relative overflow-hidden p-8 sm:p-10 lg:p-14 shadow-2xl border-gray-200 rounded-[32px]">
             <div className="mb-10 flex flex-col items-center text-center">
@@ -485,148 +515,191 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
   }
 
   const isCorrect = selectedAnswer === question.correctAnswer;
+  const progressPct = Math.round(((currentQuestionIndex + 1) / questions.length) * 100);
+  const letters = ['א', 'ב', 'ג', 'ד'];
+  const hebrewCourseName = coursesData[courseId]?.title ?? questionDataCourseId;
 
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-16 py-12">
-          <div className="flex justify-between items-center">
-            <Button
-              onClick={onBack}
-              variant="ghost"
-              className="text-teal-600 hover:text-teal-700 hover:bg-teal-50"
-            >
-              <ArrowLeft className="w-4 h-4 ml-2" />
-              חזרה לקורסים
-            </Button>
+    <div
+      className="fixed inset-0 top-28 mr-64 flex flex-col overflow-hidden"
+      dir="rtl"
+      style={{ background: 'linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #0891b2 100%)' }}
+    >
 
-            <div className="text-right">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">תרגול</h1>
-              <p className="text-xl text-gray-600">קורס: {questionDataCourseId}</p>
-            </div>
+      {/* עיגולים דקורטיביים */}
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full z-0 pointer-events-none" />
+      <div className="absolute bottom-0 -left-20 w-80 h-80 bg-cyan-300/10 rounded-full z-0 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/3 w-56 h-56 bg-teal-300/10 rounded-full blur-2xl z-0 pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-white/5 rounded-full blur-3xl z-0 pointer-events-none" />
+      <div className="absolute top-10 left-1/2 w-32 h-32 bg-cyan-200/10 rounded-full blur-xl z-0 pointer-events-none" />
+
+      {/* גריד נקודות */}
+      <div
+        className="absolute top-4 right-4 w-44 h-36 z-0 opacity-25 pointer-events-none"
+        style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1.5px)', backgroundSize: '14px 14px' }}
+      />
+      <div
+        className="absolute bottom-4 left-4 w-36 h-28 z-0 opacity-20 pointer-events-none"
+        style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1.5px)', backgroundSize: '14px 14px' }}
+      />
+
+      {/* Sparkles דקורטיביים */}
+      <Sparkles className="absolute top-1/3 right-8 w-5 h-5 text-white/20 z-0 pointer-events-none" />
+      <Sparkles className="absolute bottom-1/3 left-10 w-4 h-4 text-white/15 z-0 pointer-events-none" />
+      <Sparkles className="absolute top-1/4 left-1/4 w-3 h-3 text-white/15 z-0 pointer-events-none" />
+
+      {/* שורת ניווט */}
+      <div className="relative z-10 px-6 h-11 flex items-center justify-between flex-shrink-0">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1.5 text-sm text-white/90 hover:text-white font-semibold transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          {backLabel}
+        </button>
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-semibold text-white/80">{currentQuestionIndex + 1} / {questions.length}</span>
+          <div className="w-28 h-1.5 bg-white/20 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-white rounded-full transition-all duration-500"
+              style={{ width: `${progressPct}%` }}
+            />
           </div>
+          <span className="text-sm font-bold text-white w-8">{progressPct}%</span>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="bg-gradient-to-l from-teal-500 to-teal-600 text-white">
-        <div className="max-w-[1440px] mx-auto px-16 py-8">
-          <div className="grid grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="text-3xl font-bold mb-1">{currentQuestionIndex + 1}</div>
-              <div className="text-teal-100 text-sm">שאלה נוכחית</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold mb-1">{questions.length}</div>
-              <div className="text-teal-100 text-sm">סה"כ שאלות</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold mb-1">{Math.round(((currentQuestionIndex + 1) / questions.length) * 100)}%</div>
-              <div className="text-teal-100 text-sm">התקדמות</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* תוכן מרכזי */}
+      <div className="flex-1 overflow-y-auto relative z-10">
+        <div className="min-h-full flex items-center justify-center px-6 py-3">
+          <div className="w-full max-w-[500px]">
 
-      {/* Question Content */}
-      <div className="max-w-[1440px] mx-auto px-16 py-12">
-        <div className="max-w-4xl mx-auto">
-          <Card className="h-full flex flex-col hover:shadow-xl transition-all duration-300 border-gray-200 overflow-hidden group">
-            {/* Question Header with Gradient */}
-            <div className="bg-gradient-to-l from-teal-500 to-teal-600 p-6 text-white relative overflow-hidden min-h-[140px]">
-              <div className="absolute top-0 left-0 w-full h-full opacity-10">
-                <BookOpen className="w-24 h-24 absolute -top-4 -left-4 transform rotate-12" />
-              </div>
-              <div className="relative z-10">
-                <Badge className="bg-white/20 text-white border-white/30 mb-3">
-                  שאלה {currentQuestionIndex + 1}
-                </Badge>
-                <div className="flex items-center gap-4 text-sm text-white/90 justify-start mb-4">
-                  <div>קורס: {questionDataCourseId}</div>
-                  {question.subTopic && (
-                    <>
-                      <div className="w-1 h-1 rounded-full bg-white/50"></div>
-                      <div>תת נושא: {question.subTopic}</div>
-                    </>
-                  )}
-                </div>
+            {/* שם הקורס בעברית - מעל הכרטיס */}
+            <div className="flex items-center justify-center mb-3">
+              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 px-4 py-1.5 rounded-full">
+                <BookOpen className="w-3.5 h-3.5 text-white/80 flex-shrink-0" />
+                <span className="text-xs font-bold text-white">{hebrewCourseName}</span>
               </div>
             </div>
 
-            {/* Question Body */}
-            <div className="p-6 flex-1 flex flex-col">
-              <div className="mb-6 text-right">
-                <h2 className="text-2xl font-semibold text-gray-900 leading-8 whitespace-pre-line">
-                    <span dangerouslySetInnerHTML={{ __html: question.question }} />
-                </h2>
-              </div>
+            {/* כרטיס שאלה */}
+            <div className="bg-white rounded-3xl overflow-hidden border border-gray-100" style={{ boxShadow: '0 10px 40px -8px rgba(0,0,0,0.10), 0 2px 12px -4px rgba(20,184,166,0.08)' }}>
 
-              {question.imageUrl && (
-                <div className="mb-6">
-                  <img
-                    src={question.imageUrl}
-                    alt="שאלה ויזואלית"
-                    className="max-w-full mx-auto rounded-xl border"
-                  />
-                </div>
-              )}
+              {/* פס צבע עליון */}
+              <div className="h-1 bg-gradient-to-l from-teal-400 via-cyan-400 to-emerald-400" />
 
-              <div className="space-y-3 mb-6">
-                {question.options.map((option) => {
-                  const isSelected = selectedAnswer === option;
-                  const isRightAnswer = question.correctAnswer === option;
+              <div className="px-7 pt-4 pb-5">
 
-                  let buttonClass = 'w-full text-right border rounded-xl p-4 transition';
-
-                  if (showFeedback) {
-                    if (isRightAnswer) {
-                      buttonClass += ' bg-green-100 border-green-500 text-green-800';
-                    } else if (isSelected && !isRightAnswer) {
-                      buttonClass += ' bg-red-100 border-red-500 text-red-800';
-                    } else {
-                      buttonClass += ' bg-white border-gray-200 text-gray-700';
-                    }
-                  } else {
-                    buttonClass += ' bg-white border-gray-200 hover:border-teal-500 hover:bg-teal-50 text-gray-900';
-                  }
-
-                  return (
-                    <button
-                      key={option}
-                      onClick={() => handleAnswerClick(option)}
-                      disabled={showFeedback}
-                      className={buttonClass}
-                    >
-                      <span dangerouslySetInnerHTML={{ __html: option }} />
-                    </button>
-                  );
-                })}
-              </div>
-
-              {showFeedback && (
-                <div className="text-right">
-                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 ${isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                    {isCorrect ? (
-                      <CheckCircle className="w-5 h-5" />
-                    ) : (
-                      <XCircle className="w-5 h-5" />
+                {/* מספר שאלה + תת-נושא */}
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    {question.subTopic && (
+                      <span className="text-xs text-gray-400 bg-gray-100 px-2.5 py-0.5 rounded-full">{question.subTopic}</span>
                     )}
-                    <span className="font-medium">
-                      {isCorrect ? 'תשובה נכונה!' : 'תשובה לא נכונה'}
-                    </span>
                   </div>
-
-                  <Button
-                    onClick={handleNextQuestion}
-                    className="w-full bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white group-hover:shadow-lg transition-all"
-                  >
-                    לשאלה הבאה
-                  </Button>
+                  <span className="text-xs font-bold text-teal-600 bg-teal-50 border border-teal-100 px-3 py-1 rounded-full">
+                    שאלה {currentQuestionIndex + 1} מתוך {questions.length}
+                  </span>
                 </div>
-              )}
+
+                {/* שאלה */}
+                <h2 className="text-base font-bold text-gray-900 leading-relaxed text-right mb-3 whitespace-pre-line">
+                  <span dangerouslySetInnerHTML={{ __html: question.question }} />
+                </h2>
+
+                {/* תמונה */}
+                {question.imageUrl && (
+                  <div className="mb-3 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                    <img src={question.imageUrl} alt="תמונה לשאלה" className="w-full object-contain max-h-48" />
+                  </div>
+                )}
+
+                {/* מפריד */}
+                <div className="h-px bg-gradient-to-l from-transparent via-gray-200 to-transparent mb-3" />
+
+                {/* תשובות */}
+                <div className="space-y-1.5">
+                  {question.options.map((option, idx) => {
+                    const isSelected = selectedAnswer === option;
+                    const isRightAnswer = question.correctAnswer === option;
+
+                    let wrapCls = 'border-gray-200 bg-gray-50/50 text-gray-800 hover:border-teal-400 hover:bg-teal-50/60 cursor-pointer';
+                    let letterCls = 'bg-white text-gray-500 border border-gray-200';
+
+                    if (showFeedback) {
+                      if (isRightAnswer) {
+                        wrapCls = 'border-green-400 bg-green-50 text-green-800 cursor-default';
+                        letterCls = 'bg-green-500 text-white border-green-500';
+                      } else if (isSelected) {
+                        wrapCls = 'border-red-400 bg-red-50 text-red-800 cursor-default';
+                        letterCls = 'bg-red-500 text-white border-red-500';
+                      } else {
+                        wrapCls = 'border-gray-100 bg-gray-50 text-gray-400 cursor-default';
+                        letterCls = 'bg-gray-100 text-gray-300 border-gray-200';
+                      }
+                    } else if (isSelected) {
+                      wrapCls = 'border-teal-500 bg-teal-50/80 text-teal-900 cursor-pointer';
+                      letterCls = 'bg-teal-500 text-white border-teal-500';
+                    }
+
+                    return (
+                      <button
+                        key={option}
+                        onClick={() => handleAnswerClick(option)}
+                        disabled={showFeedback}
+                        className={`w-full flex items-center gap-3 text-right border-2 rounded-xl px-3.5 py-2.5 transition-all duration-150 ${wrapCls}`}
+                      >
+                        <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all border ${letterCls}`}>
+                          {letters[idx]}
+                        </span>
+                        <span className="flex-1 text-sm font-medium">
+                          <span dangerouslySetInnerHTML={{ __html: option }} />
+                        </span>
+                        {showFeedback && isRightAnswer && <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />}
+                        {showFeedback && isSelected && !isRightAnswer && <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* אזור ניווט תחתון */}
+                {(currentQuestionIndex > 0 || showFeedback) && (
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+
+                    {/* שורת פידבק + הבא (אחרי מענה) */}
+                    {showFeedback && (
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold flex-shrink-0 ${isCorrect ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                          {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
+                          {isCorrect ? 'נכון!' : 'שגוי'}
+                        </div>
+                        <button
+                          onClick={handleNextQuestion}
+                          className="flex-1 h-9 bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+                        >
+                          {currentQuestionIndex < questions.length - 1 ? 'לשאלה הבאה' : 'סיום תרגול'}
+                          <ArrowLeft className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+
+                    {/* כפתור חזרה לשאלה קודמת */}
+                    {currentQuestionIndex > 0 && (
+                      <button
+                        onClick={handlePreviousQuestion}
+                        className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-gray-200 text-gray-500 hover:text-teal-600 hover:border-teal-300 hover:bg-teal-50/50 transition-all text-sm font-medium"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                        צפה בתשובה של שאלה קודמת
+                      </button>
+                    )}
+                  </div>
+                )}
+
+              </div>
             </div>
-          </Card>
+
+          </div>
         </div>
       </div>
     </div>
