@@ -12,7 +12,7 @@ import { economicsQuestions } from '../../dataQ/economics_questions.js';
 import { Card } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { BookOpen, CheckCircle, XCircle, ArrowLeft } from 'lucide-react';
+import { BookOpen, CheckCircle, XCircle, ArrowLeft, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { coursesData } from '../data/coursesData';
 
@@ -445,32 +445,52 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
   const hebrewCourseName = coursesData[courseId]?.title ?? questionDataCourseId;
 
   return (
-    <div className="fixed inset-0 top-20 mr-64 flex flex-col overflow-hidden" dir="rtl">
+    <div
+      className="fixed inset-0 top-20 mr-64 flex flex-col overflow-hidden"
+      dir="rtl"
+      style={{ background: 'linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #0891b2 100%)' }}
+    >
 
-      {/* רקע עדין - בהשראת דף הבית */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-teal-50/60" />
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-100/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-cyan-100/25 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-teal-50/60 rounded-full blur-2xl pointer-events-none" />
+      {/* עיגולים דקורטיביים */}
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full z-0 pointer-events-none" />
+      <div className="absolute bottom-0 -left-20 w-80 h-80 bg-cyan-300/10 rounded-full z-0 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/3 w-56 h-56 bg-teal-300/10 rounded-full blur-2xl z-0 pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-white/5 rounded-full blur-3xl z-0 pointer-events-none" />
+      <div className="absolute top-10 left-1/2 w-32 h-32 bg-cyan-200/10 rounded-full blur-xl z-0 pointer-events-none" />
+
+      {/* גריד נקודות */}
+      <div
+        className="absolute top-4 right-4 w-44 h-36 z-0 opacity-25 pointer-events-none"
+        style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1.5px)', backgroundSize: '14px 14px' }}
+      />
+      <div
+        className="absolute bottom-4 left-4 w-36 h-28 z-0 opacity-20 pointer-events-none"
+        style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1.5px)', backgroundSize: '14px 14px' }}
+      />
+
+      {/* Sparkles דקורטיביים */}
+      <Sparkles className="absolute top-1/3 right-8 w-5 h-5 text-white/20 z-0 pointer-events-none" />
+      <Sparkles className="absolute bottom-1/3 left-10 w-4 h-4 text-white/15 z-0 pointer-events-none" />
+      <Sparkles className="absolute top-1/4 left-1/4 w-3 h-3 text-white/15 z-0 pointer-events-none" />
 
       {/* שורת ניווט */}
-      <div className="relative z-10 bg-white/60 backdrop-blur-sm border-b border-gray-100/80 px-6 h-11 flex items-center justify-between flex-shrink-0 shadow-sm">
+      <div className="relative z-10 px-6 h-11 flex items-center justify-between flex-shrink-0">
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 text-sm text-teal-600 hover:text-teal-800 font-semibold transition-colors"
+          className="flex items-center gap-1.5 text-sm text-white/90 hover:text-white font-semibold transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           {backLabel}
         </button>
         <div className="flex items-center gap-3">
-          <span className="text-sm font-semibold text-gray-600">{currentQuestionIndex + 1} / {questions.length}</span>
-          <div className="w-28 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+          <span className="text-sm font-semibold text-white/80">{currentQuestionIndex + 1} / {questions.length}</span>
+          <div className="w-28 h-1.5 bg-white/20 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-l from-teal-400 to-teal-600 rounded-full transition-all duration-500"
+              className="h-full bg-white rounded-full transition-all duration-500"
               style={{ width: `${progressPct}%` }}
             />
           </div>
-          <span className="text-sm font-bold text-teal-600 w-8">{progressPct}%</span>
+          <span className="text-sm font-bold text-white w-8">{progressPct}%</span>
         </div>
       </div>
 
@@ -481,9 +501,9 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
             {/* שם הקורס בעברית - מעל הכרטיס */}
             <div className="flex items-center justify-center mb-3">
-              <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-teal-100 shadow-sm px-4 py-1.5 rounded-full">
-                <BookOpen className="w-3.5 h-3.5 text-teal-500 flex-shrink-0" />
-                <span className="text-xs font-bold text-teal-700">{hebrewCourseName}</span>
+              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 px-4 py-1.5 rounded-full">
+                <BookOpen className="w-3.5 h-3.5 text-white/80 flex-shrink-0" />
+                <span className="text-xs font-bold text-white">{hebrewCourseName}</span>
               </div>
             </div>
 
