@@ -48,6 +48,9 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
   }), [weekStart]);
 
   const [dayIdx, setDayIdx] = useState(0);
+  
+  const userSelectedCourses = user?.selectedCourses || [];
+  const filteredCourses = COURSES.filter(c => userSelectedCourses.includes(c.id));
   const [courseId, setCourseId] = useState('');
   const [startTime, setStartTime] = useState('10:00');
   const [endTime, setEndTime] = useState('12:00');
@@ -107,15 +110,15 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
         {/* Header */}
         <div className={`px-6 py-5 text-white bg-gradient-to-l ${isGroup ? 'from-purple-500 to-indigo-600' : 'from-teal-500 to-teal-600'}`}>
           <div className="flex items-center justify-between">
-            <button onClick={onClose} className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
-              <X className="w-5 h-5" />
-            </button>
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-bold">
                 {isGroup ? `שיעור קבוצתי (${participants.length})` : `שיעור עם ${participants[0]?.fullName}`}
               </h2>
               {isGroup ? <Users className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
             </div>
+            <button onClick={onClose} className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
+              <X className="w-5 h-5" />
+            </button>
           </div>
           {isGroup && (
             <div className="flex flex-wrap gap-1 mt-2 justify-end">
@@ -158,25 +161,31 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
               {/* Course */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">קורס</label>
-                <select value={courseId} onChange={e => { setCourseId(e.target.value); setError(''); }}
-                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-right text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white" dir="rtl">
-                  <option value="">בחרי קורס...</option>
-                  {COURSES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
+                {filteredCourses.length === 0 ? (
+                  <div className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-right text-sm bg-gray-50 text-gray-600">
+                    לא נמצאו קורסים משויכים למשתמש
+                  </div>
+                ) : (
+                  <select value={courseId} onChange={e => { setCourseId(e.target.value); setError(''); }}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-right text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white" dir="rtl">
+                    <option value="">בחרי קורס...</option>
+                    {filteredCourses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                )}
               </div>
 
               {/* Time */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת סיום</label>
-                  <select value={endTime} onChange={e => { setEndTime(e.target.value); setError(''); }}
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת התחלה</label>
+                  <select value={startTime} onChange={e => { setStartTime(e.target.value); setError(''); }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 text-center bg-white">
                     {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת התחלה</label>
-                  <select value={startTime} onChange={e => { setStartTime(e.target.value); setError(''); }}
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת סיום</label>
+                  <select value={endTime} onChange={e => { setEndTime(e.target.value); setError(''); }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 text-center bg-white">
                     {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>

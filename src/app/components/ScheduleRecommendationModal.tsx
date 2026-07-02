@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { X, Plus, Calendar } from 'lucide-react';
 import { Button } from './ui/button';
 import { useCalendarSync, EventType } from '../contexts/CalendarSyncContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const COURSES = [
   { id: 'calculus1', name: 'חדו"א 1' },
@@ -91,6 +92,9 @@ export function ScheduleRecommendationModal({ recommendation, onClose }: Schedul
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  const userSelectedCourses = user?.selectedCourses || [];
+  const filteredCourses = COURSES.filter(c => userSelectedCourses.includes(c.id));
+
   const TYPE_LABELS: Record<EventType, string> = {
     lecture: 'שיעור',
     tutorial: 'תרגול',
@@ -176,36 +180,42 @@ export function ScheduleRecommendationModal({ recommendation, onClose }: Schedul
           {/* Course selector */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">קורס</label>
-            <select
-              value={courseId}
-              onChange={(e) => { setCourseId(e.target.value); setError(''); }}
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-right text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white"
-              dir="rtl"
-            >
-              <option value="">בחרי קורס...</option>
-              {COURSES.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
+            {filteredCourses.length === 0 ? (
+              <div className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-right text-sm bg-gray-50 text-gray-600">
+                לא נמצאו קורסים משויכים למשתמש
+              </div>
+            ) : (
+              <select
+                value={courseId}
+                onChange={(e) => { setCourseId(e.target.value); setError(''); }}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-right text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white"
+                dir="rtl"
+              >
+                <option value="">בחרי קורס...</option>
+                {filteredCourses.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            )}
           </div>
 
           {/* Time range */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת סיום</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת התחלה</label>
               <select
-                value={endTime}
-                onChange={(e) => { setEndTime(e.target.value); setError(''); }}
+                value={startTime}
+                onChange={(e) => { setStartTime(e.target.value); setError(''); }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent text-center bg-white"
               >
                 {TIME_SLOTS.map((t) => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת התחלה</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת סיום</label>
               <select
-                value={startTime}
-                onChange={(e) => { setStartTime(e.target.value); setError(''); }}
+                value={endTime}
+                onChange={(e) => { setEndTime(e.target.value); setError(''); }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent text-center bg-white"
               >
                 {TIME_SLOTS.map((t) => <option key={t} value={t}>{t}</option>)}

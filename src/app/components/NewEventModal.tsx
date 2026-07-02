@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, GraduationCap, Code, BookOpen, AlertCircle, Plus, Clock, MessageSquare } from 'lucide-react';
 import { Button } from './ui/button';
 import type { EventType } from '../contexts/CalendarSyncContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const COURSES = [
   { id: 'calculus1', name: 'חדו"א 1' },
@@ -71,6 +72,7 @@ interface NewEventModalProps {
 }
 
 export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defaultStartTime }: NewEventModalProps) {
+  const { user } = useAuth();
   const startIdx = Math.max(TIME_SLOTS.indexOf(defaultStartTime), 0);
 
   const [eventType, setEventType] = useState<EventType>('lecture');
@@ -79,6 +81,9 @@ export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defau
   const [endTime, setEndTime] = useState(TIME_SLOTS[Math.min(startIdx + 2, TIME_SLOTS.length - 1)]);
   const [location, setLocation] = useState('');
   const [error, setError] = useState('');
+
+  const userSelectedCourses = user?.selectedCourses || [];
+  const filteredCourses = COURSES.filter(c => userSelectedCourses.includes(c.id));
 
   const handleSubmit = () => {
     if (!courseId) {
@@ -115,7 +120,7 @@ export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defau
               <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
                 <Plus className="w-4 h-4" />
               </div>
-              <h2 className="text-lg font-bold">יצירת פעילות חדשה</h2>
+              <h2 className="text-lg font-bold">הוספת פעילות חדשה</h2>
             </div>
             <button
               onClick={onClose}
@@ -161,36 +166,42 @@ export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defau
           {/* Course selector */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">קורס</label>
-            <select
-              value={courseId}
-              onChange={(e) => { setCourseId(e.target.value); setError(''); }}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-right text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white"
-              dir="rtl"
-            >
-              <option value="">בחרי קורס...</option>
-              {COURSES.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
+            {filteredCourses.length === 0 ? (
+              <div className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-right text-sm bg-gray-50 text-gray-600">
+                לא נמצאו קורסים משויכים למשתמש
+              </div>
+            ) : (
+              <select
+                value={courseId}
+                onChange={(e) => { setCourseId(e.target.value); setError(''); }}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-right text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white"
+                dir="rtl"
+              >
+                <option value="">בחרי קורס...</option>
+                {filteredCourses.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            )}
           </div>
 
           {/* Time range */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת סיום</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת התחלה</label>
               <select
-                value={endTime}
-                onChange={(e) => { setEndTime(e.target.value); setError(''); }}
+                value={startTime}
+                onChange={(e) => { setStartTime(e.target.value); setError(''); }}
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent text-center bg-white"
               >
                 {TIME_SLOTS.map((t) => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת התחלה</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת סיום</label>
               <select
-                value={startTime}
-                onChange={(e) => { setStartTime(e.target.value); setError(''); }}
+                value={endTime}
+                onChange={(e) => { setEndTime(e.target.value); setError(''); }}
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent text-center bg-white"
               >
                 {TIME_SLOTS.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -231,7 +242,7 @@ export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defau
             className="bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
           >
             <Plus className="w-4 h-4 ml-1.5" />
-            יצרי פעילות
+            הוסף פעילות
           </Button>
           <Button variant="ghost" onClick={onClose} className="text-gray-600">
             ביטול
