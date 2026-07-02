@@ -295,15 +295,14 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
             <Button
               onClick={handleToggleCourse}
               disabled={toggling}
-              size="lg"
               className={isInMyCourses
-                ? 'bg-green-100 text-green-700 hover:bg-red-50 hover:text-red-600 border-2 border-green-300 hover:border-red-300 transition-all gap-2 px-6'
-                : 'bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white gap-2 px-6 shadow-lg shadow-teal-200 hover:shadow-teal-300 transition-all scale-100 hover:scale-105 font-bold text-base'
+                ? 'h-14 px-8 text-base bg-green-100 text-green-700 hover:bg-red-50 hover:text-red-600 border-2 border-green-300 hover:border-red-300 transition-all gap-2 rounded-xl'
+                : 'h-14 px-10 text-lg font-bold bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white gap-3 rounded-xl shadow-xl shadow-teal-300/50 hover:shadow-teal-400/60 transition-all hover:scale-105 ring-4 ring-teal-300/40'
               }
             >
               {isInMyCourses
                 ? <><CheckCircle className="w-5 h-5" />בקורסים שלי</>
-                : <><Plus className="w-5 h-5" />הוסף לקורסים שלי</>
+                : <><Plus className="w-6 h-6" />הוסף לקורסים שלי</>
               }
             </Button>
           </div>
