@@ -424,7 +424,7 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
               ))}
 
               {/* מבחנים לדוגמה */}
-              <Card className="p-5 hover:shadow-lg transition-shadow col-span-2">
+              <Card className="p-5 hover:shadow-lg transition-shadow">
                 <div className="text-right">
                   <div className="flex items-center justify-start gap-3 mb-3">
                     <h3 className="text-lg font-bold text-gray-900">מבחנים לדוגמה</h3>
