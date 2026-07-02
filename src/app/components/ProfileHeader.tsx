@@ -65,19 +65,19 @@ export function ProfileHeader() {
   };
 
   return (
-    <Card className="p-8 border-gray-100">
-      <div className="flex items-center gap-8">
+    <Card className="p-4 border-gray-100">
+      <div className="flex items-center gap-5">
         {/* Avatar */}
         <div className="relative flex-shrink-0">
           {displayPhoto ? (
             <img
               src={displayPhoto}
               alt={user?.fullName}
-              className="w-32 h-32 rounded-2xl object-cover"
+              className="w-20 h-20 rounded-xl object-cover"
             />
           ) : (
-            <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
-              <span className="text-4xl text-white font-bold">{initials}</span>
+            <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+              <span className="text-2xl text-white font-bold">{initials}</span>
             </div>
           )}
 
@@ -107,11 +107,11 @@ export function ProfileHeader() {
 
         {/* Name + badges */}
         <div className="text-right flex-1">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
             {user?.fullName || 'משתמש'}
           </h1>
-          <div className="flex items-center gap-3 justify-start">
-            <Badge className="bg-teal-100 text-teal-700 text-base px-3 py-1">סטודנט פעיל</Badge>
+          <div className="flex items-center gap-2 justify-start">
+            <Badge className="bg-teal-100 text-teal-700 text-sm px-2 py-0.5">סטודנט פעיל</Badge>
           </div>
         </div>
       </div>
