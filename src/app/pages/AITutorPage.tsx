@@ -203,28 +203,35 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
     <div className="fixed inset-0 top-20 mr-64 flex flex-col bg-gray-50" dir="rtl">
       {!activeCourseId ? (
         /* ── Course selection screen ── */
-        <div className="flex-1 flex flex-col items-center justify-center px-8 py-4 gap-5 overflow-hidden">
+        <div className="flex-1 flex flex-col items-center justify-center px-8 py-4 gap-5 overflow-hidden relative"
+             style={{ background: 'linear-gradient(135deg, #eef2ff 0%, #f0fdf4 40%, #eff6ff 100%)' }}>
+
+          {/* Decorative background blobs */}
+          <div className="absolute top-8 right-12 w-48 h-48 rounded-full bg-blue-200/30 blur-3xl pointer-events-none" />
+          <div className="absolute bottom-12 left-16 w-56 h-56 rounded-full bg-indigo-200/25 blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 left-1/3 w-40 h-40 rounded-full bg-teal-200/20 blur-2xl pointer-events-none" />
+
           {/* Header */}
-          <div className="flex flex-col items-center text-center">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg mb-3">
-              <Bot className="w-7 h-7 text-white" />
+          <div className="flex flex-col items-center text-center relative z-10">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-xl mb-3 ring-4 ring-white">
+              <Bot className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-1">מורה AI</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-1">מורה AI</h2>
             <p className="text-gray-500 text-sm text-center">שלום {userName}! בחרי קורס כדי להתחיל לשוחח</p>
           </div>
 
           {/* Course cards */}
           {myCourses.length > 0 ? (
-            <div className="flex flex-wrap justify-center gap-3 w-full max-w-4xl">
+            <div className="flex flex-wrap justify-center gap-3 w-full max-w-4xl relative z-10">
               {myCourses.map(course => {
                 const msgCount = conversations[course.id]?.length ?? 0;
                 return (
                   <button
                     key={course.id}
                     onClick={() => selectCourse(course.id)}
-                    className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border-2 border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all group text-center w-40"
+                    className="flex flex-col items-center gap-2 p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-white hover:border-blue-300 hover:shadow-xl hover:-translate-y-1 transition-all group text-center w-40 shadow-sm"
                   >
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${course.color} flex items-center justify-center text-white font-bold overflow-hidden group-hover:scale-105 transition-transform flex-shrink-0`}>
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${course.color} flex items-center justify-center text-white font-bold overflow-hidden group-hover:scale-110 transition-transform flex-shrink-0 shadow-md`}>
                       <span className="text-xl leading-none">{course.emoji}</span>
                     </div>
                     <span className="text-sm font-semibold text-gray-800 leading-tight">{course.title}</span>
@@ -238,7 +245,7 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
               })}
             </div>
           ) : (
-            <div className="text-center p-8 bg-white rounded-2xl border border-gray-200 max-w-sm shadow-sm">
+            <div className="text-center p-8 bg-white/80 backdrop-blur-sm rounded-2xl border border-white max-w-sm shadow-md relative z-10">
               <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-600 font-semibold text-base mb-1">עדיין לא הוספת קורסים</p>
               <p className="text-gray-400 text-sm leading-relaxed">
