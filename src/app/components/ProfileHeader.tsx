@@ -111,7 +111,6 @@ export function ProfileHeader() {
             {user?.fullName || 'משתמש'}
           </h1>
           <div className="flex items-center gap-3 justify-start">
-            <Badge className="bg-green-100 text-green-700 text-base px-3 py-1">חשבון מאומת</Badge>
             <Badge className="bg-teal-100 text-teal-700 text-base px-3 py-1">סטודנט פעיל</Badge>
           </div>
         </div>
