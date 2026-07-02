@@ -104,15 +104,7 @@ function AppContent() {
   }
 
   return (
-    <div className="relative min-h-screen" style={{ background: 'linear-gradient(150deg, #dde8f5 0%, #e0eff8 40%, #d8eef0 100%)' }}>
-      {/* Decorative background blobs */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-24 right-[30%] w-80 h-80 rounded-full bg-teal-300/20 blur-3xl" />
-        <div className="absolute bottom-[20%] left-[15%] w-96 h-96 rounded-full bg-blue-300/15 blur-3xl" />
-        <div className="absolute top-[55%] left-[60%] w-64 h-64 rounded-full bg-indigo-300/15 blur-3xl" />
-        <div className="absolute top-[15%] right-[65%] w-56 h-56 rounded-full bg-cyan-300/20 blur-3xl" />
-        <div className="absolute bottom-[5%] right-[40%] w-48 h-48 rounded-full bg-sky-300/15 blur-3xl" />
-      </div>
+    <div className="relative min-h-screen bg-gray-50">
       <Sidebar
         currentPage={currentPage}
         onNavigate={(page) => { setCurrentPage(page); scrollTop(); }}
