@@ -18,6 +18,7 @@ import { useAuth } from '../contexts/AuthContext';
 interface PracticePageProps {
   courseId: string;
   onBack: () => void;
+  backLabel?: string;
 }
 
 // Maps course catalog IDs (used in CoursesPage / selectedCourses) to the
@@ -42,7 +43,7 @@ interface Question {
   imageUrl?: string;
 }
 
-export function PracticePage({ courseId, onBack }: PracticePageProps) {
+export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: PracticePageProps) {
   const { user } = useAuth();
   const appUserId = user?.userId || "user_1";
   // The courseId value as stored on the question documents themselves
@@ -399,7 +400,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
               className="bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
             >
               <ArrowLeft className="w-4 h-4 ml-2" />
-              חזרה לקורסים
+              {backLabel}
             </Button>
           </Card>
         </div>
@@ -429,7 +430,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
               className="bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
             >
               <ArrowLeft className="w-4 h-4 ml-2" />
-              חזרה לקורסים
+              {backLabel}
             </Button>
           </Card>
         </div>
@@ -451,7 +452,7 @@ export function PracticePage({ courseId, onBack }: PracticePageProps) {
               className="text-teal-600 hover:text-teal-700 hover:bg-teal-50"
             >
               <ArrowLeft className="w-4 h-4 ml-2" />
-              חזרה לקורסים
+              {backLabel}
             </Button>
 
             <div className="text-right">
