@@ -1,77 +1,97 @@
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Bot, BookOpen, Calendar, Users, BarChart2, Mail } from 'lucide-react';
 import logoImage from '../../assets/logo.png';
+
+const scrollTo = (id: string) =>
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-16 px-16" dir="rtl">
+    <footer className="bg-gray-900 text-gray-300 py-12 px-16" dir="rtl">
       <div className="max-w-[1440px] mx-auto">
-        <div className="flex flex-row gap-12 mb-12 items-start">
-          {/* Text Sections Container - Right side in RTL */}
-          <div className="flex flex-row gap-12 flex-1">
-            {/* Quick Links */}
+        <div className="flex flex-row gap-16 mb-10 items-start">
+
+          {/* Columns */}
+          <div className="flex flex-row gap-14 flex-1">
+
+            {/* Navigation — real sections on this page */}
             <div className="text-right">
-              <h4 className="text-white font-semibold mb-6">קישורים מהירים</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-teal-400 transition-colors">בית</a></li>
-                <li><a href="#" className="hover:text-teal-400 transition-colors">תכונות</a></li>
-                <li><a href="#" className="hover:text-teal-400 transition-colors">אודות</a></li>
-                <li><a href="#" className="hover:text-teal-400 transition-colors">קורסים</a></li>
-                <li><a href="#" className="hover:text-teal-400 transition-colors">מחירים</a></li>
+              <h4 className="text-white font-semibold mb-5">ניווט</h4>
+              <ul className="space-y-3 text-sm">
+                <li>
+                  <button
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    className="hover:text-teal-400 transition-colors"
+                  >
+                    בית
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => scrollTo('features')}
+                    className="hover:text-teal-400 transition-colors"
+                  >
+                    תכונות
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => scrollTo('about')}
+                    className="hover:text-teal-400 transition-colors"
+                  >
+                    הסבר AI
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => scrollTo('testimonials')}
+                    className="hover:text-teal-400 transition-colors"
+                  >
+                    המלצות
+                  </button>
+                </li>
               </ul>
             </div>
 
-            {/* Support */}
+            {/* Features — what actually exists in the app */}
             <div className="text-right">
-              <h4 className="text-white font-semibold mb-6">תמיכה</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-teal-400 transition-colors">מרכז עזרה</a></li>
-                <li><a href="#" className="hover:text-teal-400 transition-colors">שאלות נפוצות</a></li>
-                <li><a href="#" className="hover:text-teal-400 transition-colors">צור קשר</a></li>
-                <li><a href="#" className="hover:text-teal-400 transition-colors">תנאי שימוש</a></li>
-                <li><a href="#" className="hover:text-teal-400 transition-colors">מדיניות פרטיות</a></li>
+              <h4 className="text-white font-semibold mb-5">מה תמצאו אצלנו</h4>
+              <ul className="space-y-3 text-sm">
+                {[
+                  { icon: Bot,      label: 'מורה AI אישי' },
+                  { icon: BookOpen, label: 'תרגול חכם' },
+                  { icon: Calendar, label: 'לוח שנה לימודי' },
+                  { icon: Users,    label: 'קהילת לומדים' },
+                  { icon: BarChart2,label: 'ניתוח ביצועים' },
+                ].map(({ icon: Icon, label }) => (
+                  <li key={label} className="flex items-center gap-2 justify-end">
+                    <span>{label}</span>
+                    <Icon className="w-4 h-4 text-teal-400 flex-shrink-0" />
+                  </li>
+                ))}
               </ul>
             </div>
 
             {/* Contact */}
             <div className="text-right">
-              <h4 className="text-white font-semibold mb-6">יצירת קשר</h4>
-              <ul className="space-y-4">
-                <li className="flex items-center gap-3 justify-end">
-                  <span>support@learning-ai.co.il</span>
-                  <Mail className="w-5 h-5 text-teal-400" />
-                </li>
-                <li className="flex items-center gap-3 justify-end">
-                  <span>03-1234567</span>
-                  <Phone className="w-5 h-5 text-teal-400" />
-                </li>
-                <li className="flex items-start gap-3 justify-end">
-                  <span>רחוב הרצל 123, תל אביב</span>
-                  <MapPin className="w-5 h-5 text-teal-400 flex-shrink-0" />
+              <h4 className="text-white font-semibold mb-5">צרו קשר</h4>
+              <ul className="space-y-3 text-sm">
+                <li className="flex items-center gap-2 justify-end">
+                  <span>mindmatch.support@gmail.com</span>
+                  <Mail className="w-4 h-4 text-teal-400 flex-shrink-0" />
                 </li>
               </ul>
             </div>
           </div>
 
-          {/* Brand - Left side (last in RTL flex) */}
+          {/* Logo */}
           <div className="flex-shrink-0">
-            <div className="mb-6 flex justify-start">
-              <img src={logoImage} alt="MindMatch Logo" className="h-44 w-auto" />
-            </div>
+            <img src={logoImage} alt="MindMatch" className="h-32 w-auto" />
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-gray-800">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-right">
-            <p className="text-gray-500 text-sm">
-              © 2026 למידה חכמה. כל הזכויות שמורות.
-            </p>
-            <div className="flex items-center gap-6 text-sm">
-              <a href="#" className="hover:text-teal-400 transition-colors">הצהרת נגישות</a>
-              <a href="#" className="hover:text-teal-400 transition-colors">מדיניות פרטיות</a>
-              <a href="#" className="hover:text-teal-400 transition-colors">תנאי שימוש</a>
-            </div>
-          </div>
+        <div className="pt-6 border-t border-gray-800 text-center">
+          <p className="text-gray-500 text-sm">© 2026 MindMatch. כל הזכויות שמורות.</p>
         </div>
       </div>
     </footer>
