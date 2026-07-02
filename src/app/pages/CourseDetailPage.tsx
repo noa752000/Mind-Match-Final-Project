@@ -295,8 +295,14 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
             <div className="flex items-center gap-3">
               {onOpenPractice && (
                 <button
-                  onClick={() => onOpenPractice(courseId)}
-                  className="flex items-center gap-2 h-12 px-6 text-base font-semibold text-teal-700 bg-white border-2 border-teal-300 hover:bg-teal-50 transition-all rounded-xl"
+                  onClick={() => isInMyCourses && onOpenPractice(courseId)}
+                  disabled={!isInMyCourses}
+                  title={!isInMyCourses ? 'הוסף את הקורס לקורסים שלי כדי להתחיל תרגול' : undefined}
+                  className={`flex items-center gap-2 h-12 px-6 text-base font-semibold rounded-xl transition-all ${
+                    isInMyCourses
+                      ? 'text-teal-700 bg-white border-2 border-teal-300 hover:bg-teal-50 cursor-pointer'
+                      : 'text-gray-400 bg-gray-100 border-2 border-gray-200 cursor-not-allowed'
+                  }`}
                 >
                   <Sparkles className="w-4 h-4" />
                   התחל תרגול
