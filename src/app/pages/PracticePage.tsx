@@ -439,91 +439,136 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
   }
 
   const isCorrect = selectedAnswer === question.correctAnswer;
-
   const progressPct = Math.round(((currentQuestionIndex + 1) / questions.length) * 100);
 
   return (
-    <div className="h-[calc(100vh-5rem)] bg-gray-100 mr-64 pt-20 flex flex-col" dir="rtl">
+    <div className="fixed inset-0 top-20 mr-64 flex flex-col overflow-hidden" dir="rtl">
 
-      {/* שורת מידע עליונה */}
-      <div className="bg-white border-b border-gray-200 px-6 py-2 flex items-center justify-between flex-shrink-0">
-        <Button onClick={onBack} variant="ghost" size="sm" className="text-teal-600 hover:text-teal-700 hover:bg-teal-50">
-          <ArrowLeft className="w-4 h-4 ml-1" />
+      {/* שורת עליונה: חזרה + התקדמות */}
+      <div className="bg-white border-b border-gray-200 px-6 h-12 flex items-center justify-between flex-shrink-0 shadow-sm">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
           {backLabel}
-        </Button>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500 font-medium">{questionDataCourseId}</span>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">שאלה {currentQuestionIndex + 1}/{questions.length}</span>
-            <div className="w-28 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-full bg-teal-500 rounded-full transition-all duration-300" style={{ width: `${progressPct}%` }} />
-            </div>
-            <span className="text-sm font-bold text-teal-600 w-8">{progressPct}%</span>
+        </button>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-gray-400">{questionDataCourseId}</span>
+          <span className="text-sm font-semibold text-gray-700">שאלה {currentQuestionIndex + 1} / {questions.length}</span>
+          <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-teal-500 rounded-full transition-all duration-300" style={{ width: `${progressPct}%` }} />
           </div>
+          <span className="text-sm font-bold text-teal-600 w-8 text-left">{progressPct}%</span>
         </div>
       </div>
 
-      {/* תוכן - שתי עמודות שממלאות את הגובה */}
-      <div className="flex-1 flex gap-0 overflow-hidden p-6">
+      {/* גוף הדף: שתי עמודות */}
+      <div className="flex-1 flex min-h-0">
 
-        {/* עמודה שמאל - השאלה */}
-        <div className="flex-1 flex flex-col justify-center pl-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Badge className="bg-teal-100 text-teal-700 border-teal-200 text-sm px-3 py-1">
+        {/* עמודה שמאל - השאלה על רקע כהה */}
+        <div className="w-[45%] bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-600 flex flex-col justify-center px-10 py-8 text-white">
+          <div className="flex items-center gap-2 mb-5">
+            <span className="text-xs font-semibold bg-white/20 text-white px-3 py-1 rounded-full">
               שאלה {currentQuestionIndex + 1}
-            </Badge>
+            </span>
             {question.subTopic && (
-              <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{question.subTopic}</span>
+              <span className="text-xs text-teal-100 bg-white/10 px-2 py-1 rounded-full">{question.subTopic}</span>
             )}
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 leading-relaxed text-right whitespace-pre-line mb-6">
+          <h2 className="text-xl font-bold leading-relaxed text-right whitespace-pre-line mb-6" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>
             <span dangerouslySetInnerHTML={{ __html: question.question }} />
           </h2>
 
           {question.imageUrl && (
-            <img src={question.imageUrl} alt="שאלה ויזואלית" className="max-h-52 rounded-2xl border object-contain self-end" />
+            <div className="bg-white/10 rounded-2xl p-3 border border-white/20">
+              <img
+                src={question.imageUrl}
+                alt="שאלה ויזואלית"
+                className="w-full max-h-52 object-contain rounded-xl"
+              />
+            </div>
           )}
+
+          <div className="mt-auto pt-6 flex items-center gap-3 opacity-60">
+            <div className="flex-1 h-px bg-white/30" />
+            <span className="text-xs text-white/70">{progressPct}% הושלם</span>
+            <div className="flex-1 h-px bg-white/30" />
+          </div>
         </div>
 
-        {/* קו מפריד */}
-        <div className="w-px bg-gray-200 mx-2 flex-shrink-0" />
-
-        {/* עמודה ימין - התשובות */}
-        <div className="flex-1 flex flex-col justify-center pr-6">
-          <p className="text-sm text-gray-500 text-right mb-3">בחר תשובה:</p>
+        {/* עמודה ימין - תשובות על רקע בהיר */}
+        <div className="flex-1 bg-gray-50 flex flex-col justify-center px-10 py-8">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest text-right mb-4">בחר תשובה</p>
 
           <div className="space-y-3">
-            {question.options.map((option) => {
+            {question.options.map((option, idx) => {
               const isSelected = selectedAnswer === option;
               const isRightAnswer = question.correctAnswer === option;
-              let cls = 'w-full text-right border-2 rounded-2xl px-5 py-4 transition-all duration-150 font-medium text-base';
+              const letters = ['א', 'ב', 'ג', 'ד'];
+
+              let borderColor = 'border-gray-200';
+              let bgColor = 'bg-white';
+              let textColor = 'text-gray-800';
+              let labelBg = 'bg-gray-100 text-gray-500';
+
               if (showFeedback) {
-                if (isRightAnswer) cls += ' bg-green-50 border-green-400 text-green-800 shadow-sm';
-                else if (isSelected) cls += ' bg-red-50 border-red-400 text-red-800';
-                else cls += ' bg-white border-gray-100 text-gray-400';
-              } else {
-                cls += isSelected
-                  ? ' bg-teal-50 border-teal-500 text-teal-900 shadow-md'
-                  : ' bg-white border-gray-200 hover:border-teal-400 hover:bg-teal-50 hover:shadow-sm text-gray-800 cursor-pointer';
+                if (isRightAnswer) {
+                  borderColor = 'border-green-400';
+                  bgColor = 'bg-green-50';
+                  textColor = 'text-green-800';
+                  labelBg = 'bg-green-200 text-green-700';
+                } else if (isSelected) {
+                  borderColor = 'border-red-400';
+                  bgColor = 'bg-red-50';
+                  textColor = 'text-red-800';
+                  labelBg = 'bg-red-200 text-red-700';
+                } else {
+                  textColor = 'text-gray-400';
+                  bgColor = 'bg-gray-50';
+                  labelBg = 'bg-gray-100 text-gray-300';
+                }
+              } else if (isSelected) {
+                borderColor = 'border-teal-500';
+                bgColor = 'bg-teal-50';
+                textColor = 'text-teal-900';
+                labelBg = 'bg-teal-500 text-white';
               }
+
               return (
-                <button key={option} onClick={() => handleAnswerClick(option)} disabled={showFeedback} className={cls}>
-                  <span dangerouslySetInnerHTML={{ __html: option }} />
+                <button
+                  key={option}
+                  onClick={() => handleAnswerClick(option)}
+                  disabled={showFeedback}
+                  className={`w-full flex items-center gap-3 text-right border-2 rounded-2xl px-4 py-3.5 transition-all duration-150 ${borderColor} ${bgColor} ${!showFeedback ? 'hover:border-teal-400 hover:bg-teal-50 hover:shadow-sm cursor-pointer' : 'cursor-default'}`}
+                >
+                  <span className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${labelBg}`}>
+                    {letters[idx]}
+                  </span>
+                  <span className={`flex-1 text-sm font-medium ${textColor}`}>
+                    <span dangerouslySetInnerHTML={{ __html: option }} />
+                  </span>
+                  {showFeedback && isRightAnswer && <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />}
+                  {showFeedback && isSelected && !isRightAnswer && <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />}
                 </button>
               );
             })}
           </div>
 
           {showFeedback && (
-            <div className="mt-4 flex items-center gap-3">
-              <Button onClick={handleNextQuestion} className="flex-1 h-11 bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white text-base font-semibold rounded-xl">
-                לשאלה הבאה ←
-              </Button>
-              <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold ${isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+            <div className="mt-5 flex items-center gap-3">
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                 {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
-                {isCorrect ? 'נכון!' : 'לא נכון'}
+                {isCorrect ? 'תשובה נכונה!' : 'תשובה שגויה'}
               </div>
+              <button
+                onClick={handleNextQuestion}
+                className="flex-1 h-11 bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+              >
+                {currentQuestionIndex < questions.length - 1 ? 'לשאלה הבאה' : 'סיום תרגול'}
+                <ArrowLeft className="w-4 h-4" />
+              </button>
             </div>
           )}
         </div>
