@@ -292,7 +292,7 @@ export function NotificationsPanel({ onClose }: NotificationsPanelProps) {
   return (
     <div
       ref={panelRef}
-      className="fixed right-8 top-24 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-[200] overflow-hidden"
+      className="fixed right-8 top-28 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 z-[200] overflow-hidden"
       dir="rtl"
     >
       {/* Header */}

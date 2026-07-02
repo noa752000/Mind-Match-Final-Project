@@ -200,17 +200,17 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
   };
 
   return (
-    <div className="fixed inset-0 top-24 mr-64 flex flex-col bg-gray-50" dir="rtl">
+    <div className="fixed inset-0 top-28 mr-64 flex flex-col bg-gray-50" dir="rtl">
       {!activeCourseId ? (
         /* ── Course selection screen ── */
         <div className="flex-1 flex flex-col items-center justify-center px-8 py-4 gap-5 overflow-hidden">
           {/* Header */}
-          <div className="text-center">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg mx-auto mb-3">
+          <div className="flex flex-col items-center text-center">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg mb-3">
               <Bot className="w-7 h-7 text-white" />
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-1">מורה AI</h2>
-            <p className="text-gray-500 text-sm">שלום {userName}! בחרי קורס כדי להתחיל לשוחח</p>
+            <p className="text-gray-500 text-sm text-center">שלום {userName}! בחרי קורס כדי להתחיל לשוחח</p>
           </div>
 
           {/* Course cards grid */}
