@@ -31,9 +31,12 @@ function AppContent() {
   const [practiceSource, setPracticeSource] = useState<'dashboard' | 'course-detail' | 'courses'>('courses');
   const [guestMode, setGuestMode] = useState(false);
 
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+
   const handleCourseSelect = (courseId: string) => {
     setSelectedCourseId(courseId);
     setCurrentPage('course-detail');
+    scrollTop();
   };
 
   const handleOpenPractice = (courseId: string) => {
@@ -44,30 +47,29 @@ function AppContent() {
       'courses'
     );
     setCurrentPage('practice');
+    scrollTop();
   };
 
   const handleBackToCourses = () => {
     setCurrentPage('courses');
+    scrollTop();
   };
 
   const handleOpenTutor = (courseId?: string) => {
-    if (courseId) {
-      setTutorCourseId(courseId);
-    }
+    if (courseId) setTutorCourseId(courseId);
     setCurrentPage('tutor');
+    scrollTop();
   };
 
   const handleBackToCourseFromTutor = () => {
-    if (tutorCourseId) {
-      setCurrentPage('course-detail');
-    } else {
-      setCurrentPage('dashboard');
-    }
+    setCurrentPage(tutorCourseId ? 'course-detail' : 'dashboard');
+    scrollTop();
   };
 
   const handleLogout = () => {
     logout();
     setCurrentPage('home');
+    scrollTop();
   };
 
   if (loading) {
@@ -105,13 +107,13 @@ function AppContent() {
     <div className="relative min-h-screen bg-gray-50">
       <Sidebar
         currentPage={currentPage}
-        onNavigate={setCurrentPage}
+        onNavigate={(page) => { setCurrentPage(page); scrollTop(); }}
         onLogout={handleLogout}
         userName={user?.fullName}
       />
       <TopNavBar
         currentPage={currentPage}
-        onNavigate={setCurrentPage}
+        onNavigate={(page) => { setCurrentPage(page); scrollTop(); }}
         onLogout={handleLogout}
         userName={user?.fullName}
       />
