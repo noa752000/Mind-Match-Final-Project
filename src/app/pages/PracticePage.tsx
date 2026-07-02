@@ -462,35 +462,35 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
         </div>
 
         {/* Stats + buttons centered */}
-        <div className="flex-1 flex flex-col items-center justify-center px-8 gap-5">
+        <div className="flex-1 flex flex-col items-center justify-center px-10 gap-6">
           {/* Stats row */}
-          <div className="grid grid-cols-3 gap-4 w-full max-w-4xl">
-            <Card className="flex flex-col items-center justify-center rounded-2xl border border-teal-100 bg-teal-50 p-6 text-center shadow-sm">
-              <p className="text-xs font-semibold text-teal-700 mb-2">תשובות נכונות</p>
-              <p className="text-5xl font-bold text-gray-900">{correctCount}/{totalQuestions}</p>
+          <div className="grid grid-cols-3 gap-5 w-full max-w-5xl">
+            <Card className="flex flex-col items-center justify-center rounded-3xl border border-teal-100 bg-teal-50 p-10 text-center shadow-md">
+              <p className="text-sm font-semibold text-teal-700 mb-3">תשובות נכונות</p>
+              <p className="text-7xl font-bold text-gray-900">{correctCount}/{totalQuestions}</p>
             </Card>
-            <Card className="flex flex-col items-center justify-center rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm">
-              <p className="text-xs font-semibold text-gray-500 mb-2">ציון סופי</p>
-              <p className="text-5xl font-bold text-gray-900">{scoreOutOf100}</p>
+            <Card className="flex flex-col items-center justify-center rounded-3xl border border-gray-100 bg-white p-10 text-center shadow-md">
+              <p className="text-sm font-semibold text-gray-500 mb-3">ציון סופי</p>
+              <p className="text-7xl font-bold text-gray-900">{scoreOutOf100}</p>
             </Card>
-            <Card className="flex flex-col items-center justify-center rounded-2xl border border-cyan-100 bg-gradient-to-l from-cyan-50 to-teal-50 p-6 text-center shadow-sm">
-              <p className="text-xs font-semibold text-teal-700 mb-2">משוב</p>
-              <p className="text-base font-medium text-gray-700">{getSummaryMessage(scoreOutOf100)}</p>
+            <Card className="flex flex-col items-center justify-center rounded-3xl border border-cyan-100 bg-gradient-to-l from-cyan-50 to-teal-50 p-10 text-center shadow-md">
+              <p className="text-sm font-semibold text-teal-700 mb-3">משוב</p>
+              <p className="text-xl font-medium text-gray-700 leading-relaxed">{getSummaryMessage(scoreOutOf100)}</p>
             </Card>
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-4 w-full max-w-4xl">
+          <div className="flex gap-4 w-full max-w-5xl">
             <Button
               onClick={handlePracticeAgain}
-              className="flex-1 bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white h-11 rounded-xl"
+              className="flex-1 bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white h-13 text-base rounded-xl py-3"
             >
               תרגול נוסף
             </Button>
             <Button
               onClick={onBack}
               variant="outline"
-              className="flex-1 h-11 rounded-xl border border-teal-200 text-teal-700 hover:bg-teal-50"
+              className="flex-1 h-13 text-base rounded-xl border border-teal-200 text-teal-700 hover:bg-teal-50 py-3"
             >
               <ArrowLeft className="w-4 h-4 ml-2" />
               חזרה לקורסים שלי
