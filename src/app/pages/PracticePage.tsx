@@ -443,79 +443,83 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
   const letters = ['א', 'ב', 'ג', 'ד'];
 
   return (
-    <div className="fixed inset-0 top-20 mr-64 flex flex-col bg-gradient-to-br from-slate-50 via-white to-teal-50/40" dir="rtl">
+    <div className="fixed inset-0 top-20 mr-64 flex flex-col overflow-hidden" dir="rtl">
+
+      {/* רקע מעוצב */}
+      <div className="absolute inset-0 bg-gradient-to-br from-teal-600 via-teal-500 to-cyan-500" />
+      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 20% 20%, white 1px, transparent 1px), radial-gradient(circle at 80% 80%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      <div className="absolute top-0 left-0 w-72 h-72 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-300/20 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
 
       {/* שורת התקדמות */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-100 px-6 h-12 flex items-center justify-between flex-shrink-0">
+      <div className="relative z-10 px-6 h-10 flex items-center justify-between flex-shrink-0">
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 text-sm text-teal-600 hover:text-teal-800 font-semibold transition-colors"
+          className="flex items-center gap-1.5 text-sm text-white/90 hover:text-white font-semibold transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           {backLabel}
         </button>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-400 font-medium">{questionDataCourseId}</span>
-          <span className="text-sm font-semibold text-gray-600">שאלה {currentQuestionIndex + 1} / {questions.length}</span>
-          <div className="w-36 h-2 bg-gray-200 rounded-full overflow-hidden">
+          <span className="text-xs text-white/60 font-medium">{questionDataCourseId}</span>
+          <span className="text-sm font-semibold text-white/80">{currentQuestionIndex + 1} / {questions.length}</span>
+          <div className="w-28 h-1.5 bg-white/20 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-l from-teal-400 to-teal-600 rounded-full transition-all duration-500"
+              className="h-full bg-white rounded-full transition-all duration-500"
               style={{ width: `${progressPct}%` }}
             />
           </div>
-          <span className="text-sm font-bold text-teal-600 w-8">{progressPct}%</span>
+          <span className="text-sm font-bold text-white w-8">{progressPct}%</span>
         </div>
       </div>
 
-      {/* אזור תוכן - מרוכז, גולל רק אם צריך */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="min-h-full flex items-center justify-center px-6 py-5">
-          <div className="w-full max-w-xl">
+      {/* אזור תוכן - מרוכז, גולל רק אם יש תמונה שגורמת להצפה */}
+      <div className="flex-1 overflow-y-auto relative z-10">
+        <div className="min-h-full flex items-center justify-center px-6 py-3">
+          <div className="w-full max-w-[500px]">
 
             {/* כרטיס שאלה */}
-            <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/70 border border-gray-100 overflow-hidden">
+            <div className="bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden shadow-2xl shadow-black/20">
 
-              {/* פס צבע עליון */}
-              <div className="h-1 bg-gradient-to-l from-teal-400 via-cyan-400 to-teal-600" />
+              {/* פס עליון */}
+              <div className="h-1 bg-gradient-to-l from-teal-400 via-cyan-400 to-emerald-400" />
 
-              <div className="px-8 pt-6 pb-7">
+              <div className="px-7 pt-5 pb-5">
 
-                {/* Badges */}
-                <div className="flex items-center gap-2 mb-4 flex-wrap">
+                {/* כותרת */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    {question.subTopic && (
+                      <span className="text-xs text-gray-400 bg-gray-100 px-2.5 py-0.5 rounded-full">{question.subTopic}</span>
+                    )}
+                  </div>
                   <span className="text-xs font-bold bg-teal-500 text-white px-3 py-1 rounded-full">
-                    שאלה {currentQuestionIndex + 1}
+                    שאלה {currentQuestionIndex + 1} מתוך {questions.length}
                   </span>
-                  {question.subTopic && (
-                    <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">{question.subTopic}</span>
-                  )}
                 </div>
 
                 {/* טקסט השאלה */}
-                <h2 className="text-lg font-bold text-gray-900 leading-relaxed text-right mb-5 whitespace-pre-line">
+                <h2 className="text-base font-bold text-gray-900 leading-relaxed text-right mb-3 whitespace-pre-line">
                   <span dangerouslySetInnerHTML={{ __html: question.question }} />
                 </h2>
 
                 {/* תמונה אם קיימת */}
                 {question.imageUrl && (
-                  <div className="mb-5 rounded-2xl overflow-hidden border border-gray-200 bg-gray-50">
-                    <img
-                      src={question.imageUrl}
-                      alt="תמונה לשאלה"
-                      className="w-full object-contain max-h-56"
-                    />
+                  <div className="mb-3 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                    <img src={question.imageUrl} alt="תמונה לשאלה" className="w-full object-contain max-h-48" />
                   </div>
                 )}
 
-                {/* קו הפרדה */}
-                <div className="border-t border-gray-100 mb-4" />
+                {/* קו דק */}
+                <div className="h-px bg-gradient-to-l from-transparent via-gray-200 to-transparent mb-3" />
 
                 {/* כפתורי תשובה */}
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {question.options.map((option, idx) => {
                     const isSelected = selectedAnswer === option;
                     const isRightAnswer = question.correctAnswer === option;
 
-                    let wrapCls = 'border-gray-200 bg-white text-gray-800 hover:border-teal-400 hover:bg-teal-50/50 hover:shadow-sm cursor-pointer';
+                    let wrapCls = 'border-gray-200 bg-white text-gray-800 hover:border-teal-400 hover:bg-teal-50 cursor-pointer';
                     let letterCls = 'bg-gray-100 text-gray-500';
 
                     if (showFeedback) {
@@ -526,8 +530,8 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
                         wrapCls = 'border-red-400 bg-red-50 text-red-800 cursor-default';
                         letterCls = 'bg-red-500 text-white';
                       } else {
-                        wrapCls = 'border-gray-100 bg-gray-50/60 text-gray-400 cursor-default';
-                        letterCls = 'bg-gray-200 text-gray-400';
+                        wrapCls = 'border-gray-100 bg-gray-50 text-gray-400 cursor-default';
+                        letterCls = 'bg-gray-200 text-gray-300';
                       }
                     } else if (isSelected) {
                       wrapCls = 'border-teal-500 bg-teal-50 text-teal-900 shadow-sm cursor-pointer';
@@ -539,12 +543,12 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
                         key={option}
                         onClick={() => handleAnswerClick(option)}
                         disabled={showFeedback}
-                        className={`w-full flex items-center gap-3 text-right border-2 rounded-2xl px-4 py-3 transition-all duration-150 ${wrapCls}`}
+                        className={`w-full flex items-center gap-3 text-right border-2 rounded-xl px-3.5 py-2.5 transition-all duration-150 ${wrapCls}`}
                       >
-                        <span className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${letterCls}`}>
+                        <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${letterCls}`}>
                           {letters[idx]}
                         </span>
-                        <span className="flex-1 text-sm font-medium">
+                        <span className="flex-1 text-sm">
                           <span dangerouslySetInnerHTML={{ __html: option }} />
                         </span>
                         {showFeedback && isRightAnswer && <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />}
@@ -556,14 +560,14 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
                 {/* פידבק + כפתור הבא */}
                 {showFeedback && (
-                  <div className="mt-4 flex items-center gap-3 pt-4 border-t border-gray-100">
-                    <div className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-bold flex-shrink-0 ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                  <div className="mt-3 flex items-center gap-2 pt-3 border-t border-gray-100">
+                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold flex-shrink-0 ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                       {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
                       {isCorrect ? 'נכון!' : 'שגוי'}
                     </div>
                     <button
                       onClick={handleNextQuestion}
-                      className="flex-1 h-10 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+                      className="flex-1 h-9 bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                     >
                       {currentQuestionIndex < questions.length - 1 ? 'לשאלה הבאה' : 'סיום תרגול'}
                       <ArrowLeft className="w-4 h-4" />
