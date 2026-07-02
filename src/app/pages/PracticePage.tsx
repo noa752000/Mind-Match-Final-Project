@@ -12,7 +12,7 @@ import { economicsQuestions } from '../../dataQ/economics_questions.js';
 import { Card } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { BookOpen, CheckCircle, XCircle, ArrowLeft, Sparkles } from 'lucide-react';
+import { BookOpen, CheckCircle, XCircle, ArrowLeft, Sparkles, ChevronRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { coursesData } from '../data/coursesData';
 
@@ -58,6 +58,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
   const [sessionStartTime] = useState(Date.now());
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [answers, setAnswers] = useState<{ questionId: string; isCorrect: boolean; timeSpent: number }[]>([]);
+  const [answerHistory, setAnswerHistory] = useState<(string | null)[]>([]);
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -160,10 +161,26 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   const question = questions[currentQuestionIndex];
 
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex === 0) return;
+    const prevIdx = currentQuestionIndex - 1;
+    const prevAnswer = answerHistory[prevIdx] ?? null;
+    setCurrentQuestionIndex(prevIdx);
+    setSelectedAnswer(prevAnswer);
+    setShowFeedback(prevAnswer !== null);
+  };
+
   const handleAnswerClick = async (option: string) => {
     if (showFeedback) return;
     setSelectedAnswer(option);
     setShowFeedback(true);
+
+    // שמירת התשובה בהיסטוריה
+    setAnswerHistory(prev => {
+      const updated = [...prev];
+      updated[currentQuestionIndex] = option;
+      return updated;
+    });
 
     const isCorrect = option === question.correctAnswer;
     const timeSpent = Date.now() - sessionStartTime; // This is approximate, could be improved with per-question timing
@@ -353,11 +370,13 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
   };
 
   const handleNextQuestion = async () => {
-    setSelectedAnswer(null);
-    setShowFeedback(false);
+    const nextIdx = currentQuestionIndex + 1;
 
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
+    if (nextIdx < questions.length) {
+      const nextAnswer = answerHistory[nextIdx] ?? null;
+      setCurrentQuestionIndex(nextIdx);
+      setSelectedAnswer(nextAnswer);
+      setShowFeedback(nextAnswer !== null);
       return;
     }
 
@@ -483,6 +502,16 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
           {backLabel}
         </button>
         <div className="flex items-center gap-3">
+          {currentQuestionIndex > 0 && (
+            <button
+              onClick={handlePreviousQuestion}
+              className="flex items-center gap-1 text-xs text-white/70 hover:text-white font-medium transition-colors"
+            >
+              שאלה קודמת
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          )}
+          {currentQuestionIndex > 0 && <div className="w-px h-3 bg-white/25" />}
           <span className="text-sm font-semibold text-white/80">{currentQuestionIndex + 1} / {questions.length}</span>
           <div className="w-28 h-1.5 bg-white/20 rounded-full overflow-hidden">
             <div
@@ -587,9 +616,18 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
                   })}
                 </div>
 
+                {/* מצב צפייה בשאלה שכבר נענתה */}
+                {showFeedback && answerHistory[currentQuestionIndex] && (
+                  <div className="mt-2 flex items-center justify-center gap-1.5 text-xs text-gray-400">
+                    <span>צפייה בשאלה שכבר נענתה</span>
+                    <span>·</span>
+                    <span className="font-medium text-teal-600">{question.correctAnswer === answerHistory[currentQuestionIndex] ? 'ענית נכון' : `התשובה הנכונה: ${question.correctAnswer}`}</span>
+                  </div>
+                )}
+
                 {/* פידבק + כפתור הבא */}
                 {showFeedback && (
-                  <div className="mt-3 flex items-center gap-2 pt-3 border-t border-gray-100">
+                  <div className="mt-2 flex items-center gap-2 pt-3 border-t border-gray-100">
                     <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold flex-shrink-0 ${isCorrect ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
                       {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
                       {isCorrect ? 'נכון!' : 'שגוי'}
