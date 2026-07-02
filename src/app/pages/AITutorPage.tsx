@@ -213,16 +213,16 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
             <p className="text-gray-500 text-sm text-center">שלום {userName}! בחרי קורס כדי להתחיל לשוחח</p>
           </div>
 
-          {/* Course cards grid */}
+          {/* Course cards */}
           {myCourses.length > 0 ? (
-            <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 w-full max-w-4xl">
+            <div className="flex flex-wrap justify-center gap-3 w-full max-w-4xl">
               {myCourses.map(course => {
                 const msgCount = conversations[course.id]?.length ?? 0;
                 return (
                   <button
                     key={course.id}
                     onClick={() => selectCourse(course.id)}
-                    className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border-2 border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all group text-center"
+                    className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border-2 border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all group text-center w-40"
                   >
                     <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${course.color} flex items-center justify-center text-white font-bold overflow-hidden group-hover:scale-105 transition-transform flex-shrink-0`}>
                       <span className="text-xl leading-none">{course.emoji}</span>
