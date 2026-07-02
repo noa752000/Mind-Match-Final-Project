@@ -176,11 +176,11 @@ export function CommunityPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="text-right">
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3 justify-end">
-                קהילת הלומדים
+              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
                 <Users className="w-8 h-8 text-teal-600" />
+                קהילת הלומדים
               </h1>
-              <p className="text-gray-600 mt-1">מצאי שותפים ללמידה מקורסים ומוסדות משותפים</p>
+              <p className="text-gray-600 mt-1 text-right">מצאי שותפים ללמידה מקורסים ומוסדות משותפים</p>
             </div>
 
             {selected.length > 0 && (
