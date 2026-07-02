@@ -65,19 +65,19 @@ export function ProfileHeader() {
   };
 
   return (
-    <Card className="p-4 border-gray-100">
-      <div className="flex items-center gap-5">
+    <Card className="p-3 border-gray-100">
+      <div className="flex items-center gap-3">
         {/* Avatar */}
         <div className="relative flex-shrink-0">
           {displayPhoto ? (
             <img
               src={displayPhoto}
               alt={user?.fullName}
-              className="w-20 h-20 rounded-xl object-cover"
+              className="w-12 h-12 rounded-lg object-cover"
             />
           ) : (
-            <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
-              <span className="text-2xl text-white font-bold">{initials}</span>
+            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+              <span className="text-base text-white font-bold">{initials}</span>
             </div>
           )}
 
@@ -93,25 +93,25 @@ export function ProfileHeader() {
           <button
             onClick={() => !uploading && fileInputRef.current?.click()}
             disabled={uploading}
-            className="absolute bottom-1 left-1 w-9 h-9 rounded-full bg-white shadow-lg border-2 border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="absolute bottom-0 left-0 w-6 h-6 rounded-full bg-white shadow border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50"
             title="שנה תמונת פרופיל"
           >
-            <Camera className="w-4 h-4 text-gray-700" />
+            <Camera className="w-3 h-3 text-gray-700" />
           </button>
 
           {/* Verified badge */}
-          <div className="absolute -top-1 -right-1 w-8 h-8 rounded-full bg-green-500 border-4 border-white flex items-center justify-center shadow-lg">
+          <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-green-500 border-2 border-white flex items-center justify-center shadow">
             <span className="text-white text-sm font-bold">✓</span>
           </div>
         </div>
 
         {/* Name + badges */}
         <div className="text-right flex-1">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-base font-bold text-gray-900 mb-1">
             {user?.fullName || 'משתמש'}
           </h1>
           <div className="flex items-center gap-2 justify-start">
-            <Badge className="bg-teal-100 text-teal-700 text-sm px-2 py-0.5">סטודנט פעיל</Badge>
+            <Badge className="bg-teal-100 text-teal-700 text-xs px-2 py-0.5">סטודנט פעיל</Badge>
           </div>
         </div>
       </div>
