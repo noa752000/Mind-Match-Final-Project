@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { coursesData } from './data/coursesData';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Sidebar } from './components/Sidebar';
@@ -22,6 +22,8 @@ function AppContent() {
   const [currentPage, setCurrentPage] = useState<
     'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail' | 'community'
   >('home');
+
+  useEffect(() => { window.scrollTo(0, 0); }, [currentPage]);
 
   const [selectedCourseId, setSelectedCourseId] = useState<string>('');
   const [tutorCourseId, setTutorCourseId] = useState<string>('');
