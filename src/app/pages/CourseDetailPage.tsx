@@ -293,17 +293,26 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
               <h1 className="text-4xl font-bold text-gray-900">{course.title}</h1>
             </div>
             <div className="flex items-center gap-3">
+              {onOpenPractice && (
+                <button
+                  onClick={() => onOpenPractice(courseId)}
+                  className="flex items-center gap-2 h-12 px-6 text-base font-semibold text-teal-700 bg-white border-2 border-teal-300 hover:bg-teal-50 transition-all rounded-xl"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  התחל תרגול
+                </button>
+              )}
               <button
                 onClick={handleToggleCourse}
                 disabled={toggling}
                 className={isInMyCourses
-                  ? 'flex items-center gap-2 h-14 px-8 text-base font-semibold bg-green-100 text-green-700 hover:bg-red-50 hover:text-red-600 border-2 border-green-300 hover:border-red-300 transition-all rounded-xl disabled:opacity-50'
-                  : 'flex items-center gap-3 h-14 px-10 text-xl font-bold bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-xl shadow-xl shadow-teal-300/50 hover:shadow-teal-400/60 transition-all hover:scale-105 ring-4 ring-teal-300/40 disabled:opacity-50'
+                  ? 'flex items-center gap-2 h-12 px-6 text-base font-semibold bg-green-100 text-green-700 hover:bg-red-50 hover:text-red-600 border-2 border-green-300 hover:border-red-300 transition-all rounded-xl disabled:opacity-50'
+                  : 'flex items-center gap-2 h-12 px-6 text-base font-bold bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-xl shadow-lg transition-all hover:scale-105 disabled:opacity-50'
                 }
               >
                 {isInMyCourses
                   ? <><CheckCircle className="w-5 h-5" />בקורסים שלי</>
-                  : <><Plus className="w-7 h-7" />הוסף לקורסים שלי</>
+                  : <><Plus className="w-5 h-5" />הוסף לקורסים שלי</>
                 }
               </button>
             </div>
@@ -314,23 +323,6 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
       {/* Content */}
       <div className="max-w-[1440px] mx-auto px-16 py-12">
         <div className="space-y-8">
-
-          {/* כפתור התחל תרגול */}
-          {onOpenPractice && (
-            <div className="flex items-center justify-between bg-gradient-to-l from-teal-50 to-cyan-50 border border-teal-200 rounded-2xl px-8 py-5">
-              <button
-                onClick={() => onOpenPractice(courseId)}
-                className="flex items-center gap-2 h-11 px-7 text-base font-semibold bg-teal-600 hover:bg-teal-700 text-white rounded-xl transition-all hover:scale-105 shadow-md"
-              >
-                <Sparkles className="w-4 h-4" />
-                התחל תרגול
-              </button>
-              <div className="text-right">
-                <p className="text-teal-800 font-semibold text-base">מוכן לתרגל?</p>
-                <p className="text-teal-600 text-sm">תרגל שאלות בנושאי הקורס וקבל משוב מיידי</p>
-              </div>
-            </div>
-          )}
 
           {/* הסבר כללי על הקורס */}
           <Card className="p-8">
