@@ -292,19 +292,19 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
               </div>
               <h1 className="text-4xl font-bold text-gray-900">{course.title}</h1>
             </div>
-            <Button
+            <button
               onClick={handleToggleCourse}
               disabled={toggling}
               className={isInMyCourses
-                ? 'h-14 px-8 text-base bg-green-100 text-green-700 hover:bg-red-50 hover:text-red-600 border-2 border-green-300 hover:border-red-300 transition-all gap-2 rounded-xl'
-                : 'h-14 px-10 text-lg font-bold bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white gap-3 rounded-xl shadow-xl shadow-teal-300/50 hover:shadow-teal-400/60 transition-all hover:scale-105 ring-4 ring-teal-300/40'
+                ? 'flex items-center gap-2 h-14 px-8 text-base font-semibold bg-green-100 text-green-700 hover:bg-red-50 hover:text-red-600 border-2 border-green-300 hover:border-red-300 transition-all rounded-xl disabled:opacity-50'
+                : 'flex items-center gap-3 h-14 px-10 text-xl font-bold bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white rounded-xl shadow-xl shadow-teal-300/50 hover:shadow-teal-400/60 transition-all hover:scale-105 ring-4 ring-teal-300/40 disabled:opacity-50'
               }
             >
               {isInMyCourses
                 ? <><CheckCircle className="w-5 h-5" />בקורסים שלי</>
-                : <><Plus className="w-6 h-6" />הוסף לקורסים שלי</>
+                : <><Plus className="w-7 h-7" />הוסף לקורסים שלי</>
               }
-            </Button>
+            </button>
           </div>
         </div>
       </div>
