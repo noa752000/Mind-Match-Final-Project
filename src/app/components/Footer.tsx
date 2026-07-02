@@ -1,4 +1,4 @@
-import { Bot, BookOpen, Calendar, Users, BarChart2, Mail } from 'lucide-react';
+import { Bot, BookOpen, Calendar, Users, BarChart3, Mail } from 'lucide-react';
 import logoImage from '../../assets/logo.png';
 
 const scrollTo = (id: string) =>
@@ -61,7 +61,7 @@ export function Footer() {
                   { icon: BookOpen, label: 'תרגול חכם' },
                   { icon: Calendar, label: 'לוח שנה לימודי' },
                   { icon: Users,    label: 'קהילת לומדים' },
-                  { icon: BarChart2,label: 'ניתוח ביצועים' },
+                  { icon: BarChart3, label: 'ניתוח ביצועים' },
                 ].map(({ icon: Icon, label }) => (
                   <li key={label} className="flex items-center gap-2 justify-end">
                     <span>{label}</span>
