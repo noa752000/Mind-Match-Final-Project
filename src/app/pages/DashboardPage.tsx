@@ -9,7 +9,7 @@ interface DashboardPageProps {
 
 export function DashboardPage({ onOpenPractice, onNavigateToCourses }: DashboardPageProps) {
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
+    <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
       <main className="pt-8 px-8 pb-8">
         <div className="max-w-[1176px] mx-auto">
           {/* Page Header */}

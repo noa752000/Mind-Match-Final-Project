@@ -367,7 +367,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
         <div className="max-w-[1440px] mx-auto px-16 py-12">
           <Card className="p-8 text-center">
             <BookOpen className="w-16 h-16 mx-auto mb-4 text-teal-500" />
@@ -380,7 +380,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   if (questions.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
@@ -410,7 +410,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   if (!question) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
@@ -441,10 +441,10 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
   const isCorrect = selectedAnswer === question.correctAnswer;
 
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
+    <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-16 py-12">
+        <div className="max-w-[1440px] mx-auto px-8 py-3">
           <div className="flex justify-between items-center">
             <Button
               onClick={onBack}
@@ -456,8 +456,8 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
             </Button>
 
             <div className="text-right">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">תרגול</h1>
-              <p className="text-xl text-gray-600">קורס: {questionDataCourseId}</p>
+              <h1 className="text-2xl font-bold text-gray-900">תרגול</h1>
+              <p className="text-sm text-gray-600">קורס: {questionDataCourseId}</p>
             </div>
           </div>
         </div>
@@ -465,26 +465,26 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
       {/* Progress Bar */}
       <div className="bg-gradient-to-l from-teal-500 to-teal-600 text-white">
-        <div className="max-w-[1440px] mx-auto px-16 py-8">
-          <div className="grid grid-cols-3 gap-8">
+        <div className="max-w-[1440px] mx-auto px-8 py-3">
+          <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
-              <div className="text-3xl font-bold mb-1">{currentQuestionIndex + 1}</div>
-              <div className="text-teal-100 text-sm">שאלה נוכחית</div>
+              <div className="text-xl font-bold">{currentQuestionIndex + 1}</div>
+              <div className="text-teal-100 text-xs">שאלה נוכחית</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold mb-1">{questions.length}</div>
-              <div className="text-teal-100 text-sm">סה"כ שאלות</div>
+              <div className="text-xl font-bold">{questions.length}</div>
+              <div className="text-teal-100 text-xs">סה"כ שאלות</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold mb-1">{Math.round(((currentQuestionIndex + 1) / questions.length) * 100)}%</div>
-              <div className="text-teal-100 text-sm">התקדמות</div>
+              <div className="text-xl font-bold">{Math.round(((currentQuestionIndex + 1) / questions.length) * 100)}%</div>
+              <div className="text-teal-100 text-xs">התקדמות</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Question Content */}
-      <div className="max-w-[1440px] mx-auto px-16 py-12">
+      <div className="max-w-[1440px] mx-auto px-8 py-4">
         <div className="max-w-4xl mx-auto">
           <Card className="h-full flex flex-col hover:shadow-xl transition-all duration-300 border-gray-200 overflow-hidden group">
             {/* Question Header with Gradient */}

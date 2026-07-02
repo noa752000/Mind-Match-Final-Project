@@ -272,7 +272,7 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
   const qTypes = questionTypeDescriptions[courseId] || defaultQuestionTypes;
 
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-32" dir="rtl">
+    <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
       {/* Header */}
       <div className="bg-blue-50 border-b border-blue-200">
         <div className="max-w-[1440px] mx-auto px-16 py-8">

@@ -49,11 +49,11 @@ export function TopNavBar({ onNavigate, userName }: TopNavBarProps) {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-32 bg-white border-b border-gray-200 z-50">
+    <div className="fixed top-0 left-0 right-0 h-20 bg-white border-b border-gray-200 z-50">
       <div className="h-full px-8 flex items-center justify-between">
         {/* לוגו */}
         <button onClick={() => onNavigate('home')} className="flex items-center">
-          <img src={logoImage} alt="MindMatch Logo" className="h-28 w-auto" />
+          <img src={logoImage} alt="MindMatch Logo" className="h-14 w-auto" />
         </button>
 
         {/* משתמש והתראות */}
