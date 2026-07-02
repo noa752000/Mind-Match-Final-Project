@@ -387,7 +387,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
         <div className="max-w-[1440px] mx-auto px-16 py-12">
           <Card className="p-8 text-center">
             <BookOpen className="w-16 h-16 mx-auto mb-4 text-teal-500" />
@@ -400,7 +400,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   if (questions.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
@@ -430,7 +430,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   if (!question) {
     return (
-      <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
+      <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-[1440px] mx-auto px-16 py-12">
             <div className="text-right">
@@ -465,7 +465,7 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   return (
     <div
-      className="fixed inset-0 top-20 mr-64 flex flex-col overflow-hidden"
+      className="fixed inset-0 top-24 mr-64 flex flex-col overflow-hidden"
       dir="rtl"
       style={{ background: 'linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #0891b2 100%)' }}
     >

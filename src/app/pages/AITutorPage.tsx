@@ -200,32 +200,32 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
   };
 
   return (
-    <div className="fixed inset-0 top-20 mr-64 flex flex-col bg-gray-50" dir="rtl">
+    <div className="fixed inset-0 top-24 mr-64 flex flex-col bg-gray-50" dir="rtl">
       {!activeCourseId ? (
         /* ── Course selection screen ── */
-        <div className="flex-1 flex flex-col items-center justify-center p-8 gap-8 overflow-y-auto">
+        <div className="flex-1 flex flex-col items-center justify-center px-8 py-4 gap-5 overflow-hidden">
           {/* Header */}
           <div className="text-center">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg mx-auto mb-4">
-              <Bot className="w-10 h-10 text-white" />
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg mx-auto mb-3">
+              <Bot className="w-7 h-7 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">מורה AI</h2>
-            <p className="text-gray-500 text-base">שלום {userName}! בחרי קורס כדי להתחיל לשוחח</p>
+            <h2 className="text-xl font-bold text-gray-900 mb-1">מורה AI</h2>
+            <p className="text-gray-500 text-sm">שלום {userName}! בחרי קורס כדי להתחיל לשוחח</p>
           </div>
 
           {/* Course cards grid */}
           {myCourses.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-3xl">
+            <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 w-full max-w-4xl">
               {myCourses.map(course => {
                 const msgCount = conversations[course.id]?.length ?? 0;
                 return (
                   <button
                     key={course.id}
                     onClick={() => selectCourse(course.id)}
-                    className="flex flex-col items-center gap-3 p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all group text-center"
+                    className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border-2 border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all group text-center"
                   >
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${course.color} flex items-center justify-center text-white font-bold overflow-hidden group-hover:scale-105 transition-transform flex-shrink-0`}>
-                      <span className="text-2xl leading-none">{course.emoji}</span>
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${course.color} flex items-center justify-center text-white font-bold overflow-hidden group-hover:scale-105 transition-transform flex-shrink-0`}>
+                      <span className="text-xl leading-none">{course.emoji}</span>
                     </div>
                     <span className="text-sm font-semibold text-gray-800 leading-tight">{course.title}</span>
                     {msgCount > 0 ? (
@@ -238,9 +238,9 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
               })}
             </div>
           ) : (
-            <div className="text-center p-10 bg-white rounded-2xl border border-gray-200 max-w-sm shadow-sm">
-              <GraduationCap className="w-14 h-14 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-600 font-semibold text-lg mb-2">עדיין לא הוספת קורסים</p>
+            <div className="text-center p-8 bg-white rounded-2xl border border-gray-200 max-w-sm shadow-sm">
+              <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-600 font-semibold text-base mb-1">עדיין לא הוספת קורסים</p>
               <p className="text-gray-400 text-sm leading-relaxed">
                 כנסי לקטלוג הקורסים<br />והוסיפי קורסים לרשימה שלך
               </p>

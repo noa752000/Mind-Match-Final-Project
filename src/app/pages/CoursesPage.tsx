@@ -128,7 +128,7 @@ export function CoursesPage({ onCourseSelect }: CoursesPageProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
+    <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-[1440px] mx-auto px-16 py-12">

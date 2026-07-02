@@ -155,7 +155,7 @@ export function CalendarSidebar() {
 
   return (
     <>
-      <div className="fixed left-0 top-20 w-64 bg-white border-l border-gray-200 p-5 overflow-y-auto h-[calc(100vh-5rem)]">
+      <div className="fixed left-0 top-24 w-64 bg-white border-l border-gray-200 p-5 overflow-y-auto h-[calc(100vh-6rem)]">
         {/* AI Recommendations */}
         <div>
           <div className="flex items-center gap-2 mb-3 justify-start">

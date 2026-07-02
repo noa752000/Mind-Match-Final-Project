@@ -69,7 +69,7 @@ export function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
+    <div className="min-h-screen bg-gray-50 mr-64 pt-24" dir="rtl">
       <main className="pt-8 px-8 pb-8">
         <div className="max-w-[1440px] mx-auto space-y-8">
           {/* Page Title */}
