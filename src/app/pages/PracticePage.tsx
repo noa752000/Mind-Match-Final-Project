@@ -440,143 +440,84 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
 
   const isCorrect = selectedAnswer === question.correctAnswer;
 
+  const progressPct = Math.round(((currentQuestionIndex + 1) / questions.length) * 100);
+
   return (
-    <div className="min-h-screen bg-gray-50 mr-64 pt-20" dir="rtl">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-8 py-3">
-          <div className="flex justify-between items-center">
-            <Button
-              onClick={onBack}
-              variant="ghost"
-              className="text-teal-600 hover:text-teal-700 hover:bg-teal-50"
-            >
-              <ArrowLeft className="w-4 h-4 ml-2" />
-              {backLabel}
-            </Button>
+    <div className="h-[calc(100vh-5rem)] bg-gray-50 mr-64 pt-20 flex flex-col" dir="rtl">
 
-            <div className="text-right">
-              <h1 className="text-2xl font-bold text-gray-900">תרגול</h1>
-              <p className="text-sm text-gray-600">קורס: {questionDataCourseId}</p>
+      {/* שורת מידע קומפקטית */}
+      <div className="bg-white border-b border-gray-200 px-8 py-2 flex items-center justify-between flex-shrink-0">
+        <Button onClick={onBack} variant="ghost" size="sm" className="text-teal-600 hover:text-teal-700 hover:bg-teal-50">
+          <ArrowLeft className="w-4 h-4 ml-1" />
+          {backLabel}
+        </Button>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-gray-500">{questionDataCourseId}</span>
+          <span className="text-sm font-medium text-gray-700">שאלה {currentQuestionIndex + 1} / {questions.length}</span>
+          <div className="flex items-center gap-2">
+            <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-full bg-teal-500 rounded-full transition-all" style={{ width: `${progressPct}%` }} />
             </div>
+            <span className="text-sm font-bold text-teal-600">{progressPct}%</span>
           </div>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="bg-gradient-to-l from-teal-500 to-teal-600 text-white">
-        <div className="max-w-[1440px] mx-auto px-8 py-3">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center">
-              <div className="text-xl font-bold">{currentQuestionIndex + 1}</div>
-              <div className="text-teal-100 text-xs">שאלה נוכחית</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl font-bold">{questions.length}</div>
-              <div className="text-teal-100 text-xs">סה"כ שאלות</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl font-bold">{Math.round(((currentQuestionIndex + 1) / questions.length) * 100)}%</div>
-              <div className="text-teal-100 text-xs">התקדמות</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* תוכן השאלה - ממלא את שארית הגובה */}
+      <div className="flex-1 overflow-y-auto px-8 py-4">
+        <div className="max-w-3xl mx-auto">
+          <Card className="shadow-md border-gray-200">
+            <div className="p-6">
+              {/* מטא שאלה */}
+              <div className="flex items-center gap-2 mb-4 justify-end flex-wrap">
+                <Badge className="bg-teal-100 text-teal-700 border-teal-200">שאלה {currentQuestionIndex + 1}</Badge>
+                {question.subTopic && <span className="text-xs text-gray-400">{question.subTopic}</span>}
+              </div>
 
-      {/* Question Content */}
-      <div className="max-w-[1440px] mx-auto px-8 py-4">
-        <div className="max-w-4xl mx-auto">
-          <Card className="h-full flex flex-col hover:shadow-xl transition-all duration-300 border-gray-200 overflow-hidden group">
-            {/* Question Header with Gradient */}
-            <div className="bg-gradient-to-l from-teal-500 to-teal-600 p-6 text-white relative overflow-hidden min-h-[140px]">
-              <div className="absolute top-0 left-0 w-full h-full opacity-10">
-                <BookOpen className="w-24 h-24 absolute -top-4 -left-4 transform rotate-12" />
-              </div>
-              <div className="relative z-10">
-                <Badge className="bg-white/20 text-white border-white/30 mb-3">
-                  שאלה {currentQuestionIndex + 1}
-                </Badge>
-                <div className="flex items-center gap-4 text-sm text-white/90 justify-start mb-4">
-                  <div>קורס: {questionDataCourseId}</div>
-                  {question.subTopic && (
-                    <>
-                      <div className="w-1 h-1 rounded-full bg-white/50"></div>
-                      <div>תת נושא: {question.subTopic}</div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Question Body */}
-            <div className="p-6 flex-1 flex flex-col">
-              <div className="mb-6 text-right">
-                <h2 className="text-2xl font-semibold text-gray-900 leading-8 whitespace-pre-line">
-                    <span dangerouslySetInnerHTML={{ __html: question.question }} />
-                </h2>
-              </div>
+              {/* טקסט השאלה */}
+              <h2 className="text-xl font-semibold text-gray-900 leading-7 text-right mb-4 whitespace-pre-line">
+                <span dangerouslySetInnerHTML={{ __html: question.question }} />
+              </h2>
 
               {question.imageUrl && (
-                <div className="mb-6">
-                  <img
-                    src={question.imageUrl}
-                    alt="שאלה ויזואלית"
-                    className="max-w-full mx-auto rounded-xl border"
-                  />
+                <div className="mb-4">
+                  <img src={question.imageUrl} alt="שאלה ויזואלית" className="max-h-48 mx-auto rounded-xl border object-contain" />
                 </div>
               )}
 
-              <div className="space-y-3 mb-6">
+              {/* תשובות */}
+              <div className="space-y-2 mb-4">
                 {question.options.map((option) => {
                   const isSelected = selectedAnswer === option;
                   const isRightAnswer = question.correctAnswer === option;
-
-                  let buttonClass = 'w-full text-right border rounded-xl p-4 transition';
-
+                  let cls = 'w-full text-right border rounded-xl px-4 py-3 transition text-sm';
                   if (showFeedback) {
-                    if (isRightAnswer) {
-                      buttonClass += ' bg-green-100 border-green-500 text-green-800';
-                    } else if (isSelected && !isRightAnswer) {
-                      buttonClass += ' bg-red-100 border-red-500 text-red-800';
-                    } else {
-                      buttonClass += ' bg-white border-gray-200 text-gray-700';
-                    }
+                    if (isRightAnswer) cls += ' bg-green-100 border-green-500 text-green-800';
+                    else if (isSelected) cls += ' bg-red-100 border-red-500 text-red-800';
+                    else cls += ' bg-white border-gray-200 text-gray-500';
                   } else {
-                    buttonClass += ' bg-white border-gray-200 hover:border-teal-500 hover:bg-teal-50 text-gray-900';
+                    cls += isSelected
+                      ? ' bg-teal-50 border-teal-500 text-teal-900'
+                      : ' bg-white border-gray-200 hover:border-teal-400 hover:bg-teal-50 text-gray-900';
                   }
-
                   return (
-                    <button
-                      key={option}
-                      onClick={() => handleAnswerClick(option)}
-                      disabled={showFeedback}
-                      className={buttonClass}
-                    >
+                    <button key={option} onClick={() => handleAnswerClick(option)} disabled={showFeedback} className={cls}>
                       <span dangerouslySetInnerHTML={{ __html: option }} />
                     </button>
                   );
                 })}
               </div>
 
+              {/* פידבק + כפתור הבא */}
               {showFeedback && (
-                <div className="text-right">
-                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 ${isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                    {isCorrect ? (
-                      <CheckCircle className="w-5 h-5" />
-                    ) : (
-                      <XCircle className="w-5 h-5" />
-                    )}
-                    <span className="font-medium">
-                      {isCorrect ? 'תשובה נכונה!' : 'תשובה לא נכונה'}
-                    </span>
-                  </div>
-
-                  <Button
-                    onClick={handleNextQuestion}
-                    className="w-full bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white group-hover:shadow-lg transition-all"
-                  >
+                <div className="flex items-center gap-3 justify-between">
+                  <Button onClick={handleNextQuestion} className="bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white">
                     לשאלה הבאה
                   </Button>
+                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                    {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
+                    <span className="font-medium text-sm">{isCorrect ? 'תשובה נכונה!' : 'תשובה לא נכונה'}</span>
+                  </div>
                 </div>
               )}
             </div>
