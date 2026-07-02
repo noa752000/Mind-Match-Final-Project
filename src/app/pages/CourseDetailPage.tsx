@@ -432,17 +432,36 @@ export function CourseDetailPage({ courseId, onBack, onOpenTutor, onOpenPractice
                       <Award className="w-8 h-8 text-red-600" />
                     </div>
                   </div>
-                  {courseId === 'html' && (
-                    <a
-                      href="/example-tests/html5_exam1.pdf"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 border border-red-200 rounded-xl text-red-700 text-sm font-medium transition-colors"
-                    >
-                      <Award className="w-4 h-4" />
-                      מבחן לדוגמה — HTML5
-                    </a>
-                  )}
+                  {(() => {
+                    const exams: Record<string, { label: string; file: string }[]> = {
+                      html:             [{ label: 'מבחן לדוגמה 1', file: 'html5_exam1.pdf' }, { label: 'מבחן מתקדם', file: 'html5_advanced_exam2.pdf' }],
+                      calculus1:        [{ label: 'מבחן לדוגמה 1', file: 'hedva1ver1.pdf' }, { label: 'מבחן לדוגמה 2', file: 'hedva1ver2.pdf' }],
+                      'linear-algebra': [{ label: 'מבחן לדוגמה 1', file: 'linear_algebra_sample_exam1.pdf' }, { label: 'מבחן רשמי', file: 'linear_algebra_official_exam2.pdf' }],
+                      oop:              [{ label: 'מבחן לדוגמה 1', file: 'oop_ver1.pdf' }, { label: 'מבחן לדוגמה 2', file: 'oop_ver2.pdf' }],
+                      sql:              [{ label: 'מבחן לדוגמה 1', file: 'sql_ver1.pdf' }, { label: 'מבחן לדוגמה 2', file: 'sql_ver2.pdf' }],
+                      systems_analysis: [{ label: 'מבחן לדוגמה 1', file: 'system_design_and_analysis_exam_ver1.pdf' }, { label: 'מבחן לדוגמה 2', file: 'system_design_and_analysis_exam_ver2.pdf' }],
+                      cyber_security:   [{ label: 'מבחן לדוגמה 1', file: 'information_security_exam1.pdf' }, { label: 'מבחן לדוגמה 2', file: 'information_security_exam2.pdf' }],
+                      'mis-economics':  [{ label: 'מבחן לדוגמה 1', file: 'economics_exam1.pdf' }, { label: 'מבחן לדוגמה 2', file: 'economics_exam2.pdf' }],
+                    };
+                    const list = exams[courseId];
+                    if (!list) return null;
+                    return (
+                      <div className="flex flex-wrap gap-3">
+                        {list.map(({ label, file }) => (
+                          <a
+                            key={file}
+                            href={`/example-tests/${file}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 border border-red-200 rounded-xl text-red-700 text-sm font-medium transition-colors"
+                          >
+                            <Award className="w-4 h-4" />
+                            {label}
+                          </a>
+                        ))}
+                      </div>
+                    );
+                  })()}
                 </div>
               </Card>
             </div>
