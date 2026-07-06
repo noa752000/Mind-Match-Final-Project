@@ -174,7 +174,7 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
               הרשמה
             </button>
           </div>
-          <img src={logoImage} alt="Mind Match" className="h-10 w-auto flex-shrink-0" />
+          <img src={logoImage} alt="Mind Match" className="h-28 w-auto flex-shrink-0" />
         </div>
 
         <div className="text-right mb-4">
