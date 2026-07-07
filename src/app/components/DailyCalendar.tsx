@@ -64,6 +64,12 @@ export function DailyCalendar() {
   const dayLabel = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'][dayOfWeek];
   const dateLabel = `${weekStart.getDate()}/${weekStart.getMonth() + 1}`;
 
+  const isPast = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return weekStart < today;
+  }, [weekStart]);
+
   const dayEvents = useMemo(() => {
     return googleEvents
       .filter(e => e.start.dateTime && new Date(e.start.dateTime).getDay() === dayOfWeek)
@@ -74,6 +80,7 @@ export function DailyCalendar() {
   const localDayEvents = localAppEvents.filter(e => e.dayOfWeek === dayOfWeek);
 
   const handleSlotClick = (time: string) => {
+    if (isPast) return;
     setModal({ isOpen: true, day: { label: dayLabel, date: dateLabel, dayOfWeek, fullDate: weekStart }, time });
   };
 
@@ -108,7 +115,7 @@ export function DailyCalendar() {
         {/* Header */}
         <div className="grid border-b border-gray-200 bg-gray-50" style={{ gridTemplateColumns: '80px 1fr' }}>
           <div className="p-4 border-l border-gray-200" />
-          <div className="p-4 text-center border-l border-gray-200">
+          <div className={`p-4 text-center border-l border-gray-200 ${isPast ? 'opacity-50' : ''}`}>
             <div className="font-semibold text-gray-900 text-lg">{dayLabel}</div>
             <div className="text-sm text-gray-600">{dateLabel}</div>
           </div>
@@ -120,18 +127,22 @@ export function DailyCalendar() {
               <div key={t} className="h-[60px] border-b border-gray-200 px-3 py-2 text-sm text-gray-600 text-right">{t}</div>
             ))}
           </div>
-          <div className="border-l border-gray-200 relative">
+          <div className={`border-l border-gray-200 relative ${isPast ? 'bg-gray-50/60' : ''}`}>
             {timeSlots.map(t => (
               <div
                 key={t}
-                className="h-[60px] border-b border-gray-200 hover:bg-teal-50/60 transition-colors cursor-pointer group/slot relative"
+                className={`h-[60px] border-b border-gray-200 transition-colors relative ${
+                  isPast ? 'cursor-not-allowed' : 'hover:bg-teal-50/60 cursor-pointer group/slot'
+                }`}
                 onClick={() => handleSlotClick(t)}
               >
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/slot:opacity-100 transition-opacity pointer-events-none">
-                  <span className="flex items-center gap-1 bg-teal-100 text-teal-700 rounded-full px-2 py-0.5 text-xs font-medium">
-                    <Plus className="w-3 h-3" />הוסף פעילות
-                  </span>
-                </div>
+                {!isPast && (
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/slot:opacity-100 transition-opacity pointer-events-none">
+                    <span className="flex items-center gap-1 bg-teal-100 text-teal-700 rounded-full px-2 py-0.5 text-xs font-medium">
+                      <Plus className="w-3 h-3" />הוסף פעילות
+                    </span>
+                  </div>
+                )}
               </div>
             ))}
             <div className="absolute inset-0 pointer-events-none">

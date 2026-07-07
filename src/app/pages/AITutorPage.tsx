@@ -159,8 +159,8 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  const handleSend = async () => {
-    const text = input.trim();
+  const handleSend = async (overrideText?: string) => {
+    const text = (overrideText ?? input).trim();
     if (!text || !activeCourseId || isLoading) return;
 
     setInput('');
@@ -217,7 +217,7 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
               <Bot className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-1">מורה AI</h2>
-            <p className="text-gray-500 text-sm text-center">שלום {userName}! בחרי קורס כדי להתחיל לשוחח</p>
+            <p className="text-gray-500 text-sm text-center">שלום {userName}! בחר/י קורס כדי להתחיל לשוחח</p>
           </div>
 
           {/* Course cards */}
@@ -249,7 +249,7 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
               <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-600 font-semibold text-base mb-1">עדיין לא הוספת קורסים</p>
               <p className="text-gray-400 text-sm leading-relaxed">
-                כנסי לקטלוג הקורסים<br />והוסיפי קורסים לרשימה שלך
+                היכנס/י לקטלוג הקורסים<br />והוסף/הוסיפי קורסים לרשימה שלך
               </p>
             </div>
           )}
@@ -284,14 +284,14 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
               <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
                 <BookOpen className="w-12 h-12 text-gray-300" />
                 <div>
-                  <p className="text-gray-500 font-medium">שאלי כל שאלה על {activeCourse?.title}</p>
+                  <p className="text-gray-500 font-medium">שאל/י כל שאלה על {activeCourse?.title}</p>
                   <p className="text-gray-400 text-sm mt-1">המורה AI ישיב לך בעברית עם הסברים ברורים</p>
                 </div>
                 <div className="flex flex-wrap gap-2 justify-center mt-2">
                   {['הסבר לי את המושג הבסיסי ביותר', 'אילו נושאים חשובים לבחינה?', 'תן לי דוגמה פשוטה'].map(q => (
                     <button
                       key={q}
-                      onClick={() => { setInput(q); textareaRef.current?.focus(); }}
+                      onClick={() => handleSend(q)}
                       className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full border border-blue-200 hover:bg-blue-100 transition-colors"
                     >
                       {q}
@@ -333,7 +333,7 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
             {error && (
               <div className="mx-auto max-w-sm p-3 bg-red-50 border border-red-200 rounded-xl text-center">
                 <p className="text-red-600 text-sm">{error}</p>
-                <p className="text-red-400 text-xs mt-1">בדקי שיש חיבור לאינטרנט ונסי שוב.</p>
+                <p className="text-red-400 text-xs mt-1">בדוק/י שיש חיבור לאינטרנט ונסה/י שוב.</p>
               </div>
             )}
 
@@ -359,7 +359,7 @@ export function AITutorPage({ courseId: initialCourseId }: AITutorPageProps) {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={`שאלי שאלה על ${activeCourse?.title}...`}
+                placeholder={`שאל/י שאלה על ${activeCourse?.title}...`}
                 rows={1}
                 dir="rtl"
                 className="flex-1 resize-none border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none min-h-[44px] max-h-32 overflow-y-auto"

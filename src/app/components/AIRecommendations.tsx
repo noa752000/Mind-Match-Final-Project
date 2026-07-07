@@ -105,8 +105,8 @@ function buildRecommendations(
     if (best) {
       const acc = Math.round((progressMap[best].correctAnswers / progressMap[best].totalAnswers) * 100);
       recs.push({
-        title: `המשיכי להתקדם ב-${COURSE_NAMES[best] || best}`,
-        reason: `דיוק של ${acc}% — את מצטיינת בקורס זה`,
+        title: `המשך/י להתקדם ב-${COURSE_NAMES[best] || best}`,
+        reason: `דיוק של ${acc}% — את/ה מצטיין/ת בקורס זה`,
         time: '15 דקות',
         impact: 'בינוני',
         type: 'תרגול',
@@ -122,7 +122,7 @@ function buildRecommendations(
     if (recs.length >= 3) break;
     if (used.has(id)) continue;
     recs.push({
-      title: `התחילי להתרגל ב-${COURSE_NAMES[id] || id}`,
+      title: `התחל/י להתרגל ב-${COURSE_NAMES[id] || id}`,
       reason: 'טרם תרגלת קורס זה — הגיע הזמן להתחיל',
       time: '10 דקות',
       impact: 'בינוני',
@@ -238,7 +238,7 @@ export function AIRecommendations({ onOpenPractice }: AIRecommendationsProps) {
       <section className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 text-right">מומלץ עבורך</h2>
         <Card className="p-8 text-center border-gray-100">
-          <p className="text-gray-500">הוסיפי קורסים לפרופיל כדי לקבל המלצות מותאמות אישית.</p>
+          <p className="text-gray-500">הוסף/הוסיפי קורסים לפרופיל כדי לקבל המלצות מותאמות אישית.</p>
         </Card>
       </section>
     );
@@ -284,7 +284,7 @@ export function AIRecommendations({ onOpenPractice }: AIRecommendationsProps) {
           ) : aiInsight ? (
             <p className="text-gray-700 leading-relaxed">{aiInsight}</p>
           ) : (
-            <p className="text-gray-500 text-sm">המשיכי להתרגל כדי לקבל תובנות מותאמות אישית.</p>
+            <p className="text-gray-500 text-sm">המשך/י להתרגל כדי לקבל תובנות מותאמות אישית.</p>
           )}
         </div>
       </Card>

@@ -91,7 +91,7 @@ export function PersonalInfo({
                 dir="rtl"
                 className={`${fieldClass} pr-10 appearance-none`}
               >
-                <option value="">בחרי מוסד לימודים...</option>
+                <option value="">בחר/י מוסד לימודים...</option>
                 <optgroup label="אוניברסיטאות">
                   <option>אוניברסיטת תל אביב</option>
                   <option>האוניברסיטה העברית בירושלים</option>

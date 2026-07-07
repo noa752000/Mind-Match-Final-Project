@@ -127,7 +127,7 @@ export function PerformanceAnalytics({ courseProgress, practiceResults, loading 
           </ResponsiveContainer>
         ) : (
           <div className="py-16 text-center text-gray-500">
-            עדיין אין מספיק נתוני תרגול להצגת מגמה. התחילי לתרגל כדי לראות את ההתקדמות שלך כאן.
+            עדיין אין מספיק נתוני תרגול להצגת מגמה. התחל/י לתרגל כדי לראות את ההתקדמות שלך כאן.
           </div>
         )}
       </Card>
@@ -163,7 +163,7 @@ export function PerformanceAnalytics({ courseProgress, practiceResults, loading 
           </ResponsiveContainer>
         ) : (
           <div className="py-16 text-center text-gray-500">
-            עדיין לא נצברו נתוני דיוק עבור הקורסים שלך. תרגלי שאלות כדי לראות פירוט לפי נושא.
+            עדיין לא נצברו נתוני דיוק עבור הקורסים שלך. תרגל/י שאלות כדי לראות פירוט לפי נושא.
           </div>
         )}
       </Card>

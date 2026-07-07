@@ -75,6 +75,8 @@ export function WeeklyCalendar() {
   const [modal, setModal] = useState<ModalState>({ isOpen: false, day: null, time: '' });
 
   const daysOfWeek = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     return [0, 1, 2, 3, 4].map(offset => {
       const d = new Date(weekStart);
       d.setDate(weekStart.getDate() + offset);
@@ -84,6 +86,7 @@ export function WeeklyCalendar() {
         date: `${d.getDate()}/${d.getMonth() + 1}`,
         dayOfWeek: d.getDay(),
         fullDate: d,
+        isPast: d < today,
       };
     });
   }, [weekStart]);
@@ -101,6 +104,7 @@ export function WeeklyCalendar() {
   }, [googleEvents]);
 
   const handleSlotClick = (day: typeof daysOfWeek[0], time: string) => {
+    if (day.isPast) return;
     setModal({ isOpen: true, day, time });
   };
 
@@ -142,7 +146,7 @@ export function WeeklyCalendar() {
         <div className="grid border-b border-gray-200 bg-gray-50" style={{ gridTemplateColumns: '80px repeat(5, 1fr)' }}>
           <div className="p-4 border-l border-gray-200" />
           {daysOfWeek.map((day) => (
-            <div key={day.key} className="p-4 text-center border-l border-gray-200">
+            <div key={day.key} className={`p-4 text-center border-l border-gray-200 ${day.isPast ? 'opacity-50' : ''}`}>
               <div className="font-semibold text-gray-900">{day.label}</div>
               <div className="text-sm text-gray-600">{day.date}</div>
             </div>
@@ -162,20 +166,24 @@ export function WeeklyCalendar() {
 
           {/* Day Columns */}
           {daysOfWeek.map((day) => (
-            <div key={day.key} className="border-l border-gray-200 relative">
+            <div key={day.key} className={`border-l border-gray-200 relative ${day.isPast ? 'bg-gray-50/60' : ''}`}>
               {/* Clickable time slot rows */}
               {timeSlots.map((time) => (
                 <div
                   key={time}
-                  className="h-[60px] border-b border-gray-200 hover:bg-teal-50/60 transition-colors cursor-pointer group/slot relative"
+                  className={`h-[60px] border-b border-gray-200 transition-colors relative ${
+                    day.isPast ? 'cursor-not-allowed' : 'hover:bg-teal-50/60 cursor-pointer group/slot'
+                  }`}
                   onClick={() => handleSlotClick(day, time)}
                 >
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/slot:opacity-100 transition-opacity pointer-events-none">
-                    <span className="flex items-center gap-1 bg-teal-100 text-teal-700 rounded-full px-2 py-0.5 text-xs font-medium shadow-sm">
-                      <Plus className="w-3 h-3" />
-                      הוסף פעילות
-                    </span>
-                  </div>
+                  {!day.isPast && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/slot:opacity-100 transition-opacity pointer-events-none">
+                      <span className="flex items-center gap-1 bg-teal-100 text-teal-700 rounded-full px-2 py-0.5 text-xs font-medium shadow-sm">
+                        <Plus className="w-3 h-3" />
+                        הוסף פעילות
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))}
 
@@ -199,7 +207,7 @@ export function WeeklyCalendar() {
 
         {!isSyncing && googleEvents.length === 0 && localAppEvents.length === 0 && (
           <div className="p-6 text-center text-gray-500 text-sm border-t border-gray-200">
-            לחצי על משבצת זמן כלשהי ליצירת פעילות, או לחצי על "סנכרן עם Google Calendar".
+            לחץ/י על משבצת זמן כלשהי ליצירת פעילות, או לחץ/י על "סנכרן עם Google Calendar".
           </div>
         )}
       </div>

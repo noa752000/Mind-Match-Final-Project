@@ -87,7 +87,7 @@ export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defau
 
   const handleSubmit = () => {
     if (!courseId) {
-      setError('אנא בחרי קורס');
+      setError('אנא בחר/י קורס');
       return;
     }
     if (endTime <= startTime) {
@@ -177,7 +177,7 @@ export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defau
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-right text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white"
                 dir="rtl"
               >
-                <option value="">בחרי קורס...</option>
+                <option value="">בחר/י קורס...</option>
                 {filteredCourses.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
@@ -220,7 +220,7 @@ export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defau
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="הוסיפי הערה לפעילות..."
+                placeholder="הוסף/הוסיפי הערה לפעילות..."
                 className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg text-right text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                 dir="rtl"
               />

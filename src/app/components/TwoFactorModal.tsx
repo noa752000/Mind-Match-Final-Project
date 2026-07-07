@@ -34,7 +34,7 @@ export function TwoFactorModal({ onClose, onSuccess }: TwoFactorModalProps) {
 
   const handleSendCode = async () => {
     setError('');
-    if (!phone.trim()) { setError('הכניסי מספר טלפון'); return; }
+    if (!phone.trim()) { setError('הכנס/הכניסי מספר טלפון'); return; }
 
     setLoading(true);
     try {
@@ -67,7 +67,7 @@ export function TwoFactorModal({ onClose, onSuccess }: TwoFactorModalProps) {
 
   const handleVerifyCode = async () => {
     setError('');
-    if (!code.trim()) { setError('הכניסי את הקוד שקיבלת'); return; }
+    if (!code.trim()) { setError('הכנס/הכניסי את הקוד שקיבלת'); return; }
 
     setLoading(true);
     try {
@@ -80,7 +80,7 @@ export function TwoFactorModal({ onClose, onSuccess }: TwoFactorModalProps) {
       setStep('done');
       setTimeout(() => { onSuccess(); onClose(); }, 2000);
     } catch (err: any) {
-      setError(err?.message || 'קוד שגוי, נסי שוב');
+      setError(err?.message || 'קוד שגוי, נסה/י שוב');
     } finally {
       setLoading(false);
     }
@@ -137,7 +137,7 @@ export function TwoFactorModal({ onClose, onSuccess }: TwoFactorModalProps) {
                 className="w-full bg-gradient-to-l from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : null}
-                שלחי קוד SMS
+                שלח/י קוד SMS
               </Button>
             </>
           )}
@@ -168,7 +168,7 @@ export function TwoFactorModal({ onClose, onSuccess }: TwoFactorModalProps) {
                 className="w-full bg-gradient-to-l from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : null}
-                אמתי ואפשרי
+                אמת/י ואפשר/י
               </Button>
 
               <button
@@ -184,7 +184,7 @@ export function TwoFactorModal({ onClose, onSuccess }: TwoFactorModalProps) {
             <div className="py-6 flex flex-col items-center gap-3">
               <CheckCircle className="w-16 h-16 text-green-500" />
               <p className="font-bold text-gray-900">אימות דו-שלבי הופעל!</p>
-              <p className="text-sm text-gray-500 text-center">מהכניסה הבאה תתבקשי להזין קוד SMS</p>
+              <p className="text-sm text-gray-500 text-center">מהכניסה הבאה תתבקש/י להזין קוד SMS</p>
             </div>
           )}
         </div>

@@ -17,7 +17,7 @@ import { CommunityPage } from './pages/CommunityPage';
 import { CalendarSyncProvider } from './contexts/CalendarSyncContext';
 
 function AppContent() {
-  const { isAuthenticated, user, loginWithGoogle, loginWithEmail, registerWithEmail, logout, loading } = useAuth();
+  const { isAuthenticated, user, loginWithGoogle, loginWithEmail, registerWithEmail, resetPassword, logout, loading } = useAuth();
 
   const [currentPage, setCurrentPage] = useState<
     'home' | 'dashboard' | 'profile' | 'analysis' | 'tutor' | 'calendar' | 'courses' | 'practice' | 'course-detail' | 'community'
@@ -98,6 +98,7 @@ function AppContent() {
         onLogin={loginWithGoogle}
         onLoginWithEmail={loginWithEmail}
         onRegisterWithEmail={registerWithEmail}
+        onResetPassword={resetPassword}
         onBackToHome={() => setGuestMode(true)}
       />
     );

@@ -46,7 +46,7 @@ function weaknessNote(p: CourseProgressData): string {
 }
 
 function strengthRecommendation(score: number): string {
-  return score >= 90 ? 'מצוין! המשיכי לשמור על הרמה' : 'המשך ברמה הזו';
+  return score >= 90 ? 'מצוין! המשך/י לשמור על הרמה' : 'המשך/י ברמה הזו';
 }
 
 function weaknessRecommendation(score: number): string {
@@ -80,7 +80,7 @@ export function StrengthsWeaknesses({ courseProgress, loading }: StrengthsWeakne
     return (
       <Card className="p-8 border-gray-100 text-center">
         <p className="text-gray-500">
-          עדיין אין מספיק נתוני תרגול לזיהוי נקודות חוזק וחולשה. התחילי לתרגל כדי לקבל ניתוח מותאם אישית.
+          עדיין אין מספיק נתוני תרגול לזיהוי נקודות חוזק וחולשה. התחל/י לתרגל כדי לקבל ניתוח מותאם אישית.
         </p>
       </Card>
     );
@@ -127,7 +127,7 @@ export function StrengthsWeaknesses({ courseProgress, loading }: StrengthsWeakne
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-sm text-center py-8">המשיכי לתרגל כדי לזהות נקודות חוזק.</p>
+              <p className="text-gray-500 text-sm text-center py-8">המשך/י לתרגל כדי לזהות נקודות חוזק.</p>
             )}
           </Card>
         </div>

@@ -45,7 +45,7 @@ export function ChangePasswordModal({ onClose }: ChangePasswordModalProps) {
       } else if (code === 'auth/weak-password') {
         setError('הסיסמה החדשה חלשה מדי');
       } else {
-        setError(err?.message || 'אירעה שגיאה, נסי שוב');
+        setError(err?.message || 'אירעה שגיאה, נסה/י שוב');
       }
     } finally {
       setLoading(false);
@@ -128,7 +128,7 @@ export function ChangePasswordModal({ onClose }: ChangePasswordModalProps) {
                   type="password"
                   value={confirm}
                   onChange={e => setConfirm(e.target.value)}
-                  placeholder="הזיני שוב את הסיסמה החדשה"
+                  placeholder="הזן/הזיני שוב את הסיסמה החדשה"
                   dir="rtl"
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-500 focus:border-transparent"
                 />
@@ -144,7 +144,7 @@ export function ChangePasswordModal({ onClose }: ChangePasswordModalProps) {
                 className="w-full bg-gray-800 hover:bg-gray-900 text-white"
               >
                 {loading && <Loader2 className="w-4 h-4 animate-spin ml-2" />}
-                שמרי סיסמה חדשה
+                שמור/שמרי סיסמה חדשה
               </Button>
             </>
           )}

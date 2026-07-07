@@ -33,7 +33,7 @@ export function CoursePracticeBreakdown({ courseProgress, loading }: CoursePract
           <h2 className="text-2xl font-bold text-gray-900 text-right">פילוח תרגול לפי קורס</h2>
         </div>
         <p className="text-gray-500 text-center py-8">
-          עדיין אין נתוני תרגול. התחילי לתרגל קורס כדי לראות פילוח מותאם אישית כאן.
+          עדיין אין נתוני תרגול. התחל/י לתרגל קורס כדי לראות פילוח מותאם אישית כאן.
         </p>
       </Card>
     );
@@ -73,7 +73,7 @@ export function CoursePracticeBreakdown({ courseProgress, loading }: CoursePract
           <strong>תובנת AI: </strong>
           הזמן הרב ביותר הושקע ב{courseName(mostPracticed.courseId)} ({formatMinutes(mostPracticed.practicedMinutes)}),
           {' '}והדיוק הגבוה ביותר נמדד ב{courseName(mostAccurate.courseId)} ({mostAccurate.accuracy}%).
-          {practiced.length < 3 && ' המשיכי להוסיף קורסים ולתרגל כדי לקבל תמונה רחבה יותר.'}
+          {practiced.length < 3 && ' המשך/י להוסיף קורסים ולתרגל כדי לקבל תמונה רחבה יותר.'}
         </p>
       </div>
     </Card>

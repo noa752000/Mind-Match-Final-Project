@@ -59,7 +59,7 @@ function buildCalendarRecommendations(
     const id = coursesWithProgress[0];
     const acc = Math.round((progressMap[id].correctAnswers / progressMap[id].totalAnswers) * 100);
     recs.push({
-      title: `תזמני תרגול ב-${COURSE_NAMES[id] || id}`,
+      title: `תזמן/י תרגול ב-${COURSE_NAMES[id] || id}`,
       reason: `דיוק של ${acc}% — מומלץ לתרגל לפני הבחינה`,
       priority: 'high',
       time: '2 שעות',
@@ -80,7 +80,7 @@ function buildCalendarRecommendations(
     });
     if (stale) {
       recs.push({
-        title: `הוסיפי שיעור חזרה ב-${COURSE_NAMES[stale] || stale}`,
+        title: `הוסף/הוסיפי שיעור חזרה ב-${COURSE_NAMES[stale] || stale}`,
         reason: 'לא תרגלת קורס זה יותר משבוע',
         priority: 'medium',
         time: 'שעתיים',
@@ -110,8 +110,8 @@ function buildCalendarRecommendations(
     if (best) {
       const acc = Math.round((progressMap[best].correctAnswers / progressMap[best].totalAnswers) * 100);
       recs.push({
-        title: `המשיכי להתקדם ב-${COURSE_NAMES[best] || best}`,
-        reason: `דיוק של ${acc}% — תזמני תרגול נוסף לשמירה על הרצף`,
+        title: `המשך/י להתקדם ב-${COURSE_NAMES[best] || best}`,
+        reason: `דיוק של ${acc}% — תזמן/י תרגול נוסף לשמירה על הרצף`,
         priority: 'medium',
         time: 'שעה',
         schedulable: { defaultType: 'tutorial', defaultCourseId: best, durationHours: 1 },
@@ -171,7 +171,7 @@ export function CalendarSidebar() {
             </div>
           ) : recommendations.length === 0 ? (
             <p className="text-xs text-gray-400 leading-relaxed">
-              הוסיפי קורסים לפרופיל כדי לקבל המלצות מותאמות אישית.
+              הוסף/הוסיפי קורסים לפרופיל כדי לקבל המלצות מותאמות אישית.
             </p>
           ) : (
             <div className="space-y-2">

@@ -103,7 +103,7 @@ export function ScheduleRecommendationModal({ recommendation, onClose }: Schedul
   };
 
   const handleSubmit = async () => {
-    if (!courseId) { setError('אנא בחרי קורס'); return; }
+    if (!courseId) { setError('אנא בחר/י קורס'); return; }
     if (endTime <= startTime) { setError('שעת הסיום חייבת להיות אחרי שעת ההתחלה'); return; }
 
     setIsSubmitting(true);
@@ -191,7 +191,7 @@ export function ScheduleRecommendationModal({ recommendation, onClose }: Schedul
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-right text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white"
                 dir="rtl"
               >
-                <option value="">בחרי קורס...</option>
+                <option value="">בחר/י קורס...</option>
                 {filteredCourses.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}

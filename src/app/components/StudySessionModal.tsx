@@ -59,7 +59,7 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
   const [error, setError] = useState('');
 
   const handleCreate = async () => {
-    if (!courseId) { setError('בחרי קורס'); return; }
+    if (!courseId) { setError('בחר/י קורס'); return; }
     if (endTime <= startTime) { setError('שעת הסיום חייבת להיות אחרי שעת ההתחלה'); return; }
     if (!user) return;
 
@@ -97,7 +97,7 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
       setTimeout(onClose, 2500);
     } catch (e) {
       console.error('Failed to create study session invite:', e);
-      setError('אירעה שגיאה בשליחת ההזמנה. נסי שוב.');
+      setError('אירעה שגיאה בשליחת ההזמנה. נסה/י שוב.');
     } finally {
       setSubmitting(false);
     }
@@ -168,7 +168,7 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
                 ) : (
                   <select value={courseId} onChange={e => { setCourseId(e.target.value); setError(''); }}
                     className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-right text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white" dir="rtl">
-                    <option value="">בחרי קורס...</option>
+                    <option value="">בחר/י קורס...</option>
                     {filteredCourses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 )}

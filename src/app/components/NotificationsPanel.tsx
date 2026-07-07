@@ -118,7 +118,7 @@ function buildNotifications(
     items.push({
       id: `start-${id}`,
       type: 'recommendation',
-      title: `התחילי להתרגל ב-${COURSE_NAMES[id] || id}`,
+      title: `התחל/י להתרגל ב-${COURSE_NAMES[id] || id}`,
       description: 'טרם תרגלת קורס זה — מומלץ להתחיל.',
       time: 'היום',
       read: false,
@@ -136,7 +136,7 @@ function buildNotifications(
           id: `good-${best}`,
           type: 'study',
           title: `כל הכבוד! ${acc}% דיוק ב-${COURSE_NAMES[best] || best}`,
-          description: 'את/ה מצטיין/ת בקורס זה — המשיכי כך.',
+          description: 'את/ה מצטיין/ת בקורס זה — המשך/י כך.',
           time: 'היום',
           read: true,
           courseId: best,

@@ -19,9 +19,9 @@ const TYPE_LABELS: Record<'knowledge' | 'analysis' | 'visual', { full: string; s
 };
 
 const LEVEL_LABELS: Record<'beginner' | 'intermediate' | 'advanced', string> = {
-  beginner: 'מתחילה',
-  intermediate: 'בינונית',
-  advanced: 'מתקדמת',
+  beginner: 'מתחיל/ה',
+  intermediate: 'בינוני/ת',
+  advanced: 'מתקדם/ת',
 };
 
 const TYPE_ORDER: Array<'visual' | 'analysis' | 'knowledge'> = ['visual', 'analysis', 'knowledge'];
@@ -74,11 +74,11 @@ export function LearningStyleInsights({
   });
 
   const aiText = preferredLearningType
-    ? `המערכת זיהתה שאת מצליחה במיוחד ב${TYPE_LABELS[preferredLearningType].full}. מומלץ להמשיך להתמקד בסוג השאלות הזה, ולשלב תרגול בסוגים האחרים לשיפור מאוזן.`
-    : 'עדיין אין מספיק נתונים לזיהוי סגנון הלמידה שלך. המשיכי לתרגל כדי לקבל ניתוח AI מותאם אישית.';
+    ? `המערכת זיהתה שאת/ה מצליח/ה במיוחד ב${TYPE_LABELS[preferredLearningType].full}. מומלץ להמשיך להתמקד בסוג השאלות הזה, ולשלב תרגול בסוגים האחרים לשיפור מאוזן.`
+    : 'עדיין אין מספיק נתונים לזיהוי סגנון הלמידה שלך. המשך/י לתרגל כדי לקבל ניתוח AI מותאם אישית.';
 
   const traits = [
-    { label: 'רמת לומדת', value: LEVEL_LABELS[studentLevel] },
+    { label: 'רמת לומד/ת', value: LEVEL_LABELS[studentLevel] },
     { label: 'סגנון מועדף', value: preferredLearningType ? TYPE_LABELS[preferredLearningType].short : 'לא זוהה עדיין' },
     { label: 'תרגול השבוע', value: formatMinutes(weeklyStudyMinutes) },
     { label: 'תרגול כולל', value: formatMinutes(totalStudyMinutes) },
@@ -119,7 +119,7 @@ export function LearningStyleInsights({
         </div>
       ) : (
         <div className="mb-6 p-4 bg-gray-50 rounded-xl text-center text-sm text-gray-500">
-          התחילי לתרגל כדי לראות פילוח לפי סוגי שאלות.
+          התחל/י לתרגל כדי לראות פילוח לפי סוגי שאלות.
         </div>
       )}
 

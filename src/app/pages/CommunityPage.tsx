@@ -180,7 +180,7 @@ export function CommunityPage() {
                 <Users className="w-8 h-8 text-teal-600" />
                 קהילת הלומדים
               </h1>
-              <p className="text-gray-600 mt-1 text-right">מצאי שותפים ללמידה מקורסים ומוסדות משותפים</p>
+              <p className="text-gray-600 mt-1 text-right">מצא/י שותפים ללמידה מקורסים ומוסדות משותפים</p>
             </div>
 
             {selected.length > 0 && (
@@ -241,11 +241,11 @@ export function CommunityPage() {
                     : 'אין לומדים אחרים במערכת עדיין'}
                 </p>
                 {tab === 'familiar' && (
-                  <p className="text-gray-400 text-sm mt-1">הוסיפי מוסד לימודים בפרופיל או עברי לטאב "כולם"</p>
+                  <p className="text-gray-400 text-sm mt-1">הוסף/הוסיפי מוסד לימודים בפרופיל או עבור/עברי לטאב "כולם"</p>
                 )}
               </div>
               {tab === 'familiar' && (
-                <Button variant="outline" onClick={() => setTab('all')}>צפי בכל הלומדים</Button>
+                <Button variant="outline" onClick={() => setTab('all')}>צפה/צפי בכל הלומדים</Button>
               )}
             </div>
           ) : (

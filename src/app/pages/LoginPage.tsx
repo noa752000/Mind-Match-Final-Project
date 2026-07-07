@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { Sparkles, TrendingUp, Users, Eye, EyeOff, UserPlus, LogIn, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Sparkles, TrendingUp, Users, Eye, EyeOff, UserPlus, LogIn, ArrowRight, CheckCircle2, KeyRound, Mail } from 'lucide-react';
 import logoImage from '../../assets/logo.png';
 
 interface LoginPageProps {
   onLogin: () => Promise<boolean>;
   onLoginWithEmail: (email: string, password: string) => Promise<boolean>;
   onRegisterWithEmail: (fullName: string, email: string, password: string) => Promise<boolean>;
+  onResetPassword: (email: string) => Promise<void>;
   onBackToHome: () => void;
 }
 
-type Mode = 'login' | 'register';
+type Mode = 'login' | 'register' | 'forgot';
 
 const GoogleIcon = () => (
   <svg width="22" height="22" viewBox="0 0 48 48">
@@ -20,7 +21,7 @@ const GoogleIcon = () => (
   </svg>
 );
 
-export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBackToHome }: LoginPageProps) {
+export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onResetPassword, onBackToHome }: LoginPageProps) {
   const [mode, setMode] = useState<Mode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,21 +32,39 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [error, setError] = useState('');
+  const [resetEmail, setResetEmail] = useState('');
+  const [isResetLoading, setIsResetLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
 
   const resetForm = () => {
     setEmail(''); setPassword(''); setConfirmPassword('');
     setFullName(''); setError('');
     setShowPassword(false); setShowConfirmPassword(false);
+    setResetEmail(''); setResetSent(false);
   };
 
   const switchMode = (newMode: Mode) => { setMode(newMode); resetForm(); };
+
+  const handleResetSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsResetLoading(true);
+    try {
+      await onResetPassword(resetEmail);
+      setResetSent(true);
+    } catch (err: any) {
+      setError(err?.message || 'אירעה שגיאה. אנא נסה/י שוב.');
+    } finally {
+      setIsResetLoading(false);
+    }
+  };
 
   const handleGoogleLogin = async () => {
     setError('');
     setIsGoogleLoading(true);
     try {
       const success = await onLogin();
-      if (!success) setError('התחברות עם Google נכשלה. אנא נסה שוב.');
+      if (!success) setError('התחברות עם Google נכשלה. אנא נסה/י שוב.');
     } catch (err: any) {
       setError(err?.message || 'אירעה שגיאה בעת ההתחברות עם Google');
     } finally {
@@ -65,7 +84,7 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
       if (mode === 'login') await onLoginWithEmail(email, password);
       else await onRegisterWithEmail(fullName, email, password);
     } catch (err: any) {
-      setError(err?.message || 'אירעה שגיאה. אנא נסה שוב.');
+      setError(err?.message || 'אירעה שגיאה. אנא נסה/י שוב.');
     } finally {
       setIsLoading(false);
     }
@@ -179,15 +198,69 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
 
         <div className="text-right mb-4">
           <h2 className="text-2xl font-bold text-gray-900 mb-1">
-            {mode === 'login' ? 'ברוך שובך!' : 'הצטרף אלינו'}
+            {mode === 'login' ? 'ברוך שובך!' : mode === 'register' ? 'הצטרף אלינו' : 'שחזור סיסמה'}
           </h2>
           <p className="text-gray-500 text-sm">
             {mode === 'login'
               ? 'התחבר לחשבון שלך כדי להמשיך ללמוד'
-              : 'צור חשבון חדש והתחל ללמוד בחינם'}
+              : mode === 'register'
+              ? 'צור חשבון חדש והתחל ללמוד בחינם'
+              : 'הזן את כתובת האימייל שלך ונשלח לך קישור לאיפוס הסיסמה'}
           </p>
         </div>
 
+        {mode === 'forgot' ? (
+          resetSent ? (
+            <div className="py-6 flex flex-col items-center gap-3 text-center">
+              <CheckCircle2 className="w-14 h-14 text-teal-500" />
+              <p className="font-bold text-gray-900">קישור לאיפוס הסיסמה נשלח!</p>
+              <p className="text-gray-500 text-sm">בדוק/י את תיבת הדואר שלך ({resetEmail}) ופעל/י לפי ההוראות.</p>
+              <button
+                type="button"
+                onClick={() => switchMode('login')}
+                className="text-teal-600 hover:text-teal-700 text-sm font-semibold mt-2"
+              >
+                חזרה להתחברות
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleResetSubmit} className="space-y-3">
+              <div className="space-y-1">
+                <label className="block text-right text-sm font-medium text-gray-700">אימייל</label>
+                <div className="relative">
+                  <input
+                    type="email" value={resetEmail} onChange={e => setResetEmail(e.target.value)}
+                    className="w-full px-4 py-2.5 pr-10 text-left border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm bg-gray-50 focus:bg-white"
+                    placeholder="example@email.com" required dir="ltr"
+                  />
+                  <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                </div>
+              </div>
+
+              {error && (
+                <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-right">
+                  <p className="text-red-600 text-sm">{error}</p>
+                </div>
+              )}
+
+              <button
+                type="submit" disabled={isResetLoading}
+                className="w-full h-11 bg-gradient-to-l from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              >
+                {isResetLoading ? 'שולח...' : 'שלח קישור לאיפוס'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => switchMode('login')}
+                className="w-full text-center text-teal-600 hover:text-teal-700 text-sm font-semibold"
+              >
+                חזרה להתחברות
+              </button>
+            </form>
+          )
+        ) : (
+        <>
         <form onSubmit={handleEmailSubmit} className="space-y-3">
           {mode === 'register' && (
             <div className="space-y-1">
@@ -223,6 +296,18 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
+            {mode === 'login' && (
+              <div className="flex justify-start">
+                <button
+                  type="button"
+                  onClick={() => switchMode('forgot')}
+                  className="flex items-center gap-1 text-teal-600 hover:text-teal-700 text-xs font-medium"
+                >
+                  <KeyRound className="w-3.5 h-3.5" />
+                  שכחת סיסמה?
+                </button>
+              </div>
+            )}
           </div>
 
           {mode === 'register' && (
@@ -274,6 +359,8 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onBa
             {isGoogleLoading ? 'מתחבר...' : (mode === 'login' ? 'התחבר עם Google' : 'הירשם עם Google')}
           </span>
         </button>
+        </>
+        )}
         </div>
 
       </div>
