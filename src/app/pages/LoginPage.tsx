@@ -289,7 +289,7 @@ export function LoginPage({ onLogin, onLoginWithEmail, onRegisterWithEmail, onRe
                 type={showPassword ? 'text' : 'password'} value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="w-full px-4 py-2.5 pr-10 text-right border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm bg-gray-50 focus:bg-white"
-                placeholder={mode === 'register' ? 'לפחות 6 תווים' : '••••••••'} required dir="rtl"
+                placeholder={mode === 'register' ? 'נדרשים לפחות 6 תווים' : '••••••••'} required dir="rtl"
               />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">

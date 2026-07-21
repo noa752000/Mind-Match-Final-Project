@@ -37,6 +37,6 @@ async function addAcademicYearToUsers() {
 }
 
 addAcademicYearToUsers().catch((error) => {
-  console.error("Update failed:", error);
+  //console.error("Update failed:", error);
   process.exit(1);
 });
