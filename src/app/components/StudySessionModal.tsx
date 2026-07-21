@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { X, Calendar, Users, BookOpen, Clock, CheckCircle, Plus } from 'lucide-react';
+import { X, Calendar, Users, BookOpen, Clock, CheckCircle, Plus, ChevronDown } from 'lucide-react';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { Button } from './ui/button';
@@ -195,17 +195,23 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">שעת התחלה</label>
-                  <select value={startTime} onChange={e => { setStartTime(e.target.value); setError(''); }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 text-center bg-white">
-                    {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
+                  <div className="relative">
+                    <select value={startTime} onChange={e => { setStartTime(e.target.value); setError(''); }}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 text-center bg-white appearance-none">
+                      {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                    <ChevronDown className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">שעת סיום</label>
-                  <select value={endTime} onChange={e => { setEndTime(e.target.value); setError(''); }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 text-center bg-white">
-                    {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
+                  <div className="relative">
+                    <select value={endTime} onChange={e => { setEndTime(e.target.value); setError(''); }}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 text-center bg-white appearance-none">
+                      {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                    <ChevronDown className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
                 </div>
               </div>
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, GraduationCap, Code, BookOpen, AlertCircle, Plus, Clock, MessageSquare } from 'lucide-react';
+import { X, GraduationCap, Code, BookOpen, AlertCircle, Plus, Clock, MessageSquare, ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
 import type { EventType } from '../contexts/CalendarSyncContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -189,23 +189,29 @@ export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defau
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">שעת התחלה</label>
-              <select
-                value={startTime}
-                onChange={(e) => { setStartTime(e.target.value); setError(''); }}
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent text-center bg-white"
-              >
-                {TIME_SLOTS.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
+              <div className="relative">
+                <select
+                  value={startTime}
+                  onChange={(e) => { setStartTime(e.target.value); setError(''); }}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent text-center bg-white appearance-none"
+                >
+                  {TIME_SLOTS.map((t) => <option key={t} value={t}>{t}</option>)}
+                </select>
+                <ChevronDown className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              </div>
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">שעת סיום</label>
-              <select
-                value={endTime}
-                onChange={(e) => { setEndTime(e.target.value); setError(''); }}
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent text-center bg-white"
-              >
-                {TIME_SLOTS.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
+              <div className="relative">
+                <select
+                  value={endTime}
+                  onChange={(e) => { setEndTime(e.target.value); setError(''); }}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent text-center bg-white appearance-none"
+                >
+                  {TIME_SLOTS.map((t) => <option key={t} value={t}>{t}</option>)}
+                </select>
+                <ChevronDown className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              </div>
             </div>
           </div>
 
