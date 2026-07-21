@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import { courseAccuracy, fetchTotalQuestionsPerCourse } from '../lib/analyticsTypes';
 
 const COURSE_NAMES: Record<string, string> = {
   calculus1: 'חדו"א 1',
@@ -32,6 +33,7 @@ interface CourseProgress {
   courseId: string;
   correctAnswers: number;
   totalAnswers: number;
+  totalQuestionsInCourse?: number;
   practicedMinutes: number;
   lastPracticedAt: { toDate?: () => Date } | null;
 }
@@ -42,7 +44,8 @@ interface AIRecommendationsProps {
 
 function buildRecommendations(
   selectedCourses: string[],
-  progressMap: Record<string, CourseProgress>
+  progressMap: Record<string, CourseProgress>,
+  totalQuestionsMap: Record<string, number>
 ): Recommendation[] {
   const recs: Recommendation[] = [];
   const used = new Set<string>();
@@ -50,8 +53,8 @@ function buildRecommendations(
   const coursesWithProgress = selectedCourses
     .filter(id => progressMap[id] && progressMap[id].totalAnswers > 0)
     .sort((a, b) => {
-      const accA = progressMap[a].correctAnswers / progressMap[a].totalAnswers;
-      const accB = progressMap[b].correctAnswers / progressMap[b].totalAnswers;
+      const accA = courseAccuracy(progressMap[a].correctAnswers, a, totalQuestionsMap[a]);
+      const accB = courseAccuracy(progressMap[b].correctAnswers, b, totalQuestionsMap[b]);
       return accA - accB;
     });
 
@@ -62,7 +65,7 @@ function buildRecommendations(
   // 1. Weakest course → more practice
   if (coursesWithProgress.length > 0) {
     const id = coursesWithProgress[0];
-    const acc = Math.round((progressMap[id].correctAnswers / progressMap[id].totalAnswers) * 100);
+    const acc = courseAccuracy(progressMap[id].correctAnswers, id, totalQuestionsMap[id]);
     recs.push({
       title: `תרגול נוסף ב-${COURSE_NAMES[id] || id}`,
       reason: `דיוק של ${acc}% — יש מקום לשיפור`,
@@ -103,7 +106,7 @@ function buildRecommendations(
   if (recs.length < 3 && coursesWithProgress.length > 1) {
     const best = [...coursesWithProgress].reverse().find(id => !used.has(id));
     if (best) {
-      const acc = Math.round((progressMap[best].correctAnswers / progressMap[best].totalAnswers) * 100);
+      const acc = courseAccuracy(progressMap[best].correctAnswers, best, totalQuestionsMap[best]);
       recs.push({
         title: `המשך/י להתקדם ב-${COURSE_NAMES[best] || best}`,
         reason: `דיוק של ${acc}% — את/ה מצטיין/ת בקורס זה`,
@@ -138,13 +141,14 @@ function buildRecommendations(
 
 async function fetchAIInsight(
   selectedCourses: string[],
-  progressMap: Record<string, CourseProgress>
+  progressMap: Record<string, CourseProgress>,
+  totalQuestionsMap: Record<string, number>
 ): Promise<string> {
   const courseStats = selectedCourses.map(id => {
     const p = progressMap[id];
     const name = COURSE_NAMES[id] || id;
     if (!p || p.totalAnswers === 0) return `• ${name}: טרם תורגל`;
-    const acc = Math.round((p.correctAnswers / p.totalAnswers) * 100);
+    const acc = courseAccuracy(p.correctAnswers, id, totalQuestionsMap[id]);
     return `• ${name}: ${acc}% דיוק, ${p.totalAnswers} שאלות, ${p.practicedMinutes} דקות`;
   }).join('\n');
 
@@ -203,13 +207,15 @@ export function AIRecommendations({ onOpenPractice }: AIRecommendationsProps) {
       progressMap[data.courseId] = data;
     });
 
-    const recs = buildRecommendations(selectedCourses, progressMap);
+    const totalQuestionsMap = await fetchTotalQuestionsPerCourse(selectedCourses);
+
+    const recs = buildRecommendations(selectedCourses, progressMap, totalQuestionsMap);
     setRecommendations(recs);
     setLoadingRecs(false);
 
     if (selectedCourses.length > 0) {
       try {
-        const insight = await fetchAIInsight(selectedCourses, progressMap);
+        const insight = await fetchAIInsight(selectedCourses, progressMap, totalQuestionsMap);
         setAiInsight(insight);
       } catch {
         setAiInsight('');

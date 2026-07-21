@@ -69,8 +69,11 @@ interface ScheduleRecommendationModalProps {
 
 export function ScheduleRecommendationModal({ recommendation, onClose }: ScheduleRecommendationModalProps) {
   const { weekStart, addLocalAppEvent, createGoogleCalendarEvent } = useCalendarSync();
+  const { user } = useAuth();
 
   const daysOfWeek = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     return [0, 1, 2, 3, 4].map(offset => {
       const d = new Date(weekStart);
       d.setDate(weekStart.getDate() + offset);
@@ -79,11 +82,21 @@ export function ScheduleRecommendationModal({ recommendation, onClose }: Schedul
         label: DAY_LABELS[offset],
         date: `${d.getDate()}/${d.getMonth() + 1}`,
         fullDate: d,
+        isPast: d < today,
       };
     });
   }, [weekStart]);
 
-  const [selectedDayOffset, setSelectedDayOffset] = useState(0);
+  const [selectedDayOffset, setSelectedDayOffset] = useState(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    for (let offset = 0; offset < 5; offset++) {
+      const d = new Date(weekStart);
+      d.setDate(weekStart.getDate() + offset);
+      if (d >= today) return offset;
+    }
+    return 0;
+  });
   const [courseId, setCourseId] = useState(recommendation.defaultCourseId || '');
   const [startTime, setStartTime] = useState(DEFAULT_START_TIME);
   const [endTime, setEndTime] = useState(
@@ -161,15 +174,20 @@ export function ScheduleRecommendationModal({ recommendation, onClose }: Schedul
               {daysOfWeek.map((day) => (
                 <button
                   key={day.offset}
+                  disabled={day.isPast}
                   onClick={() => setSelectedDayOffset(day.offset)}
                   className={`flex flex-col items-center py-2 px-1 rounded-lg border text-xs font-medium transition-all ${
-                    selectedDayOffset === day.offset
+                    day.isPast
+                      ? 'border-gray-100 text-gray-300 cursor-not-allowed'
+                      : selectedDayOffset === day.offset
                       ? 'bg-teal-500 text-white border-teal-500'
                       : 'border-gray-200 text-gray-600 hover:bg-gray-50'
                   }`}
                 >
                   <span>{day.label}</span>
-                  <span className={`text-xs mt-0.5 ${selectedDayOffset === day.offset ? 'text-teal-100' : 'text-gray-400'}`}>
+                  <span className={`text-xs mt-0.5 ${
+                    day.isPast ? 'text-gray-300' : selectedDayOffset === day.offset ? 'text-teal-100' : 'text-gray-400'
+                  }`}>
                     {day.date}
                   </span>
                 </button>
@@ -202,7 +220,7 @@ export function ScheduleRecommendationModal({ recommendation, onClose }: Schedul
           {/* Time range */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת התחלה</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">שעת התחלה</label>
               <select
                 value={startTime}
                 onChange={(e) => { setStartTime(e.target.value); setError(''); }}
@@ -212,7 +230,7 @@ export function ScheduleRecommendationModal({ recommendation, onClose }: Schedul
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת סיום</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">שעת סיום</label>
               <select
                 value={endTime}
                 onChange={(e) => { setEndTime(e.target.value); setError(''); }}

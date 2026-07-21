@@ -188,7 +188,7 @@ export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defau
           {/* Time range */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת התחלה</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">שעת התחלה</label>
               <select
                 value={startTime}
                 onChange={(e) => { setStartTime(e.target.value); setError(''); }}
@@ -198,7 +198,7 @@ export function NewEventModal({ onClose, onCreateEvent, dayLabel, dayDate, defau
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת סיום</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">שעת סיום</label>
               <select
                 value={endTime}
                 onChange={(e) => { setEndTime(e.target.value); setError(''); }}

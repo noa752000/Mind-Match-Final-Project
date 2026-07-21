@@ -3,6 +3,7 @@ import { Bell, X, Calendar, Clock, Sparkles, Check, Users } from 'lucide-react';
 import { collection, doc, getDocs, onSnapshot, query, updateDoc, where, arrayRemove, arrayUnion, DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../contexts/AuthContext';
+import { courseAccuracy, fetchTotalQuestionsPerCourse } from '../lib/analyticsTypes';
 
 const DAY_NAMES = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
 
@@ -30,6 +31,7 @@ interface CourseProgress {
   courseId: string;
   correctAnswers: number;
   totalAnswers: number;
+  totalQuestionsInCourse?: number;
   lastPracticedAt: { toDate?: () => Date } | null;
 }
 
@@ -53,7 +55,8 @@ function daysAgoLabel(date: Date): string {
 
 function buildNotifications(
   selectedCourses: string[],
-  progressMap: Record<string, CourseProgress>
+  progressMap: Record<string, CourseProgress>,
+  totalQuestionsMap: Record<string, number>
 ): Notification[] {
   const items: Notification[] = [];
   const used = new Set<string>();
@@ -61,8 +64,8 @@ function buildNotifications(
   const coursesWithProgress = selectedCourses
     .filter(id => progressMap[id] && progressMap[id].totalAnswers > 0)
     .sort((a, b) => {
-      const accA = progressMap[a].correctAnswers / progressMap[a].totalAnswers;
-      const accB = progressMap[b].correctAnswers / progressMap[b].totalAnswers;
+      const accA = courseAccuracy(progressMap[a].correctAnswers, a, totalQuestionsMap[a]);
+      const accB = courseAccuracy(progressMap[b].correctAnswers, b, totalQuestionsMap[b]);
       return accA - accB;
     });
 
@@ -73,7 +76,7 @@ function buildNotifications(
   // 1. Weakest course → AI recommendation to practice more
   if (coursesWithProgress.length > 0) {
     const id = coursesWithProgress[0];
-    const acc = Math.round((progressMap[id].correctAnswers / progressMap[id].totalAnswers) * 100);
+    const acc = courseAccuracy(progressMap[id].correctAnswers, id, totalQuestionsMap[id]);
     if (acc < 80) {
       items.push({
         id: `rec-${id}`,
@@ -130,7 +133,7 @@ function buildNotifications(
   if (items.length < 4 && coursesWithProgress.length > 1) {
     const best = [...coursesWithProgress].reverse().find(id => !used.has(id));
     if (best) {
-      const acc = Math.round((progressMap[best].correctAnswers / progressMap[best].totalAnswers) * 100);
+      const acc = courseAccuracy(progressMap[best].correctAnswers, best, totalQuestionsMap[best]);
       if (acc >= 85) {
         items.push({
           id: `good-${best}`,
@@ -235,8 +238,10 @@ export function NotificationsPanel({ onClose }: NotificationsPanelProps) {
         progressMap[data.courseId] = data;
       });
 
+      const totalQuestionsMap = await fetchTotalQuestionsPerCourse(selectedCourses);
+
       const lessonItems = buildLessonReminders(sessionsSnap.docs, user.userId);
-      setItems([...lessonItems, ...buildNotifications(selectedCourses, progressMap)]);
+      setItems([...lessonItems, ...buildNotifications(selectedCourses, progressMap, totalQuestionsMap)]);
       setLoadingItems(false);
     };
 

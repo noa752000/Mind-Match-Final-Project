@@ -4,6 +4,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { Card } from './ui/card';
+import { courseAccuracy, fetchTotalQuestionsPerCourse } from '../lib/analyticsTypes';
 
 const COURSE_NAMES: Record<string, string> = {
   calculus1: 'חדו"א 1',
@@ -67,11 +68,12 @@ export function WeeklySummaryCard() {
         query(collection(db, 'course_progress'), where('userId', '==', userId))
       );
       const progressData = progressSnap.docs.map(d => d.data());
+      const totalQuestionsMap = await fetchTotalQuestionsPerCourse(progressData.map(p => p.courseId));
 
       const courseStats = progressData.map(p => {
         const name = COURSE_NAMES[p.courseId] || p.courseId;
         const accuracy = p.totalAnswers > 0
-          ? Math.round((p.correctAnswers / p.totalAnswers) * 100)
+          ? courseAccuracy(p.correctAnswers, p.courseId, totalQuestionsMap[p.courseId])
           : 0;
         return `• ${name}: ${accuracy}% דיוק, ${p.totalAnswers || 0} שאלות, ${p.practicedMinutes || 0} דקות תרגול`;
       }).join('\n');
@@ -80,7 +82,7 @@ export function WeeklySummaryCard() {
       const totalMinutes = progressData.reduce((s, p) => s + (p.practicedMinutes || 0), 0);
       const avgAccuracy = progressData.length > 0
         ? Math.round(progressData.reduce((s, p) =>
-            s + (p.totalAnswers > 0 ? (p.correctAnswers / p.totalAnswers) * 100 : 0), 0
+            s + (p.totalAnswers > 0 ? courseAccuracy(p.correctAnswers, p.courseId, totalQuestionsMap[p.courseId]) : 0), 0
           ) / progressData.length)
         : 0;
 

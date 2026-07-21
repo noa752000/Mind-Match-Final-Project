@@ -14,7 +14,7 @@ import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { BookOpen, CheckCircle, XCircle, ArrowLeft, Sparkles, ChevronRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { courseName } from '../lib/analyticsTypes';
+import { courseName, computeAverageGrade } from '../lib/analyticsTypes';
 import { coursesData } from '../data/coursesData';
 
 interface PracticePageProps {
@@ -319,9 +319,9 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
         where('userId', '==', appUserId)
       );
       const snapshot = await getDocs(progressQuery);
+      const progressDocs = snapshot.docs.map((d) => d.data());
 
       let totalAnswers = 0;
-      let correctAnswers = 0;
       let knowledgeTotal = 0;
       let knowledgeCorrect = 0;
       let analysisTotal = 0;
@@ -331,10 +331,8 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
       let practicedMinutes = 0;
       let lastPracticedAt: Timestamp | null = null;
 
-      snapshot.docs.forEach((progressDoc) => {
-        const data = progressDoc.data();
+      progressDocs.forEach((data) => {
         totalAnswers += data.totalAnswers || 0;
-        correctAnswers += data.correctAnswers || 0;
         knowledgeTotal += data.knowledgeTotal || 0;
         knowledgeCorrect += data.knowledgeCorrect || 0;
         analysisTotal += data.analysisTotal || 0;
@@ -348,7 +346,9 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
         }
       });
 
-      const averageGrade = totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
+      // Overall average = the average of each *currently selected* course's own
+      // accuracy, kept in sync with AuthContext's addUserCourse/removeUserCourse.
+      const { averageGrade, studentLevel } = await computeAverageGrade(appUserId, user?.selectedCourses || []);
 
       const accuracies: { type: 'knowledge' | 'analysis' | 'visual'; value: number }[] = [
         { type: 'knowledge', value: knowledgeTotal > 0 ? knowledgeCorrect / knowledgeTotal : -1 },
@@ -357,15 +357,6 @@ export function PracticePage({ courseId, onBack, backLabel = '{backLabel}' }: Pr
       ];
       const bestType = accuracies.reduce((best, curr) => (curr.value > best.value ? curr : best), accuracies[0]);
       const preferredLearningType = bestType.value >= 0 ? bestType.type : null;
-
-      let studentLevel: 'beginner' | 'intermediate' | 'advanced';
-      if (averageGrade < 60) {
-        studentLevel = 'beginner';
-      } else if (averageGrade <= 79) {
-        studentLevel = 'intermediate';
-      } else {
-        studentLevel = 'advanced';
-      }
 
       await setDoc(doc(db, 'users', appUserId), {
         averageGrade,

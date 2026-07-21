@@ -41,13 +41,26 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
   const { user } = useAuth();
   const isGroup = participants.length > 1;
 
-  const days = useMemo(() => [0, 1, 2, 3, 4].map(i => {
-    const d = new Date(weekStart);
-    d.setDate(weekStart.getDate() + i);
-    return { label: DAY_LABELS[i], date: `${d.getDate()}/${d.getMonth() + 1}`, dow: d.getDay() };
-  }), [weekStart]);
+  const days = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return [0, 1, 2, 3, 4].map(i => {
+      const d = new Date(weekStart);
+      d.setDate(weekStart.getDate() + i);
+      return { label: DAY_LABELS[i], date: `${d.getDate()}/${d.getMonth() + 1}`, dow: d.getDay(), isPast: d < today };
+    });
+  }, [weekStart]);
 
-  const [dayIdx, setDayIdx] = useState(0);
+  const [dayIdx, setDayIdx] = useState(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    for (let i = 0; i < 5; i++) {
+      const d = new Date(weekStart);
+      d.setDate(weekStart.getDate() + i);
+      if (d >= today) return i;
+    }
+    return 0;
+  });
   
   const userSelectedCourses = user?.selectedCourses || [];
   const filteredCourses = COURSES.filter(c => userSelectedCourses.includes(c.id));
@@ -147,12 +160,16 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
                 <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">יום</label>
                 <div className="grid grid-cols-5 gap-1">
                   {days.map((d, i) => (
-                    <button key={i} onClick={() => setDayIdx(i)}
+                    <button key={i} disabled={d.isPast} onClick={() => setDayIdx(i)}
                       className={`flex flex-col items-center py-2 px-1 rounded-lg border text-xs font-medium transition-all ${
-                        dayIdx === i ? 'bg-teal-500 text-white border-teal-500' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                        d.isPast
+                          ? 'border-gray-100 text-gray-300 cursor-not-allowed'
+                          : dayIdx === i ? 'bg-teal-500 text-white border-teal-500' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
                       }`}>
                       <span>{d.label}</span>
-                      <span className={`text-xs mt-0.5 ${dayIdx === i ? 'text-teal-100' : 'text-gray-400'}`}>{d.date}</span>
+                      <span className={`text-xs mt-0.5 ${
+                        d.isPast ? 'text-gray-300' : dayIdx === i ? 'text-teal-100' : 'text-gray-400'
+                      }`}>{d.date}</span>
                     </button>
                   ))}
                 </div>
@@ -177,14 +194,14 @@ export function StudySessionModal({ participants, onClose }: StudySessionModalPr
               {/* Time */}
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת התחלה</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">שעת התחלה</label>
                   <select value={startTime} onChange={e => { setStartTime(e.target.value); setError(''); }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 text-center bg-white">
                     {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">שעת סיום</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 text-center">שעת סיום</label>
                   <select value={endTime} onChange={e => { setEndTime(e.target.value); setError(''); }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 text-center bg-white">
                     {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}

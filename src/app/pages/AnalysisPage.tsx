@@ -12,6 +12,7 @@ import { WeeklySummaryCard } from '../components/WeeklySummaryCard';
 import { Card } from '../components/ui/card';
 import { TrendingUp, Clock, Target, Award } from 'lucide-react';
 import type { CourseProgressData, PracticeResultData } from '../lib/analyticsTypes';
+import { courseAccuracy, fetchTotalQuestionsPerCourse } from '../lib/analyticsTypes';
 
 interface UserStats {
   averageGrade: number;
@@ -23,17 +24,6 @@ interface UserStats {
   weeklyStudyMinutes: number;
   totalStudyMinutes: number;
 }
-
-const QUESTION_DATA_COURSE_ID: Record<string, string> = {
-  'html': 'html_fundamentals',
-  'linear-algebra': 'linear_algebra',
-  'mis-economics': 'information_systems_economics',
-};
-
-const FALLBACK_TOTAL_QUESTIONS: Record<string, number> = {
-  'calculus1': 36, 'linear-algebra': 36, 'oop': 36, 'html': 36,
-  'sql': 24, 'systems_analysis': 36, 'cyber_security': 36, 'mis-economics': 36,
-};
 
 const DEFAULT_STATS: UserStats = {
   averageGrade: 0,
@@ -109,36 +99,16 @@ export function AnalysisPage() {
       ]);
 
       const rawProgress = progressSnap.docs.map(d => d.data() as CourseProgressData);
-      console.log('[AnalysisPage] userId:', userId);
-      console.log('[AnalysisPage] rawProgress:', rawProgress.map(p => ({ courseId: p.courseId, correctAnswers: p.correctAnswers, totalAnswers: p.totalAnswers, accuracy: p.accuracy })));
 
       // Fetch total question count per course from Firestore so that
       // accuracy = correctAnswers / totalQuestionsInCourse (not just attempted).
       const courseIds = [...new Set(rawProgress.map(p => p.courseId))];
-      const totalQuestionsMap: Record<string, number> = {};
-      await Promise.all(courseIds.map(async courseId => {
-        const questionDataCourseId = QUESTION_DATA_COURSE_ID[courseId] || courseId;
-        try {
-          const snap = await getDocs(
-            query(collection(db, 'questions'), where('courseId', '==', questionDataCourseId))
-          );
-          const count = snap.size;
-          console.log(`[AnalysisPage] courseId=${courseId} questionDataCourseId=${questionDataCourseId} firestoreCount=${count}`);
-          totalQuestionsMap[courseId] = count > 0 ? count : (FALLBACK_TOTAL_QUESTIONS[courseId] ?? 36);
-        } catch (e) {
-          console.warn(`[AnalysisPage] getDocs failed for ${courseId}:`, e);
-          totalQuestionsMap[courseId] = FALLBACK_TOTAL_QUESTIONS[courseId] ?? 36;
-        }
+      const totalQuestionsMap = await fetchTotalQuestionsPerCourse(courseIds);
+
+      const correctedProgress = rawProgress.map(p => ({
+        ...p,
+        accuracy: courseAccuracy(p.correctAnswers, p.courseId, totalQuestionsMap[p.courseId]),
       }));
-
-      console.log('[AnalysisPage] totalQuestionsMap:', totalQuestionsMap);
-
-      const correctedProgress = rawProgress.map(p => {
-        const total = totalQuestionsMap[p.courseId] ?? p.totalQuestionsInCourse ?? p.totalAnswers;
-        const accuracy = total > 0 ? Math.round((p.correctAnswers / total) * 100) : 0;
-        console.log(`[AnalysisPage] ${p.courseId}: correctAnswers=${p.correctAnswers} total=${total} accuracy=${accuracy}`);
-        return { ...p, accuracy };
-      });
 
       setCourseProgress(correctedProgress);
       setPracticeResults(resultsSnap.docs.map(d => d.data() as PracticeResultData));

@@ -8,6 +8,7 @@ import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { ScheduleRecommendationModal, RecommendationToSchedule } from './ScheduleRecommendationModal';
+import { courseAccuracy, fetchTotalQuestionsPerCourse } from '../lib/analyticsTypes';
 
 const COURSE_NAMES: Record<string, string> = {
   calculus1: 'חדו"א 1',
@@ -24,6 +25,7 @@ interface CourseProgress {
   courseId: string;
   correctAnswers: number;
   totalAnswers: number;
+  totalQuestionsInCourse?: number;
   lastPracticedAt: { toDate?: () => Date } | null;
 }
 
@@ -37,7 +39,8 @@ interface CalendarRecommendation {
 
 function buildCalendarRecommendations(
   selectedCourses: string[],
-  progressMap: Record<string, CourseProgress>
+  progressMap: Record<string, CourseProgress>,
+  totalQuestionsMap: Record<string, number>
 ): CalendarRecommendation[] {
   const recs: CalendarRecommendation[] = [];
   const used = new Set<string>();
@@ -45,8 +48,8 @@ function buildCalendarRecommendations(
   const coursesWithProgress = selectedCourses
     .filter(id => progressMap[id] && progressMap[id].totalAnswers > 0)
     .sort((a, b) => {
-      const accA = progressMap[a].correctAnswers / progressMap[a].totalAnswers;
-      const accB = progressMap[b].correctAnswers / progressMap[b].totalAnswers;
+      const accA = courseAccuracy(progressMap[a].correctAnswers, a, totalQuestionsMap[a]);
+      const accB = courseAccuracy(progressMap[b].correctAnswers, b, totalQuestionsMap[b]);
       return accA - accB;
     });
 
@@ -57,7 +60,7 @@ function buildCalendarRecommendations(
   // 1. Weakest course → focused tutorial
   if (coursesWithProgress.length > 0) {
     const id = coursesWithProgress[0];
-    const acc = Math.round((progressMap[id].correctAnswers / progressMap[id].totalAnswers) * 100);
+    const acc = courseAccuracy(progressMap[id].correctAnswers, id, totalQuestionsMap[id]);
     recs.push({
       title: `תזמן/י תרגול ב-${COURSE_NAMES[id] || id}`,
       reason: `דיוק של ${acc}% — מומלץ לתרגל לפני הבחינה`,
@@ -108,7 +111,7 @@ function buildCalendarRecommendations(
   if (recs.length < 3 && coursesWithProgress.length > 1) {
     const best = [...coursesWithProgress].reverse().find(id => !used.has(id));
     if (best) {
-      const acc = Math.round((progressMap[best].correctAnswers / progressMap[best].totalAnswers) * 100);
+      const acc = courseAccuracy(progressMap[best].correctAnswers, best, totalQuestionsMap[best]);
       recs.push({
         title: `המשך/י להתקדם ב-${COURSE_NAMES[best] || best}`,
         reason: `דיוק של ${acc}% — תזמן/י תרגול נוסף לשמירה על הרצף`,
@@ -146,7 +149,9 @@ export function CalendarSidebar() {
         progressMap[data.courseId] = data;
       });
 
-      setRecommendations(buildCalendarRecommendations(selectedCourses, progressMap));
+      const totalQuestionsMap = await fetchTotalQuestionsPerCourse(selectedCourses);
+
+      setRecommendations(buildCalendarRecommendations(selectedCourses, progressMap, totalQuestionsMap));
       setLoading(false);
     };
 
